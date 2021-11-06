@@ -14,14 +14,27 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nhomduan.quanlyungdungdathang.Activity.MainActivity;
+import com.nhomduan.quanlyungdungdathang.Interface.UpdateRecyclerView;
+import com.nhomduan.quanlyungdungdathang.Model.CategoryDomain;
+import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.R;
+
+import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
     Context context;
+    ArrayList<CategoryDomain> categoryArrayList;
+    ArrayList<Product> productArrayList;
+    UpdateRecyclerView updateRecyclerView;
 
     public CategoryAdapter(Context context) {
         this.context = context;
+    }
+
+    public CategoryAdapter(Context context, UpdateRecyclerView updateRecyclerView) {
+        this.context = context;
+        this.updateRecyclerView = updateRecyclerView;
     }
 
     @Override
@@ -32,40 +45,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CategoryAdapter.ViewHolder holder, int position) {
-        switch (position){
-            case 0:
-                holder.categoryName.setText("Pizza");
-                holder.categoryPic.setImageResource(R.drawable.pizza);
-                holder.mainLayout.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.category_bg_1));
-                holder.mainLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, MainActivity.class);
-                        context.startActivity(intent);
-                    }
-                });
-                break;
-            case 1:
-                holder.categoryName.setText("Burger");
-                holder.categoryPic.setImageResource(R.drawable.hamburger);
-                holder.mainLayout.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.category_bg_2));
-                break;
-            case 2:
-                holder.categoryName.setText("Hotdog");
-                holder.categoryPic.setImageResource(R.drawable.hotdog);
-                holder.mainLayout.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.category_bg_3));
-                break;
-            case 3:
-                holder.categoryName.setText("Drink");
-                holder.categoryPic.setImageResource(R.drawable.drink);
-                holder.mainLayout.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.category_bg_4));
-                break;
-            case 4:
-                holder.categoryName.setText("Noodle");
-                holder.categoryPic.setImageResource(R.drawable.noodle);
-                holder.mainLayout.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.category_bg_5));
-                break;
-        }
+        CategoryDomain category = categoryArrayList.get(position);
+        holder.categoryName.setText(category.getTitle());
+        holder.categoryPic.setImageResource(category.getPic());
+        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateRecyclerView.callback(position,productArrayList); // mảng theo từng tên thể loại
+            }
+        });
 
 
 
@@ -73,7 +61,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return 5;
+        return categoryArrayList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -88,3 +76,4 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
     }
 }
+
