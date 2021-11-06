@@ -1,4 +1,4 @@
-package com.example.quanlynhahang.Adapter;
+package com.nhomduan.quanlyungdungdathang.Adapter;
 
 import android.content.Context;
 
@@ -7,8 +7,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.quanlynhahang.Fragment.LoginTabFragment;
-import com.example.quanlynhahang.Fragment.SignupTabFragment;
+import com.nhomduan.quanlyungdungdathang.Fragment.LoginTabFragment;
+import com.nhomduan.quanlyungdungdathang.Fragment.SignupTabFragment;
 
 public class LoginAdapter extends FragmentPagerAdapter {
 
