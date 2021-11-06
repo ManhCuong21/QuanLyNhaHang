@@ -1,13 +1,13 @@
 package com.example.quanlynhahang.Model;
 
-public class CategoryDomain {
+public class Category {
     private String title;
     private int pic;
 
-    public CategoryDomain() {
+    public Category() {
     }
 
-    public CategoryDomain(String title, int pic) {
+    public Category(String title, int pic) {
         this.title = title;
         this.pic = pic;
     }

@@ -14,6 +14,8 @@ import com.example.quanlynhahang.R;
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.ViewHoler> {
 
 
+
+
     @Override
     public ViewHoler onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 

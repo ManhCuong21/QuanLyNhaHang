@@ -14,7 +14,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.quanlynhahang.Activity.MainActivity;
-import com.example.quanlynhahang.Model.CategoryDomain;
+import com.example.quanlynhahang.Interface.UpdateRecyclerView;
+import com.example.quanlynhahang.Model.Category;
+import com.example.quanlynhahang.Model.Product;
 import com.example.quanlynhahang.R;
 
 import java.util.ArrayList;
@@ -22,9 +24,17 @@ import java.util.ArrayList;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
     Context context;
+    UpdateRecyclerView updateRecyclerView;
+    boolean check = true;
+    boolean select = true;
 
     public CategoryAdapter(Context context) {
         this.context = context;
+    }
+
+    public CategoryAdapter(Context context, UpdateRecyclerView updateRecyclerView) {
+        this.context = context;
+        this.updateRecyclerView = updateRecyclerView;
     }
 
     @Override
@@ -43,8 +53,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 holder.mainLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, MainActivity.class);
-                        context.startActivity(intent);
+                        ArrayList<Product> productArrayList = new ArrayList<>();
+                        productArrayList.add(new Product(1,"Hamburger","Hamburger bò",2000,R.drawable.hamburger,10));
+                        productArrayList.add(new Product(2,"Pizza","Pizza bò",3000,R.drawable.hamburger,30));
+                        productArrayList.add(new Product(3,"Hotdog","Hotdog bò",4000,R.drawable.hamburger,40));
+                        productArrayList.add(new Product(4,"Hamburger","Hamburger bò",5000,R.drawable.hamburger,50));
+                        productArrayList.add(new Product(5,"Hamburger","Hamburger bò",6000,R.drawable.hamburger,60));
+                        updateRecyclerView.callback(0,productArrayList);
                     }
                 });
                 break;
@@ -52,24 +67,60 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 holder.categoryName.setText("Burger");
                 holder.categoryPic.setImageResource(R.drawable.hamburger);
                 holder.mainLayout.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.category_bg_2));
+                holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<Product> productArrayList = new ArrayList<>();
+                        productArrayList.add(new Product(1,"Hamburger","Hamburger bò",2000,R.drawable.hotdog,10));
+                        productArrayList.add(new Product(2,"Pizza","Pizza bò",3000,R.drawable.hotdog,30));
+                        productArrayList.add(new Product(3,"Hotdog","Hotdog bò",4000,R.drawable.hotdog,40));
+                        productArrayList.add(new Product(4,"Hamburger","Hamburger bò",5000,R.drawable.hotdog,50));
+                        productArrayList.add(new Product(5,"Hamburger","Hamburger bò",6000,R.drawable.hotdog,60));
+                        updateRecyclerView.callback(1,productArrayList);
+                    }
+                });
                 break;
             case 2:
-                holder.categoryName.setText("Hotdog");
+                holder.categoryName.setText("Fast food");
                 holder.categoryPic.setImageResource(R.drawable.hotdog);
                 holder.mainLayout.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.category_bg_3));
+                holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<Product> productArrayList = new ArrayList<>();
+                        productArrayList.add(new Product(1,"Hamburger","Hamburger bò",2000,R.drawable.salad,10));
+                        productArrayList.add(new Product(2,"Pizza","Pizza bò",3000,R.drawable.salad,30));
+                        productArrayList.add(new Product(3,"Hotdog","Hotdog bò",4000,R.drawable.salad,40));
+                        productArrayList.add(new Product(4,"Hamburger","Hamburger bò",5000,R.drawable.salad,50));
+                        productArrayList.add(new Product(5,"Hamburger","Hamburger bò",6000,R.drawable.salad,60));
+                        updateRecyclerView.callback(2,productArrayList);
+                    }
+                });
                 break;
+
             case 3:
                 holder.categoryName.setText("Drink");
                 holder.categoryPic.setImageResource(R.drawable.drink);
                 holder.mainLayout.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.category_bg_4));
                 break;
             case 4:
-                holder.categoryName.setText("Noodle");
-                holder.categoryPic.setImageResource(R.drawable.noodle);
+                holder.categoryName.setText("Salad");
+                holder.categoryPic.setImageResource(R.drawable.salad);
                 holder.mainLayout.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(),R.drawable.category_bg_5));
                 break;
         }
 
+        if (check){
+            ArrayList<Product> productArrayList = new ArrayList<>();
+            productArrayList.add(new Product(1,"Hamburger","Hamburger bò",2000,R.drawable.hamburger,10));
+            productArrayList.add(new Product(2,"Pizza","Pizza bò",3000,R.drawable.pizza,30));
+            productArrayList.add(new Product(3,"Hotdog","Hotdog bò",4000,R.drawable.hamburger,40));
+            productArrayList.add(new Product(4,"Hamburger","Hamburger bò",5000,R.drawable.hamburger,50));
+            productArrayList.add(new Product(5,"Hamburger","Hamburger bò",6000,R.drawable.hamburger,60));
+
+            updateRecyclerView.callback(position,productArrayList);
+            check = false;
+        }
 
 
     }

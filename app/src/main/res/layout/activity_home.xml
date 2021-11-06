@@ -228,8 +228,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:backgroundTint="#f6f6f6"
-            app:fabCradleMargin="8dp"
-            app:fabCradleRoundedCornerRadius="50dp"
+            app:fabCradleMargin="10dp"
+            app:fabCradleRoundedCornerRadius="20dp"
             app:fabCradleVerticalOffset="6dp">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -332,7 +332,7 @@
             android:backgroundTint="@color/orange"
             android:elevation="3dp"
             app:backgroundTint="#ff5e00"
-            app:maxImageSize="30dp"
+            app:maxImageSize="25dp"
             app:tint="#fff"
             app:layout_anchor="@id/app_bar"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
