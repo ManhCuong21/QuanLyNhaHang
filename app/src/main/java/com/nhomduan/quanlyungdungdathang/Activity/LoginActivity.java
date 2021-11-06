@@ -1,4 +1,4 @@
-package com.example.quanlynhahang.Activity;
+package com.nhomduan.quanlyungdungdathang.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -6,8 +6,9 @@ import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.example.quanlynhahang.Adapter.LoginAdapter;
-import com.example.quanlynhahang.R;
+import com.nhomduan.quanlyungdungdathang.Adapter.LoginAdapter;
+import com.nhomduan.quanlyungdungdathang.Model.User;
+import com.nhomduan.quanlyungdungdathang.R;
 import com.google.android.material.tabs.TabLayout;
 
 public class LoginActivity extends AppCompatActivity {
@@ -16,6 +17,14 @@ public class LoginActivity extends AppCompatActivity {
     ViewPager viewPager;
     ImageView fb,google,twitter;
     float v = 0;
+
+    public TabLayout getTabLayout() {
+        return tabLayout;
+    }
+
+    public void setTabLayout(TabLayout tabLayout) {
+        this.tabLayout = tabLayout;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,4 +69,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+
 }

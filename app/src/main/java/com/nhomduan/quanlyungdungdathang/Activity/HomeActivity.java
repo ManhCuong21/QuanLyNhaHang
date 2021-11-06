@@ -1,4 +1,4 @@
-package com.example.quanlynhahang.Activity;
+package com.nhomduan.quanlyungdungdathang.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -6,10 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
-import com.example.quanlynhahang.Adapter.CategoryAdapter;
-import com.example.quanlynhahang.R;
-
-import java.util.ArrayList;
+import com.nhomduan.quanlyungdungdathang.Adapter.CategoryAdapter;
+import com.nhomduan.quanlyungdungdathang.R;
 
 public class HomeActivity extends AppCompatActivity {
 

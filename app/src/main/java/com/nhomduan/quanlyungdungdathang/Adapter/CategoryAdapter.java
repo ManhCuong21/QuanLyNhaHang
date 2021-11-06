@@ -1,4 +1,4 @@
-package com.example.quanlynhahang.Adapter;
+package com.nhomduan.quanlyungdungdathang.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.quanlynhahang.Activity.MainActivity;
-import com.example.quanlynhahang.Model.CategoryDomain;
-import com.example.quanlynhahang.R;
-
-import java.util.ArrayList;
+import com.nhomduan.quanlyungdungdathang.Activity.MainActivity;
+import com.nhomduan.quanlyungdungdathang.R;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 

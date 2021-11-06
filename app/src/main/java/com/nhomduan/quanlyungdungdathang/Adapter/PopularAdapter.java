@@ -1,4 +1,4 @@
-package com.example.quanlynhahang.Adapter;
+package com.nhomduan.quanlyungdungdathang.Adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.quanlynhahang.R;
+import com.nhomduan.quanlyungdungdathang.R;
 
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.ViewHoler> {
 

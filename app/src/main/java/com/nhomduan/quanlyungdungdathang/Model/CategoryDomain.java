@@ -1,4 +1,4 @@
-package com.example.quanlynhahang.Model;
+package com.nhomduan.quanlyungdungdathang.Model;
 
 public class CategoryDomain {
     private String title;
