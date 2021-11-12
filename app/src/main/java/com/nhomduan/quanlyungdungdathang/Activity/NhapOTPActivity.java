@@ -35,7 +35,7 @@ import com.nhomduan.quanlyungdungdathang.Utils.UserUtils;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class NhapOTPActivity extends AppCompatActivity implements View.OnClickListener {
+public class NhapOTPActivity extends AppCompatActivity {
 
     private EditText edtOTP;
     private Button btnNhapOTP;
@@ -63,7 +63,23 @@ public class NhapOTPActivity extends AppCompatActivity implements View.OnClickLi
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        btnNhapOTP.setOnClickListener(this);
+        btnNhapOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String code = edtOTP.getText().toString().trim();
+                if(code.isEmpty()) {
+                    OverUtils.makeToast(getApplicationContext(), "Quý khánh vui lòng nhập mã OTP");
+                    return;
+                }
+                sendCode(code);
+            }
+        });
+        tvGuiLaiOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickOTPAgain(user);
+            }
+        });
 
     }
 
@@ -74,24 +90,6 @@ public class NhapOTPActivity extends AppCompatActivity implements View.OnClickLi
 
         // disable clickEnable của tvGuiLaiOTP
         tvGuiLaiOTP.setClickable(false);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btnNhapOTP:
-                String code = edtOTP.getText().toString().trim();
-                if(code.isEmpty()) {
-                    OverUtils.makeToast(getApplicationContext(), "Quý khánh vui lòng nhập mã OTP");
-                    return;
-                }
-                sendCode(code);
-                break;
-            case R.id.tvGuiLaiOTP:
-                onClickOTPAgain(user);
-                break;
-
-        }
     }
 
 
@@ -145,7 +143,7 @@ public class NhapOTPActivity extends AppCompatActivity implements View.OnClickLi
                             Log.d("TAG", "signInWithCredential:success");
 //                            FirebaseUser user = task.getResult().getUser();
                             UserUtils.getDbRefUser()
-                                    .push().setValue(user.toMap(), new DatabaseReference.CompletionListener() {
+                                    .child(user.getId()).setValue(user.toMap(), new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                                     goToLoginFragment(user);
@@ -170,7 +168,7 @@ public class NhapOTPActivity extends AppCompatActivity implements View.OnClickLi
                 String sDuration = String.format(Locale.ENGLISH, "%02d : %02d",
                         TimeUnit.MILLISECONDS.toMinutes(l),
                         TimeUnit.MILLISECONDS.toSeconds(l) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(l)));
-                tvGuiLaiOTP.setText("OTP sẽ được gửi tới bạn trong vòng " + sDuration);
+                tvGuiLaiOTP.setText("OTP sẽ hết hạn sau : " + sDuration);
             }
 
             @Override

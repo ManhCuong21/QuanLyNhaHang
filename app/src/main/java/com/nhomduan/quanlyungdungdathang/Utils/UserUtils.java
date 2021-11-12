@@ -17,6 +17,8 @@ import java.util.List;
 
 public class UserUtils {
 
+    private static FirebaseDatabase mDatabase;
+
     /**
      *
      * @return trả về một list các user trong hệ thống
@@ -37,7 +39,12 @@ public class UserUtils {
      * @return cụ thể là là cây(bảng) user trên db
      */
     public static DatabaseReference getDbRefUser() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        return database.getReference("user");
+        if (mDatabase == null) {
+            mDatabase = FirebaseDatabase.getInstance();
+            mDatabase.setPersistenceEnabled(true);
+        }
+        return mDatabase.getReference("user");
     }
 }
+
+

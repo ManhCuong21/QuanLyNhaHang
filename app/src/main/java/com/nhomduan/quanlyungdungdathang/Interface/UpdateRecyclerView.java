@@ -3,7 +3,8 @@ package com.nhomduan.quanlyungdungdathang.Interface;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface UpdateRecyclerView {
-    public void callback(int position, ArrayList<Product> list);
+    public void callback(int position, List<Product> list);
 }
