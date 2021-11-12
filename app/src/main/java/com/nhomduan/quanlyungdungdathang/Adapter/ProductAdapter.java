@@ -12,15 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
 
     Context context;
-    ArrayList<Product> list;
+    List<Product> list;
 
-    public ProductAdapter(Context context, ArrayList<Product> list) {
+    public ProductAdapter(Context context, List<Product> list) {
         this.context = context;
         this.list = list;
     }
@@ -34,10 +36,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = list.get(position);
-        holder.imgProduct.setImageResource(product.getImg());
+        Picasso.get()
+                .load(product.getImage())
+                .placeholder(R.drawable.ic_image)
+                .into(holder.imgProduct);
         holder.tvNameProduct.setText(product.getName());
         holder.tvCategoryProduct.setText(product.getLoai_sp());
-        holder.tvTimeProduct.setText(product.getRate()+" min");
+
+        holder.tvTimeProduct.setText(product.getThoiGianCheBien() +" min");
     }
 
     @Override

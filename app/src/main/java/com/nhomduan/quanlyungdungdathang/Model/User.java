@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 public class User implements Serializable {
+    private String id;
     private String username;
     private String password;
     private String phone_number;
-    private boolean enabled;
+    private boolean enable;
+    private String hinhanh;
 
     private List<String> ma_sp_da_thich;
-    private List<ThongTinGiaoHang> thong_tin_giao_hang;
+    private String address;
+    private String name;
+
 
     public User() {
     }
@@ -22,11 +26,44 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public User(String username, String password, String phone_number, boolean enabled) {
+    public User(String id, String username, String password, String phone_number, boolean enable) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.phone_number = phone_number;
-        this.enabled = enabled;
+        this.enable = enable;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getHinhanh() {
+        return hinhanh;
+    }
+
+    public void setHinhanh(String hinhanh) {
+        this.hinhanh = hinhanh;
     }
 
     public String getUsername() {
@@ -53,12 +90,12 @@ public class User implements Serializable {
         this.phone_number = phone_number;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isEnable() {
+        return enable;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     public List<String> getMa_sp_da_thich() {
@@ -69,32 +106,17 @@ public class User implements Serializable {
         this.ma_sp_da_thich = ma_sp_da_thich;
     }
 
-    public List<ThongTinGiaoHang> getThong_tin_giao_hang() {
-        return thong_tin_giao_hang;
-    }
-
-    public void setThong_tin_giao_hang(List<ThongTinGiaoHang> thong_tin_giao_hang) {
-        this.thong_tin_giao_hang = thong_tin_giao_hang;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", phone_number='" + phone_number + '\'' +
-                ", enabled=" + enabled +
-                ", ma_sp_da_thich=" + ma_sp_da_thich +
-                ", thong_tin_giao_hang=" + thong_tin_giao_hang +
-                '}';
-    }
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("id", id);
         map.put("username", username);
         map.put("password", password);
-        map.put("enable", enabled);
+        map.put("enable", enable);
         map.put("phone_number", phone_number);
         return map;
     }
+
+
 }
+

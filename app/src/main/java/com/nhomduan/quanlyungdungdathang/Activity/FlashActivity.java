@@ -9,7 +9,7 @@ import android.view.View;
 import com.nhomduan.quanlyungdungdathang.R;
 
 
-public class MainActivity extends AppCompatActivity {
+public class FlashActivity extends AppCompatActivity {
 
 
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void btnStart(View view) {
-        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+        Intent intent = new Intent(FlashActivity.this,LoginActivity.class);
         startActivity(intent);
     }
 }

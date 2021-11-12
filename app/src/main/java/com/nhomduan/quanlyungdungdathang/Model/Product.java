@@ -1,29 +1,63 @@
 package com.nhomduan.quanlyungdungdathang.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class Product {
-    private int price;
+public class Product implements Serializable, Parcelable {
     private String name;
-    private String main_img;
-    private List<String> detain_img;
+    private String image;
     private String bao_quan;
     private String thong_tin_bao_quan;
     private String mota;
     private String loai_sp;
-    private String gia_ban;
+    private int thoiGianCheBien;
+    private int gia_ban;
     private float khuyen_mai;
     private int rate;
+    private int so_luong_da_ban;
 
     public Product() {
     }
 
-    public int getPrice() {
-        return price;
+    protected Product(Parcel in) {
+        name = in.readString();
+        image = in.readString();
+        bao_quan = in.readString();
+        thong_tin_bao_quan = in.readString();
+        mota = in.readString();
+        loai_sp = in.readString();
+        thoiGianCheBien = in.readInt();
+        gia_ban = in.readInt();
+        khuyen_mai = in.readFloat();
+        rate = in.readInt();
+        so_luong_da_ban = in.readInt();
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
+
+    public int getThoiGianCheBien() {
+        return thoiGianCheBien;
+    }
+
+    public void setThoiGianCheBien(int thoiGianCheBien) {
+        this.thoiGianCheBien = thoiGianCheBien;
+    }
+
+    public void setGia_ban(int gia_ban) {
+        this.gia_ban = gia_ban;
     }
 
     public String getName() {
@@ -34,20 +68,12 @@ public class Product {
         this.name = name;
     }
 
-    public String getMain_img() {
-        return main_img;
+    public String getImage() {
+        return image;
     }
 
-    public void setMain_img(String main_img) {
-        this.main_img = main_img;
-    }
-
-    public List<String> getDetain_img() {
-        return detain_img;
-    }
-
-    public void setDetain_img(List<String> detain_img) {
-        this.detain_img = detain_img;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getBao_quan() {
@@ -82,12 +108,8 @@ public class Product {
         this.loai_sp = loai_sp;
     }
 
-    public String getGia_ban() {
+    public int getGia_ban() {
         return gia_ban;
-    }
-
-    public void setGia_ban(String gia_ban) {
-        this.gia_ban = gia_ban;
     }
 
     public float getKhuyen_mai() {
@@ -104,5 +126,33 @@ public class Product {
 
     public void setRate(int rate) {
         this.rate = rate;
+    }
+
+    public int getSo_luong_da_ban() {
+        return so_luong_da_ban;
+    }
+
+    public void setSo_luong_da_ban(int so_luong_da_ban) {
+        this.so_luong_da_ban = so_luong_da_ban;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(image);
+        parcel.writeString(bao_quan);
+        parcel.writeString(thong_tin_bao_quan);
+        parcel.writeString(mota);
+        parcel.writeString(loai_sp);
+        parcel.writeInt(thoiGianCheBien);
+        parcel.writeInt(gia_ban);
+        parcel.writeFloat(khuyen_mai);
+        parcel.writeInt(rate);
+        parcel.writeInt(so_luong_da_ban);
     }
 }

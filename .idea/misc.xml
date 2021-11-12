@@ -3,12 +3,39 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/layout/activity_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/bg_border_button.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/bg_img_header.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/card_background.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/category_bg_1.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/category_bg_2.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/category_bg_3.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/category_bg_4.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/check_pass.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/edit_text_bg.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/ic_keyboard_arrow_left_24.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/ic_search_24.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/ic_timer_24.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/light_orange_bg.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/search_back.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/update_hearth.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/drawable/vie_bg.xml" value="0.2546875" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/layout/activity_home.xml" value="0.15141430948419302" />
         <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/layout/activity_login.xml" value="0.25025641025641027" />
         <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/layout/activity_nhap_otp.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/layout/activity_product.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/layout/fragment_login_tab.xml" value="0.22395833333333334" />
         <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/layout/fragment_signup_tab.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/QuanLyNhaHang/app/src/main/res/layout/viewholder_cat.xml" value="0.2328125" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/drawable/ic_timer_24.xml" value="0.25076923076923074" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/layout/activity_home.xml" value="0.22760416666666666" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/layout/activity_main.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/layout/activity_nhap_otp.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/layout/activity_product.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/layout/viewholder_cat.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/layout/viewholder_product.xml" value="0.15104166666666666" />
       </map>
     </option>
   </component>
