@@ -11,16 +11,24 @@
         android:theme="@style/Theme.QuanLyNhaHang"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Activity.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.OrdersStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.OrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.NhapOTPActivity"
             android:exported="false" />
         <activity
             android:name=".Activity.HomeActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".Activity.LoginActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name=".Activity.ProductActivity"/>
+            android:exported="true" />
+        <activity android:name=".Activity.ProductActivity" />
         <activity
             android:name=".Activity.FlashActivity"
             android:exported="true">
