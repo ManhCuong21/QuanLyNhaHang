@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chauthai.swipereveallayout.SwipeRevealLayout
+    android:id="@+id/swipeRevealLayoutCart"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    android:background="#F3FBFF"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:mode="same_level"
+    app:dragEdge="right">
+
+<!-- Your secondary layout here -->
+    <LinearLayout
+        android:id="@+id/layout_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#F44336"
+            android:text="Delete"/>
+    </LinearLayout>
+
+    <!-- Your main layout here -->
+
+    <LinearLayout
+        android:id="@+id/layout_product"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:scaleType="fitXY"
+            android:id="@+id/imgProduct"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:src="@drawable/hamburger"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp">
+
+            <TextView
+                android:id="@+id/tvNameProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hamburger chicken"
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:weightSum="5">
+                <TextView
+                    android:gravity="center|left"
+                    android:id="@+id/tvPriceProduct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="16sp"
+                    android:text="100000"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:gravity="center|left"
+                    android:id="@+id/tvSalePriceProduct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="20sp"
+                    android:textColor="#CDDC39"
+                    android:text="100000"
+                    android:layout_weight="4"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/btnDecrease"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_border_button"
+                    android:paddingLeft="11dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="11dp"
+                    android:paddingBottom="3dp"
+                    android:text="-"
+                    android:textColor="#fff"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvQuantity"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:text="0"
+                    android:textColor="#000"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:background="@null"/>
+
+                <TextView
+                    android:id="@+id/btnIncrease"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_border_button"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="3dp"
+                    android:text="+"
+                    android:textColor="#fff"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.chauthai.swipereveallayout.SwipeRevealLayout>
