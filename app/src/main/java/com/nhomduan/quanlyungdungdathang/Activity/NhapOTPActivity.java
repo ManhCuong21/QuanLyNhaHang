@@ -1,9 +1,8 @@
 package com.nhomduan.quanlyungdungdathang.Activity;
 
-import static java.security.AccessController.getContext;
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -26,11 +25,11 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
 import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.UserUtils;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -142,11 +141,15 @@ public class NhapOTPActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d("TAG", "signInWithCredential:success");
 //                            FirebaseUser user = task.getResult().getUser();
-                            UserUtils.getDbRefUser()
-                                    .child(user.getId()).setValue(user.toMap(), new DatabaseReference.CompletionListener() {
+                            UserDao.getInstance().insertUser(user, new IAfterInsertObject() {
                                 @Override
-                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                public void onSuccess(Object obj) {
                                     goToLoginFragment(user);
+                                }
+
+                                @Override
+                                public void onError(DatabaseError exception) {
+                                    OverUtils.makeToast(NhapOTPActivity.this, ERROR_MESSAGE);
                                 }
                             });
                         } else {

@@ -2,6 +2,7 @@ package com.nhomduan.quanlyungdungdathang.Model;
 
 public class Shipper {
     private String id;
+    private String hinh_anh;
     private String name;
     private String phone_number;
 
@@ -12,6 +13,14 @@ public class Shipper {
     }
 
     public Shipper() {
+    }
+
+    public String getHinh_anh() {
+        return hinh_anh;
+    }
+
+    public void setHinh_anh(String hinh_anh) {
+        this.hinh_anh = hinh_anh;
     }
 
     public String getId() {

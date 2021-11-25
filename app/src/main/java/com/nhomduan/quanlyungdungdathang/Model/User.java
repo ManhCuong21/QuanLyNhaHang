@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class User implements Serializable {
-    private String id;
     private String username;
     private String password;
     private String phone_number;
@@ -27,21 +26,13 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public User(String id, String username, String password, String phone_number, boolean enable) {
-        this.id = id;
+    public User(String username, String password, String phone_number, boolean enable) {
         this.username = username;
         this.password = password;
         this.phone_number = phone_number;
         this.enable = enable;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
@@ -117,13 +108,34 @@ public class User implements Serializable {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("id", id);
         map.put("username", username);
         map.put("password", password);
         map.put("enable", enable);
         map.put("phone_number", phone_number);
         return map;
     }
+
+    public Map<String, Object> toMapThongTinGiaoHang() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("phone_number", phone_number);
+        map.put("address", address);
+        map.put("name", name);
+        return map;
+    }
+
+    public Map<String, Object> toMapGioHang() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("gio_hang", gio_hang);
+        return map;
+    }
+
+    public Map<String, Object> toMapSPDaThich() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("ma_sp_da_thich",ma_sp_da_thich);
+        return map;
+    }
+
+
 
 
 }

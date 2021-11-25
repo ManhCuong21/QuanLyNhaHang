@@ -3,6 +3,7 @@
     package="com.nhomduan.quanlyungdungdathang">
 
     <application
+        android:hardwareAccelerated="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,6 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuanLyNhaHang"
         android:usesCleartextTraffic="true">
+
+
+        <activity
+            android:name=".Activity.SearchActivity"
+            android:exported="false" />
         <activity
             android:name=".Activity.ThanhToanNgayActivity"
             android:exported="false" />

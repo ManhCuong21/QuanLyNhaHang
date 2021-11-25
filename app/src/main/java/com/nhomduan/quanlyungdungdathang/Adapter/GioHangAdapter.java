@@ -1,5 +1,6 @@
 package com.nhomduan.quanlyungdungdathang.Adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +10,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.nhomduan.quanlyungdungdathang.Dao.ProductDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
 import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.ProductUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -44,25 +43,25 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.DonHangV
             return;
         }
 
-        Query query = ProductUtils.getDbRfProduct().orderByChild("id").equalTo(gioHang.getMa_sp());
-        query.addValueEventListener(new ValueEventListener() {
+        ProductDao.getInstance().queryProductById(gioHang.getMa_sp(), new IAfterGetAllObject() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Product> productList;
-                productList = ProductUtils.getAllProduct(snapshot);
-                Product product = productList.get(0);
+            public void iAfterGetAllObject(Object obj) {
+                if(obj != null) {
+                    Product product = (Product) obj;
 
-                holder.tvTenSanPham.setText(product.getName());
-                int giaBanTT = (int) ((product.getGia_ban() - (product.getGia_ban() * product.getKhuyen_mai())));
-                holder.tvGiaSanPham.setText(OverUtils.numberFormat.format(giaBanTT) + "VNĐ");
-                Picasso.get()
-                        .load(product.getImage())
-                        .placeholder(R.drawable.ic_image)
-                        .into(holder.imgSanPham);
+                    holder.tvTenSanPham.setText(product.getName());
+                    int giaBanTT = (int) ((product.getGia_ban() - (product.getGia_ban() * product.getKhuyen_mai())));
+                    holder.tvGiaSanPham.setText(OverUtils.numberFormat.format(giaBanTT) + "VNĐ");
+                    Picasso.get()
+                            .load(product.getImage())
+                            .placeholder(R.drawable.ic_image)
+                            .into(holder.imgSanPham);
+                }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onError(DatabaseError error) {
+                Log.e("TAG", error.getMessage());
             }
         });
         holder.tvSoLuong.setText("x" + gioHang.getSo_luong());

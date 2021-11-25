@@ -1,5 +1,7 @@
 package com.nhomduan.quanlyungdungdathang.Fragment;
 
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,16 +28,16 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.nhomduan.quanlyungdungdathang.Activity.LoginActivity;
 import com.nhomduan.quanlyungdungdathang.Activity.NhapOTPActivity;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
 import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.UserUtils;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -166,27 +168,33 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
         String password = edtMatKhau.getText().toString().trim();
         String rePassword = edtNhapLaiMatKhau.getText().toString().trim();
         if (validate(phone_number, username, password, rePassword)) {
-            String userId = UserUtils.getDbRefUser().push().getKey();
-            User user = new User(userId, username, password, phone_number, true);
-            DatabaseReference ref = UserUtils.getDbRefUser();
-            ref.keepSynced(true);
-            ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            User user = new User(username, password, phone_number, true);
+            UserDao.getInstance().getAllUser(new IAfterGetAllObject() {
                 @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if(task.isSuccessful())  {
-                        DataSnapshot dataSnapshot = task.getResult();
-                        if (dataSnapshot != null) {
-                            List<User> userList = UserUtils.getAllUser(dataSnapshot);
-                            boolean valid = checkUser(user, userList);
-                            if (valid) {
-                                onClickVerifyPhone(user);
-                            }
-                        } else {
-                            OverUtils.makeToast(getContext(), "Lỗi thực hiện");
+                public void iAfterGetAllObject(Object obj) {
+                    if(obj != null) {
+                        boolean valid = checkUser(user, (List<User>) obj);
+                        if (valid) {
+                            UserDao.getInstance().insertUser(user, new IAfterInsertObject() {
+                                @Override
+                                public void onSuccess(Object obj) {
+                                    goToLoginFragment(user);
+                                }
+
+                                @Override
+                                public void onError(DatabaseError exception) {
+                                    OverUtils.makeToast(getContext(), ERROR_MESSAGE);
+                                }
+                            });
+
+//                            onClickVerifyPhone(user);
                         }
-                    } else {
-                        OverUtils.makeToast(getContext(), "Lỗi thực hiện");
                     }
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+                    OverUtils.makeToast(getContext(), ERROR_MESSAGE);
                 }
             });
         }
@@ -236,11 +244,15 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
                             Log.d("TAG", "signInWithCredential:success");
 //                            FirebaseUser user = task.getResult().getUser();
                             // Update UI
-                            UserUtils.getDbRefUser()
-                                    .child(user.getId()).setValue(user.toMap(), new DatabaseReference.CompletionListener() {
+                            UserDao.getInstance().insertUser(user, new IAfterInsertObject() {
                                 @Override
-                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                public void onSuccess(Object obj) {
                                     goToLoginFragment(user);
+                                }
+
+                                @Override
+                                public void onError(DatabaseError exception) {
+                                    OverUtils.makeToast(getContext(), ERROR_MESSAGE);
                                 }
                             });
 
@@ -257,7 +269,11 @@ public class SignupTabFragment extends Fragment implements View.OnClickListener 
 
 
     private void goToLoginFragment(User user) {
-        loginActivity.getTabLayout().setId(0);
+        edtSoDienThoai.setText("");
+        edtMatKhau.setText("");
+        edtNhapLaiMatKhau.setText("");
+        edtTenDangNhap.setText("");
+        loginActivity.getTabLayout().selectTab(loginActivity.getTabLayout().getTabAt(0));
     }
 
     private void goToEnterOTPActivity(User user, String verificationId) {

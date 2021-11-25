@@ -8,15 +8,25 @@ public class LoaiSP {
     private String id;
     private String name;
     private String hinhanh;
+    private int soSanPhamThuocLoai;
 
     public LoaiSP() {
     }
 
 
-    public LoaiSP(String id, String name, String hinhanh) {
+    public LoaiSP(String id, String name, String hinhanh, int soSanPhamThuocLoai) {
         this.id = id;
         this.name = name;
         this.hinhanh = hinhanh;
+        this.soSanPhamThuocLoai = soSanPhamThuocLoai;
+    }
+
+    public int getSoSanPhamThuocLoai() {
+        return soSanPhamThuocLoai;
+    }
+
+    public void setSoSanPhamThuocLoai(int soSanPhamThuocLoai) {
+        this.soSanPhamThuocLoai = soSanPhamThuocLoai;
     }
 
     public String getName() {

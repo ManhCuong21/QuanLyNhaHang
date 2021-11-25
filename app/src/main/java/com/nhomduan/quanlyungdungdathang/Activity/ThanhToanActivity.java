@@ -3,8 +3,8 @@ package com.nhomduan.quanlyungdungdathang.Activity;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,22 +21,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.FirebaseDatabase;
 import com.nhomduan.quanlyungdungdathang.Adapter.GioHangAdapter;
+import com.nhomduan.quanlyungdungdathang.Dao.GioHangDao;
+import com.nhomduan.quanlyungdungdathang.Dao.OrderDao;
+import com.nhomduan.quanlyungdungdathang.Dao.ProductDao;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
 import com.nhomduan.quanlyungdungdathang.Model.DonHang;
 import com.nhomduan.quanlyungdungdathang.Model.DonHangChiTiet;
 import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.Model.TrangThai;
 import com.nhomduan.quanlyungdungdathang.R;
-import com.nhomduan.quanlyungdungdathang.Utils.DonHangUtils;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.ProductUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,7 +105,7 @@ public class ThanhToanActivity extends AppCompatActivity {
         tvDoiThoiGianGH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               OverUtils.makeToast(ThanhToanActivity.this, "Chúng tôi chưa hỗ trợ chức năng này");
+                OverUtils.makeToast(ThanhToanActivity.this, "Chúng tôi chưa hỗ trợ chức năng này");
             }
         });
     }
@@ -137,9 +137,9 @@ public class ThanhToanActivity extends AppCompatActivity {
         tvDangHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!donHangChiTietList.isEmpty()) {
+                if (!donHangChiTietList.isEmpty()) {
                     DonHang donHang = new DonHang();
-                    donHang.setUser_id(HomeActivity.userLogin.getId());
+                    donHang.setUser_id(HomeActivity.userLogin.getUsername());
                     donHang.setDia_chi(HomeActivity.userLogin.getAddress());
                     donHang.setHo_ten(HomeActivity.userLogin.getName());
                     donHang.setDon_hang_chi_tiets(donHangChiTietList);
@@ -148,14 +148,17 @@ public class ThanhToanActivity extends AppCompatActivity {
                     donHang.setTrang_thai(TrangThai.CXN.getTrangThai());
                     donHang.setThoiGianDatHang(OverUtils.getSimpleDateFormat().format(new Date(System.currentTimeMillis())));
                     donHang.setTong_tien(soTienThanhToan + soTienVanChuyen);
-                    String key = DonHangUtils.getDbRfDonHang().push().getKey();
+                    String key = FirebaseDatabase.getInstance().getReference().child("don_hang").push().getKey();
                     donHang.setId(key);
-                    DonHangUtils.getDbRfDonHang().child(donHang.getId()).setValue(donHang, new DatabaseReference.CompletionListener() {
+                    OrderDao.getInstance().insertDonHang(donHang, new IAfterInsertObject() {
                         @Override
-                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if(error == null) {
-                                xoaGioHang();
-                            }
+                        public void onSuccess(Object obj) {
+                            xoaGioHang();
+                        }
+
+                        @Override
+                        public void onError(DatabaseError exception) {
+                            OverUtils.makeToast(ThanhToanActivity.this, ERROR_MESSAGE);
                         }
                     });
                 } else {
@@ -167,33 +170,32 @@ public class ThanhToanActivity extends AppCompatActivity {
 
     private void xoaGioHang() {
         HomeActivity.userLogin.setGio_hang(new ArrayList<>());
-        UserUtils.getDbRefUser().child(HomeActivity.userLogin.getId()).setValue(HomeActivity.userLogin, new DatabaseReference.CompletionListener() {
+        GioHangDao.getInstance().insertGioHang(HomeActivity.userLogin, HomeActivity.userLogin.getGio_hang(), new IAfterInsertObject() {
             @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                if(error == null) {
-                    OverUtils.makeToast(ThanhToanActivity.this, "Đặt hàng thành công");
-                    Intent intent = new Intent(ThanhToanActivity.this, HomeActivity.class);
-                    intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
-                    startActivity(intent);
-                } else {
-                    OverUtils.makeToast(ThanhToanActivity.this, OverUtils.ERROR_MESSAGE);
-                }
+            public void onSuccess(Object obj) {
+                OverUtils.makeToast(ThanhToanActivity.this, "Đặt hàng thành công");
+                Intent intent = new Intent(ThanhToanActivity.this, HomeActivity.class);
+                intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onError(DatabaseError exception) {
+                OverUtils.makeToast(ThanhToanActivity.this, ERROR_MESSAGE);
             }
         });
     }
 
     private void setUpThoiGianGiaoAndTienThanhToan() {
         donHangChiTietList = new ArrayList<>();
-        for(GioHang gioHang : gioHangList) {
+        for (GioHang gioHang : gioHangList) {
             count++;
             tongSoSP += gioHang.getSo_luong();
-            Query query = ProductUtils.getDbRfProduct().orderByChild("id").equalTo(gioHang.getMa_sp());
-            query.addValueEventListener(new ValueEventListener() {
+            ProductDao.getInstance().queryProductById(gioHang.getMa_sp(), new IAfterGetAllObject() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    List<Product> productList = ProductUtils.getAllProduct(snapshot);
-                    if(!productList.isEmpty()) {
-                        Product product = productList.get(0);
+                public void iAfterGetAllObject(Object obj) {
+                    if (obj != null) {
+                        Product product = (Product) obj;
                         // lấy đơn hàng chi tiet
                         DonHangChiTiet donHangChiTiet = new DonHangChiTiet();
                         donHangChiTiet.setSo_luong(gioHang.getSo_luong());
@@ -203,7 +205,7 @@ public class ThanhToanActivity extends AppCompatActivity {
                         // lấy thời gian giao hàng và phí
                         thoiGianGiaoHang += (product.getThoiGianCheBien() * gioHang.getSo_luong());
                         soTienThanhToan += ((product.getGia_ban() - (product.getGia_ban() * product.getKhuyen_mai())) * gioHang.getSo_luong());
-                        if(count == gioHangList.size()) {
+                        if (count == gioHangList.size()) {
                             tvSoSanPham.setText(tongSoSP + " sản phẩm");
                             tvTien.setText(OverUtils.currencyFormat.format(soTienThanhToan));
                             tvTongTien.setText(OverUtils.currencyFormat.format(soTienThanhToan + soTienVanChuyen));
@@ -217,7 +219,9 @@ public class ThanhToanActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {}
+                public void onError(DatabaseError error) {
+                    OverUtils.makeToast(ThanhToanActivity.this, ERROR_MESSAGE);
+                }
             });
         }
     }
@@ -284,28 +288,32 @@ public class ThanhToanActivity extends AppCompatActivity {
                         HomeActivity.userLogin.setAddress(diaChi);
                         HomeActivity.userLogin.setName(hoTen);
 
-                        UserUtils.getDbRefUser().child(HomeActivity.userLogin.getId())
-                                .setValue(HomeActivity.userLogin, new DatabaseReference.CompletionListener() {
+                        UserDao.getInstance().updateUser(HomeActivity.userLogin,
+                                HomeActivity.userLogin.toMapThongTinGiaoHang(),
+                                new IAfterUpdateObject() {
                                     @Override
-                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                        if (error == null) {
-                                            OverUtils.makeToast(getApplicationContext(), "Thành công");
-                                            rcvDiaChi.setVisibility(VISIBLE);
-                                            tvHoTen.setText(hoTen);
-                                            tvDiaChiGiaoHang.setText(diaChi);
-                                            tvSDT.setText(sdt);
-                                            bottomSheetDialog.cancel();
-                                        }
+                                    public void onSuccess(Object obj) {
+                                        OverUtils.makeToast(getApplicationContext(), "Thành công");
+                                        rcvDiaChi.setVisibility(VISIBLE);
+                                        tvHoTen.setText(hoTen);
+                                        tvDiaChiGiaoHang.setText(diaChi);
+                                        tvSDT.setText(sdt);
+                                        bottomSheetDialog.cancel();
+                                    }
+
+                                    @Override
+                                    public void onError(DatabaseError error) {
+                                        OverUtils.makeToast(ThanhToanActivity.this, ERROR_MESSAGE);
                                     }
                                 });
                     }
                 });
 
-
                 bottomSheetDialog.show();
             }
         });
     }
+
 
     private void setUpCarDiaChi() {
         hoTen = HomeActivity.userLogin.getName();
@@ -330,12 +338,7 @@ public class ThanhToanActivity extends AppCompatActivity {
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ThanhToanActivity.this.onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> ThanhToanActivity.this.onBackPressed());
     }
 
     private void initView() {

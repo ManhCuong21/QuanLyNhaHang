@@ -1,7 +1,11 @@
 package com.nhomduan.quanlyungdungdathang.Adapter;
 
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,21 +14,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.nhomduan.quanlyungdungdathang.Activity.CartActivity;
+import com.nhomduan.quanlyungdungdathang.Activity.HomeActivity;
+import com.nhomduan.quanlyungdungdathang.Dao.ProductDao;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
 import com.nhomduan.quanlyungdungdathang.Interface.OnChangeSoLuongItem;
 import com.nhomduan.quanlyungdungdathang.Interface.OnClickItem;
 import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.ProductUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -45,6 +54,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         this.onChangeSoLuongItem = onChangeSoLuongItem;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void setData(List<GioHang> gioHangList) {
+        this.gioHangList = gioHangList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.viewholder_cart, parent, false);
@@ -53,7 +68,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         GioHang gioHang = gioHangList.get(position);
         if (gioHang == null) {
             return;
@@ -61,31 +76,31 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         viewBinderHelper.bind(holder.swipeRevealLayoutCart, gioHang.getMa_sp());
         holder.tvQuantity.setText(String.valueOf(gioHang.getSo_luong()));
 
-        Query query = ProductUtils.getDbRfProduct().orderByChild("id").equalTo(gioHang.getMa_sp());
-        query.addValueEventListener(new ValueEventListener() {
+        ProductDao.getInstance().queryProductById(gioHang.getMa_sp(), new IAfterGetAllObject() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Product> productList = ProductUtils.getAllProduct(snapshot);
-                Product product = productList.get(0);
-                Picasso.get()
-                        .load(product.getImage())
-                        .placeholder(R.drawable.ic_image)
-                        .into(holder.imgProduct);
-                holder.tvNameProduct.setText(product.getName());
+            public void iAfterGetAllObject(Object obj) {
+                if(obj != null) {
+                    Product product = (Product) obj;
+                    Picasso.get()
+                            .load(product.getImage())
+                            .placeholder(R.drawable.ic_image)
+                            .into(holder.imgProduct);
+                    holder.tvNameProduct.setText(product.getName());
 
-                if (product.getKhuyen_mai() > 0) {
-                    holder.tvPriceProduct.setPaintFlags(holder.tvPriceProduct.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    holder.tvPriceProduct.setText(OverUtils.numberFormat.format(product.getGia_ban() * gioHang.getSo_luong()));
-                } else {
-                    holder.tvPriceProduct.setVisibility(View.GONE);
+                    if (product.getKhuyen_mai() > 0) {
+                        holder.tvPriceProduct.setPaintFlags(holder.tvPriceProduct.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        holder.tvPriceProduct.setText(OverUtils.numberFormat.format(product.getGia_ban() * gioHang.getSo_luong()));
+                    } else {
+                        holder.tvPriceProduct.setVisibility(View.GONE);
+                    }
+                    float tienTTSP = (product.getGia_ban() - (product.getKhuyen_mai() * product.getGia_ban()));
+                    holder.tvSalePriceProduct.setText(OverUtils.numberFormat.format(tienTTSP * gioHang.getSo_luong()) + " VNĐ");
                 }
-                float tienTTSP = (product.getGia_ban() - (product.getKhuyen_mai() * product.getGia_ban()));
-                holder.tvSalePriceProduct.setText(OverUtils.numberFormat.format(tienTTSP * gioHang.getSo_luong()) + " VNĐ");
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                OverUtils.makeToast(context, error.getMessage());
+            public void onError(DatabaseError error) {
+                OverUtils.makeToast(context, ERROR_MESSAGE);
             }
         });
 
@@ -95,7 +110,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             public void onClick(View v) {
                 if (gioHang.getSo_luong() > 1) {
                     gioHang.setSo_luong(gioHang.getSo_luong() - 1);
-                    onChangeSoLuongItem.onChange(gioHang);
+                    onChangeSoLuongItem.onChangeItem(position, gioHang);
                 }
             }
         });
@@ -104,7 +119,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             public void onClick(View v) {
                 if (gioHang.getSo_luong() < 50) {
                     gioHang.setSo_luong(gioHang.getSo_luong() + 1);
-                    onChangeSoLuongItem.onChange(gioHang);
+                    onChangeSoLuongItem.onChangeItem(position, gioHang);
                 }
             }
         });
@@ -125,6 +140,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         }
         return 0;
     }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.nhomduan.quanlyungdungdathang.Adapter.LoginAdapter;
-import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.google.android.material.tabs.TabLayout;
 
@@ -15,7 +14,7 @@ public class LoginActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
     ViewPager viewPager;
-    ImageView fb,google,twitter;
+    ImageView fb, google, twitter;
     float v = 0;
 
     public TabLayout getTabLayout() {
@@ -30,7 +29,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
         fb = findViewById(R.id.fab_fb);
@@ -44,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 
-        final LoginAdapter adapter = new LoginAdapter(getSupportFragmentManager(),this);
+        final LoginAdapter adapter = new LoginAdapter(getSupportFragmentManager(), this);
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -66,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
         google.animate().translationY(0).alpha(1).setDuration(2000).setStartDelay(600).start();
         twitter.animate().translationY(0).alpha(1).setDuration(2000).setStartDelay(800).start();
         tabLayout.animate().translationY(0).alpha(1).setDuration(2000).setStartDelay(100).start();
-
 
     }
 

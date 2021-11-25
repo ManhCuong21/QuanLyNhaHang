@@ -1,8 +1,10 @@
 package com.nhomduan.quanlyungdungdathang.Model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Product implements Serializable {
+public class Product implements Serializable{
     private String id;
     private String name;
     private String image;
@@ -125,4 +127,12 @@ public class Product implements Serializable {
     public void setSo_luong_da_ban(int so_luong_da_ban) {
         this.so_luong_da_ban = so_luong_da_ban;
     }
+
+    public Map<String, Object> toMapRate() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("rate", rate);
+        return map;
+    }
+
+
 }
