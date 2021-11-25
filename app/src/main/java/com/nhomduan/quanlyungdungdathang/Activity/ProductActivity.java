@@ -1,32 +1,36 @@
 package com.nhomduan.quanlyungdungdathang.Activity;
 
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
 import com.nhomduan.quanlyungdungdathang.Adapter.CategoryAdapter;
 import com.nhomduan.quanlyungdungdathang.Adapter.ProductAdapter;
+import com.nhomduan.quanlyungdungdathang.Dao.ProductDao;
+import com.nhomduan.quanlyungdungdathang.Dao.ProductTypeDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
 import com.nhomduan.quanlyungdungdathang.Interface.UpdateRecyclerView;
 import com.nhomduan.quanlyungdungdathang.Model.LoaiSP;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.R;
-import com.nhomduan.quanlyungdungdathang.Utils.LoaiSanPhamUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.ProductUtils;
+import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductActivity extends AppCompatActivity implements UpdateRecyclerView {
+
+    private TextView edtTimKiem;
 
     RecyclerView recyclerViewCategoryProduct, recyclerViewProduct;
 
@@ -43,11 +47,20 @@ public class ProductActivity extends AppCompatActivity implements UpdateRecycler
         anhXa();
         recyclerViewCategory();
         recyclerViewProduct();
+
+        edtTimKiem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void anhXa() {
         recyclerViewCategoryProduct = findViewById(R.id.recyclerViewCategoryProduct);
         recyclerViewProduct = findViewById(R.id.recyclerViewProduct);
+        edtTimKiem = findViewById(R.id.edtTimKiem);
     }
 
     private void recyclerViewCategory() {
@@ -56,50 +69,16 @@ public class ProductActivity extends AppCompatActivity implements UpdateRecycler
         recyclerViewCategoryProduct.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewCategoryProduct.setAdapter(categoryAdapter);
 
-        LoaiSanPhamUtils.getDbRfLoaiSP().addChildEventListener(new ChildEventListener() {
+        ProductTypeDao.getInstance().getAllProductType(new IAfterGetAllObject() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                LoaiSP loaiSP = snapshot.getValue(LoaiSP.class);
-                if (loaiSP != null) {
-                    categoryArrayList.add(loaiSP);
-                    categoryAdapter.notifyDataSetChanged();
-                }
+            public void iAfterGetAllObject(Object obj) {
+                categoryArrayList = (List<LoaiSP>) obj;
+                categoryAdapter.setData(categoryArrayList);
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                LoaiSP loaiSP = snapshot.getValue(LoaiSP.class);
-                if(loaiSP == null || categoryArrayList == null || categoryArrayList.isEmpty()) {
-                    return;
-                }
-                for (int i = 0; i < categoryArrayList.size(); i++) {
-                    if(categoryArrayList.get(i).getId().equals(loaiSP.getId())) {
-                        categoryArrayList.set(i, loaiSP);
-                        categoryAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                LoaiSP loaiSP = snapshot.getValue(LoaiSP.class);
-                if(loaiSP == null || categoryArrayList == null || categoryArrayList.isEmpty()) {
-                    return;
-                }
-                for (int i = 0; i < categoryArrayList.size(); i++) {
-                    if(categoryArrayList.get(i).getId().equals(loaiSP.getId())) {
-                        categoryArrayList.remove(i);
-                        categoryAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onError(DatabaseError error) {
+                OverUtils.makeToast(ProductActivity.this, ERROR_MESSAGE);
             }
         });
     }
@@ -111,113 +90,37 @@ public class ProductActivity extends AppCompatActivity implements UpdateRecycler
         recyclerViewProduct.setAdapter(productAdapter);
 
         String categoryId = getIntent().getStringExtra("categoryId");
-        Query query = ProductUtils.getDbRfProduct().orderByChild("loai_sp").equalTo(categoryId);
-        query.addChildEventListener(new ChildEventListener() {
+        ProductDao.getInstance().getProductByType(categoryId, new IAfterGetAllObject() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Product product = snapshot.getValue(Product.class);
-                if (product != null) {
-                    productArrayList.add(product);
-                    productAdapter.notifyDataSetChanged();
-                }
+            public void iAfterGetAllObject(Object obj) {
+                productArrayList = (List<Product>) obj;
+                productAdapter.setData(productArrayList);
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Product product = snapshot.getValue(Product.class);
-                if (product == null || productArrayList == null || productArrayList.isEmpty()) {
-                    return;
-                }
-                for (int i = 0; i < productArrayList.size(); i++) {
-                    if (productArrayList.get(i).getId().equals(product.getId())) {
-                        productArrayList.set(i, product);
-                        productAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                Product product = snapshot.getValue(Product.class);
-                if (product == null || productArrayList == null || productArrayList.isEmpty()) {
-                    return;
-                }
-                for (int i = 0; i < productArrayList.size(); i++) {
-                    if (productArrayList.get(i).getId().equals(product.getId())) {
-                        productArrayList.remove(i);
-                        productAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onError(DatabaseError error) {
+                OverUtils.makeToast(ProductActivity.this, ERROR_MESSAGE);
             }
         });
     }
 
 
     public void btnReturn(View view) {
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        onBackPressed();
     }
 
     @Override
     public void callback(String categoryId) {
-        productArrayList.clear();
-        Query query = ProductUtils.getDbRfProduct().orderByChild("loai_sp").equalTo(categoryId);
-        query.addChildEventListener(new ChildEventListener() {
+        ProductDao.getInstance().getProductByType(categoryId, new IAfterGetAllObject() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Product product = snapshot.getValue(Product.class);
-                if (product != null) {
-                    productArrayList.add(product);
-                    productAdapter.notifyDataSetChanged();
-                }
+            public void iAfterGetAllObject(Object obj) {
+                productArrayList = (List<Product>) obj;
+                productAdapter.setData(productArrayList);
             }
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Product product = snapshot.getValue(Product.class);
-                if (product == null || productArrayList == null || productArrayList.isEmpty()) {
-                    return;
-                }
-                for (int i = 0; i < productArrayList.size(); i++) {
-                    if (productArrayList.get(i).getId().equals(product.getId())) {
-                        productArrayList.set(i, product);
-                        productAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                Product product = snapshot.getValue(Product.class);
-                if (product == null || productArrayList == null || productArrayList.isEmpty()) {
-                    return;
-                }
-                for (int i = 0; i < productArrayList.size(); i++) {
-                    if (productArrayList.get(i).getId().equals(product.getId())) {
-                        productArrayList.remove(i);
-                        productAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onError(DatabaseError error) {
+                OverUtils.makeToast(ProductActivity.this, ERROR_MESSAGE);
             }
         });
     }

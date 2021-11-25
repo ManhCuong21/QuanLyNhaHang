@@ -1,8 +1,8 @@
 package com.nhomduan.quanlyungdungdathang.Fragment;
 
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -22,19 +22,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 import com.nhomduan.quanlyungdungdathang.Activity.HomeActivity;
 import com.nhomduan.quanlyungdungdathang.Adapter.FavoriteProductAdapter;
+import com.nhomduan.quanlyungdungdathang.Dao.ProductDao;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
 import com.nhomduan.quanlyungdungdathang.Interface.ItemTouchHelpListener;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.R;
-import com.nhomduan.quanlyungdungdathang.Utils.ProductUtils;
+import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 import com.nhomduan.quanlyungdungdathang.Utils.RecyclerViewItemTouchHelper;
 
 import java.util.ArrayList;
@@ -71,14 +69,9 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
         Log.e("dsf", "fsdf");
         activity.setSupportActionBar(toolbar);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerViewHome, new HomeFragment())
-                        .commit();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> fragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerViewHome, new HomeFragment())
+                .commit());
     }
 
     @Override
@@ -99,24 +92,34 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(rcvSanPhamYeuThich);
 
 
-        List<String> list = HomeActivity.userLogin.getMa_sp_da_thich();
-        if(list != null) {
-            for(String maSP : list) {
-                ProductUtils.getDbRfProduct().child(maSP).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful() && task.getResult() != null) {
-                            Product product = task.getResult().getValue(Product.class);
-                            if(product != null) {
-                                productList.add(product);
+        UserDao.getInstance().getSanPhamYeuThichOfUser(HomeActivity.userLogin, new IAfterGetAllObject() {
+            @Override
+            public void iAfterGetAllObject(Object obj) {
+                List<String> maSanPhamYeuThichList = (List<String>) obj;
+                for(String maSP : maSanPhamYeuThichList) {
+                    ProductDao.getInstance().queryProductById(maSP, new IAfterGetAllObject() {
+                        @SuppressLint("NotifyDataSetChanged")
+                        @Override
+                        public void iAfterGetAllObject(Object obj) {
+                            if(obj != null) {
+                                productList.add((Product) obj);
                                 favoriteProductAdapter.notifyDataSetChanged();
                             }
                         }
-                    }
-                });
+
+                        @Override
+                        public void onError(DatabaseError error) {
+                            OverUtils.makeToast(getContext(), ERROR_MESSAGE);
+                        }
+                    });
+                }
             }
-        }
+
+            @Override
+            public void onError(DatabaseError error) {
+                OverUtils.makeToast(getContext(), ERROR_MESSAGE);
+            }
+        });
     }
 
     private void initView(View view) {

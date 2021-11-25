@@ -1,8 +1,7 @@
 package com.nhomduan.quanlyungdungdathang.Fragment;
 
-import static androidx.constraintlayout.motion.widget.TransitionBuilder.validate;
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,25 +16,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.nhomduan.quanlyungdungdathang.Activity.HomeActivity;
 import com.nhomduan.quanlyungdungdathang.Activity.LoginActivity;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
 import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.UserUtils;
-
-import java.util.List;
 
 
 public class LoginTabFragment extends Fragment implements View.OnClickListener {
+
 
     private LoginActivity loginActivity;
 
@@ -50,11 +46,10 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
     }
 
-    EditText edtTenDangNhap,edtMatKhau;
+    EditText edtTenDangNhap, edtMatKhau;
     TextView tvQuenMatKhau;
-    Button btnDangNhap,btnHuyDangNhap;
+    Button btnDangNhap, btnHuyDangNhap;
     ToggleButton btnCheckPass;
-    CheckBox ckbGhiNho;
     float v = 0;
     SharedPreferences sharedPreferences;
 
@@ -73,7 +68,6 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
         btnDangNhap = root.findViewById(R.id.btnDangNhap);
         btnCheckPass = root.findViewById(R.id.btnCheckPass);
         btnHuyDangNhap = root.findViewById(R.id.btnHuyDangNhap);
-        ckbGhiNho = root.findViewById(R.id.ckbGhiNho);
 
         edtTenDangNhap.setTranslationX(800);
         edtMatKhau.setTranslationX(800);
@@ -81,7 +75,6 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
         btnCheckPass.setTranslationX(800);
         btnDangNhap.setTranslationX(800);
         btnHuyDangNhap.setTranslationX(800);
-        ckbGhiNho.setTranslationX(800);
 
         edtTenDangNhap.setAlpha(v);
         edtMatKhau.setAlpha(v);
@@ -89,7 +82,6 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
         btnCheckPass.setAlpha(v);
         btnDangNhap.setAlpha(v);
         btnHuyDangNhap.setAlpha(v);
-        ckbGhiNho.setAlpha(v);
 
         edtTenDangNhap.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(300).start();
         edtMatKhau.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(500).start();
@@ -97,14 +89,13 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
         btnCheckPass.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(500).start();
         btnDangNhap.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(700).start();
         btnHuyDangNhap.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(700).start();
-        ckbGhiNho.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(700).start();
 
         btnCheckPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (btnCheckPass.isChecked()){
+                if (btnCheckPass.isChecked()) {
                     edtMatKhau.setTransformationMethod(null);
-                }else {
+                } else {
                     edtMatKhau.setTransformationMethod(new PasswordTransformationMethod());
                 }
             }
@@ -115,27 +106,10 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initAccount();
-
         btnDangNhap.setOnClickListener(this);
         btnHuyDangNhap.setOnClickListener(this);
 
 
-
-    }
-
-    private void initAccount() {
-        SharedPreferences sharedPreferences =
-                loginActivity.getSharedPreferences("ACCOUNT_FILE",Context.MODE_PRIVATE);
-        boolean isChecked = sharedPreferences.getBoolean("remember", false);
-        if(isChecked) {
-            String userName = sharedPreferences.getString("username", "");
-            String password = sharedPreferences.getString("password", "");
-
-            edtTenDangNhap.setText(userName);
-            edtMatKhau.setText(password);
-            ckbGhiNho.setChecked(true);
-        }
     }
 
     @Override
@@ -155,76 +129,62 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
     private void clearForm() {
         edtTenDangNhap.setText("");
         edtMatKhau.setText("");
-        ckbGhiNho.setChecked(false);
     }
 
     private void dangNhap() {
         String userName = edtTenDangNhap.getText().toString().trim();
         String password = edtMatKhau.getText().toString().trim();
-        boolean isChecked;
-        if(ckbGhiNho.isChecked()) {
-            isChecked = true;
-        } else {
-            isChecked = false;
-        }
-
-        if(validate(userName, password)) {
-            UserUtils.getDbRefUser().get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        if (validate(userName, password)) {
+            UserDao.getInstance().getUserByUserName(userName, new IAfterGetAllObject() {
                 @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if(task.isSuccessful()) {
-                        DataSnapshot dataSnapshot = task.getResult();
-                        if(dataSnapshot != null) {
-                            List<User> userList = UserUtils.getAllUser(dataSnapshot);
-                            User user = isUser(new User(userName, password), userList);
-                            if(user != null) {
-                                rememberAccount(userName, password, isChecked);
-                                goToHomeActivity(user);
-                            } else {
-                                OverUtils.makeToast(getContext(), "Tên đăng nhập hoặc mật khẩu không chính xác");
-                            }
+                public void iAfterGetAllObject(Object obj) {
+                    User user = (User) obj;
+                    if (user.getUsername() != null) {
+                        if(user.getPassword().equals(password)) {
+                            rememberAccount(userName, password);
+                            goToHomeActivity(user);
                         } else {
-                            OverUtils.makeToast(getContext(), OverUtils.ERROR_MESSAGE);
+                            OverUtils.makeToast(getContext(), "Vui lòng kiểm tra lại mật khẩu");
                         }
+                    } else {
+                        OverUtils.makeToast(getContext(), "Tài khoản không tồn tại");
                     }
+                }
+
+                @Override
+                public void onError(DatabaseError error) {
+                    OverUtils.makeToast(getContext(), ERROR_MESSAGE);
                 }
             });
         }
     }
 
+
     private void goToHomeActivity(User user) {
         Intent intent = new Intent(getContext(), HomeActivity.class);
         intent.putExtra("user", user);
+
+        SharedPreferences.Editor editor = OverUtils.getSPInstance(getContext(), OverUtils.PASS_FILE).edit();
+        editor.putString("pass", OverUtils.PASS_LOGIN_ACTIVITY);
+        editor.apply();
+
         startActivity(intent);
         loginActivity.finish();
     }
 
-    private void rememberAccount(String userName, String password, boolean isChecked) {
-        SharedPreferences sharedPreferences =
-                loginActivity.getSharedPreferences("ACCOUNT_FILE",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
+    private void rememberAccount(String userName, String password) {
+        SharedPreferences.Editor editor = OverUtils.getSPInstance(getContext(), OverUtils.ACCOUNT_FILE).edit();
+        editor.clear();
         editor.putString("username", userName);
         editor.putString("password", password);
-        editor.putBoolean("remember", isChecked);
-
         editor.apply();
     }
 
     private boolean validate(String userName, String password) {
-        if(userName.isEmpty() || password.isEmpty()) {
+        if (userName.isEmpty() || password.isEmpty()) {
             OverUtils.makeToast(getContext(), "Quý khánh vui lòng nhập đầy đủ thông tin");
             return false;
         }
         return true;
-    }
-
-    private User isUser(User user, List<User> userList) {
-        for(User u : userList) {
-            if(user.getUsername().equals(u.getUsername()) && user.getPassword().equals(u.getPassword())) {
-                return u;
-            }
-        }
-        return null;
     }
 }

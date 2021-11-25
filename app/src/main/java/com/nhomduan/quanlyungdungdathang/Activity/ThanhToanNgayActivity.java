@@ -4,13 +4,11 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,26 +20,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.nhomduan.quanlyungdungdathang.Adapter.GioHangAdapter;
+import com.google.firebase.database.FirebaseDatabase;
+import com.nhomduan.quanlyungdungdathang.Dao.OrderDao;
+import com.nhomduan.quanlyungdungdathang.Dao.ProductDao;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
 import com.nhomduan.quanlyungdungdathang.Model.DonHang;
 import com.nhomduan.quanlyungdungdathang.Model.DonHangChiTiet;
-import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.Model.TrangThai;
 import com.nhomduan.quanlyungdungdathang.R;
-import com.nhomduan.quanlyungdungdathang.Utils.DonHangUtils;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.ProductUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.UserUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ThanhToanNgayActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -53,7 +51,7 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
     private TextView tvDiaChiGiaoHang;
     private TextView textView8;
     private TextView tvSDT;
-    private TextView tvtThoiGianGiaoHang;
+    private TextView tvThoiGianGiaoHang;
     private TextView tvDoiThoiGianGH;
     private TextView tvSoSanPham;
     private TextView tvTien;
@@ -129,7 +127,7 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DonHang donHang = new DonHang();
-                donHang.setUser_id(HomeActivity.userLogin.getId());
+                donHang.setUser_id(HomeActivity.userLogin.getUsername());
                 donHang.setDia_chi(HomeActivity.userLogin.getAddress());
                 donHang.setHo_ten(HomeActivity.userLogin.getName());
                 donHang.setDon_hang_chi_tiets(donHangChiTietList);
@@ -138,17 +136,20 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
                 donHang.setTrang_thai(TrangThai.CXN.getTrangThai());
                 donHang.setThoiGianDatHang(OverUtils.getSimpleDateFormat().format(new Date(System.currentTimeMillis())));
                 donHang.setTong_tien(soTienThanhToan + soTienVanChuyen);
-                String key = DonHangUtils.getDbRfDonHang().push().getKey();
+                String key = FirebaseDatabase.getInstance().getReference().child("don_hang").push().getKey();
                 donHang.setId(key);
-                DonHangUtils.getDbRfDonHang().child(donHang.getId()).setValue(donHang, new DatabaseReference.CompletionListener() {
+                OrderDao.getInstance().insertDonHang(donHang, new IAfterInsertObject() {
                     @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        if(error == null) {
-                            OverUtils.makeToast(ThanhToanNgayActivity.this, "Đặt hàng thành công");
-                            Intent intent = new Intent(ThanhToanNgayActivity.this, HomeActivity.class);
-                            intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
-                            startActivity(intent);
-                        }
+                    public void onSuccess(Object obj) {
+                        OverUtils.makeToast(ThanhToanNgayActivity.this, "Đặt hàng thành công");
+                        Intent intent = new Intent(ThanhToanNgayActivity.this, HomeActivity.class);
+                        intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(DatabaseError exception) {
+                        OverUtils.makeToast(ThanhToanNgayActivity.this, ERROR_MESSAGE);
                     }
                 });
             }
@@ -211,18 +212,24 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
                         HomeActivity.userLogin.setAddress(diaChi);
                         HomeActivity.userLogin.setName(hoTen);
 
-                        UserUtils.getDbRefUser().child(HomeActivity.userLogin.getId())
-                                .setValue(HomeActivity.userLogin, new DatabaseReference.CompletionListener() {
+                        UserDao.getInstance().updateUser(HomeActivity.userLogin,
+                                HomeActivity.userLogin.toMapThongTinGiaoHang(),
+                                new IAfterUpdateObject() {
                                     @Override
-                                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                        if (error == null) {
-                                            OverUtils.makeToast(getApplicationContext(), "Thành công");
-                                            rcvDiaChi.setVisibility(VISIBLE);
-                                            tvHoTen.setText(hoTen);
-                                            tvDiaChiGiaoHang.setText(diaChi);
-                                            tvSDT.setText(sdt);
-                                            bottomSheetDialog.cancel();
-                                        }
+                                    public void onSuccess(Object obj) {
+                                        OverUtils.makeToast(getApplicationContext(), "Thành công");
+                                        rcvDiaChi.setVisibility(VISIBLE);
+                                        tvHoTen.setText(hoTen);
+                                        tvDiaChiGiaoHang.setText(diaChi);
+                                        tvSDT.setText(sdt);
+                                        tvDangHang.setBackgroundColor(Color.RED);
+                                        tvDangHang.setClickable(true);
+                                        bottomSheetDialog.cancel();
+                                    }
+
+                                    @Override
+                                    public void onError(DatabaseError error) {
+                                        OverUtils.makeToast(ThanhToanNgayActivity.this, ERROR_MESSAGE);
                                     }
                                 });
                     }
@@ -268,24 +275,20 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
     private void getDuLieu() {
         Intent intent = getIntent();
         String productId = intent.getStringExtra("productId");
-        int soLuong = intent.getIntExtra("so_luong", 0);
+        int soLuongDaChon = intent.getIntExtra("so_luong", 0);
 
-        soLuongDaChon = soLuong;
-
-        ProductUtils.getDbRfProduct().child(productId).addValueEventListener(new ValueEventListener() {
+        ProductDao.getInstance().getProductById(productId, new IAfterGetAllObject() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Product product = snapshot.getValue(Product.class);
-                productDaChon = product;
+            public void iAfterGetAllObject(Object obj) {
+                productDaChon = (Product) obj;
                 donHangChiTietList = new ArrayList<>();
                 donHangChiTietList.add(new DonHangChiTiet(productDaChon, soLuongDaChon));
                 buildComponentSanPham(productDaChon, soLuongDaChon);
-
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onError(DatabaseError error) {
+                OverUtils.makeToast(ThanhToanNgayActivity.this, ERROR_MESSAGE);
             }
         });
 
@@ -309,6 +312,12 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
 
         soTienThanhToan = giaCuaSanPham;
         ThanhToanNgayActivity.soTienVanChuyen = soTienVanChuyen;
+
+        long timeGiaoHang = System.currentTimeMillis() +
+                TimeUnit.MINUTES.toMillis(productDaChon.getThoiGianCheBien()) +
+                TimeUnit.MINUTES.toMillis(30);
+        tvThoiGianGiaoHang.setText(OverUtils.getSimpleDateFormat().format(new Date(timeGiaoHang)));
+
     }
 
     private void initView() {
@@ -321,7 +330,7 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
         tvDiaChiGiaoHang = findViewById(R.id.tvDiaChiGiaoHang);
         textView8 = findViewById(R.id.textView8);
         tvSDT = findViewById(R.id.tvSDT);
-        tvtThoiGianGiaoHang = findViewById(R.id.tvtThoiGianGiaoHang);
+        tvThoiGianGiaoHang = findViewById(R.id.tvThoiGianGiaoHang);
         tvDoiThoiGianGH = findViewById(R.id.tvDoiThoiGianGH);
         tvSoSanPham = findViewById(R.id.tvSoSanPham);
         tvTien = findViewById(R.id.tvTien);

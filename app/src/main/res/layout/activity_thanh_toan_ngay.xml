@@ -44,18 +44,22 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="8dp"
                     android:layout_weight="1"
+                    android:background="@color/orange"
+                    android:drawableTint="@color/white"
+                    android:padding="12dp"
                     android:drawableStart="@drawable/ic_location"
                     android:drawableLeft="@drawable/ic_location"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:text="Giao đến: "
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
 
                 <TextView
+                    android:background="@color/orange"
                     android:id="@+id/tvThemDiaChi"
+                    android:textColor="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginRight="16dp"
@@ -179,16 +183,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:layout_marginLeft="8dp"
+                        android:paddingLeft="12dp"
                         android:drawableStart="@drawable/ic_time_png"
                         android:drawableLeft="@drawable/ic_time_png"
                         android:drawablePadding="4dp"
+                        android:background="@color/orange"
+                        android:textColor="@color/white"
+                        android:drawableTint="@color/white"
                         android:gravity="center_vertical"
                         android:maxLines="1"
                         android:text="Giao hàng dự kiến : " />
 
                     <TextView
-                        android:id="@+id/tvtThoiGianGiaoHang"
+                        android:id="@+id/tvThoiGianGiaoHang"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_marginLeft="4dp"
@@ -204,6 +211,8 @@
                         android:id="@+id/tvDoiThoiGianGH"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
+                        android:background="@color/orange"
+                        android:textColor="@color/white"
                         android:layout_marginRight="16dp"
                         android:drawableEnd="@drawable/ic_next"
                         android:drawableRight="@drawable/ic_next"
@@ -370,10 +379,14 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:background="@color/orange"
+                    android:layout_marginRight="2dp"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="left"
-                    android:layout_marginLeft="8dp"
+                    android:paddingLeft="12dp"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_sale"
                     android:drawableLeft="@drawable/ic_sale"
@@ -383,6 +396,8 @@
                     android:text="Mã giảm giá" />
 
                 <TextView
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
                     android:id="@+id/tvNhapMaGiamGia"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -403,10 +418,14 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_marginRight="2dp"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
+                    android:drawableTint="@color/white"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="left"
-                    android:layout_marginLeft="8dp"
+                    android:paddingLeft="12dp"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_note"
                     android:drawableLeft="@drawable/ic_note"
@@ -416,6 +435,8 @@
                     android:text="Ghi chú" />
 
                 <TextView
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
                     android:id="@+id/tvNhapGhiChu"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"

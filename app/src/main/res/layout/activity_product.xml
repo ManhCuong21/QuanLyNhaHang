@@ -24,16 +24,18 @@
             android:layout_height="40dp"
             android:src="@drawable/ic_keyboard_arrow_left_24" />
 
-        <EditText
+        <TextView
+            android:id="@+id/edtTimKiem"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:gravity="center_vertical"
             android:background="@drawable/card_background"
             android:drawableLeft="@drawable/ic_search_24"
             android:drawablePadding="8dp"
             android:hint="Find your food"
-            android:paddingLeft="10dp"
+            android:imeOptions="actionSearch"
             android:maxLines="1"
-            android:imeOptions="actionSearch"/>
+            android:paddingLeft="10dp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

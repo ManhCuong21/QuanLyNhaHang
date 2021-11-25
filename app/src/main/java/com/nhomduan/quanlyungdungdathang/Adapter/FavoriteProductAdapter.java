@@ -11,18 +11,14 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.nhomduan.quanlyungdungdathang.Activity.HomeActivity;
 import com.nhomduan.quanlyungdungdathang.Activity.ShowProductActivity;
+import com.nhomduan.quanlyungdungdathang.Dao.ProductDao;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.R;
-import com.nhomduan.quanlyungdungdathang.Utils.ProductUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.UserUtils;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -107,22 +103,30 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
                 viTri = i;
             }
         }
+        // remove mã sản phẩm yêu thích
         maSanPhamYeuThich.remove(viTri);
-        UserUtils.getDbRefUser().child(HomeActivity.userLogin.getId()).child("ma_sp_da_thich")
-                .setValue(maSanPhamYeuThich);
-        ProductUtils.getDbRfProduct().child(product.getId()).child("rate")
-                .setValue(product.getRate() - 1);
+        HomeActivity.userLogin.setMa_sp_da_thich(maSanPhamYeuThich);
+        UserDao.getInstance().updateUser(HomeActivity.userLogin, HomeActivity.userLogin.toMapSPDaThich());
+        
+        // thay đổi lượng yêu thích của sản phẩm
+        product.setRate(product.getRate() - 1);
+        ProductDao.getInstance().updateProduct(product, product.toMapRate());
+        
         list.remove(index);
         notifyItemRemoved(index);
     }
 
     public void undoItem(Product product,int index) {
         List<String> maSanPhamYeuThich = HomeActivity.userLogin.getMa_sp_da_thich();
+
         maSanPhamYeuThich.add(product.getId());
-        UserUtils.getDbRefUser().child(HomeActivity.userLogin.getId()).child("ma_sp_da_thich")
-                .setValue(maSanPhamYeuThich);
-        ProductUtils.getDbRfProduct().child(product.getId()).child("rate")
-                .setValue(product.getRate() + 1);
+        HomeActivity.userLogin.setMa_sp_da_thich(maSanPhamYeuThich);
+        UserDao.getInstance().updateUser(HomeActivity.userLogin, HomeActivity.userLogin.toMapSPDaThich());
+
+
+        product.setRate(product.getRate() + 1);
+        ProductDao.getInstance().updateProduct(product, product.toMapRate());
+
         list.add(index, product);
         notifyItemInserted(index);
     }

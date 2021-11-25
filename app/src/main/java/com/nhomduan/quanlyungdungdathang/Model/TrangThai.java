@@ -1,7 +1,7 @@
 package com.nhomduan.quanlyungdungdathang.Model;
 
 public enum TrangThai {
-    CXN("Chưa xác nhận"), CB("Chế biến"), DGH("Đang giao hàng"), HT("hoàn thành"), HD("Hủy đơn");
+    CXN("Chưa xác nhận"), CB("Chế biến"), DGH("Đang giao hàng"), HT("Hoàn thành"), HD("Hủy đơn");
 
     private String trangThai;
 

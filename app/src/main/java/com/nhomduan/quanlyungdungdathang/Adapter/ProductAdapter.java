@@ -1,10 +1,14 @@
 package com.nhomduan.quanlyungdungdathang.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -15,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.nhomduan.quanlyungdungdathang.Activity.ShowProductActivity;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
+import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.squareup.picasso.Picasso;
 
@@ -26,34 +31,42 @@ import java.util.Locale;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHolder> {
 
     Context context;
-    List<Product> list;
+    List<Product> productList;
 
     public ProductAdapter(Context context, List<Product> list) {
         this.context = context;
-        this.list = list;
+        this.productList = list;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void setData(List<Product> productList) {
+        this.productList = productList;
+        notifyDataSetChanged();
+    }
+
+
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.viewholder_product,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.viewholder_product, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Product product = list.get(position);
+        Product product = productList.get(position);
         Picasso.get()
                 .load(product.getImage())
                 .placeholder(R.drawable.ic_image)
                 .into(holder.imgProduct);
         holder.tvNameProduct.setText(product.getName());
-        holder.tvTimeProduct.setText(product.getThoiGianCheBien() +" min");
+        holder.tvTimeProduct.setText(product.getThoiGianCheBien() + " min");
         holder.tvSoNguoiThichSP.setText(String.valueOf(product.getRate()));
         holder.tvSoNguoiMuaSP.setText(String.valueOf(product.getSo_luong_da_ban()));
 
         Locale locale = new Locale("vi", "VN");
         NumberFormat currencyFormat = NumberFormat.getNumberInstance(locale);
-        holder.tvPriceProduct.setText(currencyFormat.format((int)(product.getGia_ban()-product.getGia_ban()*product.getKhuyen_mai()))+" VNĐ");
+        holder.tvPriceProduct.setText(currencyFormat.format((int) (product.getGia_ban() - product.getGia_ban() * product.getKhuyen_mai())) + " VNĐ");
 
         holder.viewHolderProduct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,19 +80,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return productList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgProduct;
-        ToggleButton imgHearthLike;
-        TextView tvNameProduct,tvTimeProduct,tvPriceProduct;
+        TextView tvNameProduct, tvTimeProduct, tvPriceProduct;
         ConstraintLayout viewHolderProduct;
-
-        //
-        private TextView tvSoNguoiThichSP;
-        private TextView tvSoNguoiMuaSP;
+        TextView tvSoNguoiThichSP;
+        TextView tvSoNguoiMuaSP;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

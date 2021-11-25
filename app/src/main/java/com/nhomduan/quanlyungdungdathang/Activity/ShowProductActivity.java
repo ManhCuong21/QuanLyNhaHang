@@ -1,28 +1,29 @@
 package com.nhomduan.quanlyungdungdathang.Activity;
 
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
+
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import com.nhomduan.quanlyungdungdathang.Dao.GioHangDao;
+import com.nhomduan.quanlyungdungdathang.Dao.ProductDao;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
 import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.ProductUtils;
-import com.nhomduan.quanlyungdungdathang.Utils.UserUtils;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -35,7 +36,7 @@ public class ShowProductActivity extends AppCompatActivity {
 
     private TextView tvNameProduct;
     private TextView btnDecrease;
-    private EditText tvQuantity;
+    private TextView tvQuantity;
     private TextView btnIncrease;
     private TextView tvreduce;
     private TextView tvPriceProduct, tvSalePriceProduct;
@@ -65,22 +66,27 @@ public class ShowProductActivity extends AppCompatActivity {
         setUpBtnLike();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("TAG", "detroy");
+    }
+
     private void getDuLieu() {
         Intent intent = getIntent();
         String productId = intent.getStringExtra("productId");
-        ProductUtils.getDbRfProduct().child(productId).addValueEventListener(new ValueEventListener() {
+        ProductDao.getInstance().getProductById(productId, new IAfterGetAllObject() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Product product = snapshot.getValue(Product.class);
-                if(product != null) {
-                    productDaChon = product;
+            public void iAfterGetAllObject(Object obj) {
+                if(obj != null) {
+                    productDaChon = (Product) obj;
                     setText();
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onError(DatabaseError error) {
+                OverUtils.makeToast(ShowProductActivity.this, ERROR_MESSAGE);
             }
         });
     }
@@ -98,12 +104,12 @@ public class ShowProductActivity extends AppCompatActivity {
                     }
                     sanPhamYeuThichList.add(productDaChon.getId());
                     HomeActivity.userLogin.setMa_sp_da_thich(sanPhamYeuThichList);
-                    UserUtils.getDbRefUser().child(HomeActivity.userLogin.getId()).child("ma_sp_da_thich")
-                            .setValue(HomeActivity.userLogin.getMa_sp_da_thich());
+                    UserDao.getInstance().updateUser(HomeActivity.userLogin,
+                            HomeActivity.userLogin.toMapSPDaThich());
 
                     // xử lý phần sản phẩm
-                    ProductUtils.getDbRfProduct().child(productDaChon.getId()).child("rate")
-                            .setValue(productDaChon.getRate() + 1);
+                    productDaChon.setRate(productDaChon.getRate() + 1);
+                    ProductDao.getInstance().updateProduct(productDaChon, productDaChon.toMapRate());
 
 
                 } else {
@@ -118,12 +124,12 @@ public class ShowProductActivity extends AppCompatActivity {
                     }
                     sanPhamYeuThichList.remove(viTri);
                     HomeActivity.userLogin.setMa_sp_da_thich(sanPhamYeuThichList);
-                    UserUtils.getDbRefUser().child(HomeActivity.userLogin.getId()).child("ma_sp_da_thich")
-                            .setValue(HomeActivity.userLogin.getMa_sp_da_thich());
+                    UserDao.getInstance().updateUser(HomeActivity.userLogin,
+                            HomeActivity.userLogin.toMapSPDaThich());
 
                     // xử lý phần sản phẩm
-                    ProductUtils.getDbRfProduct().child(productDaChon.getId()).child("rate")
-                            .setValue(productDaChon.getRate() - 1);
+                    productDaChon.setRate(productDaChon.getRate() - 1);
+                    ProductDao.getInstance().updateProduct(productDaChon, productDaChon.toMapRate());
                 }
             }
         });
@@ -244,7 +250,12 @@ public class ShowProductActivity extends AppCompatActivity {
             if (tonTaiGioHangCuaSP) {
                 for (GioHang dhct : gioHangList) {
                     if (dhct.getMa_sp().equals(gioHang.getMa_sp())) {
-                        dhct.setSo_luong(dhct.getSo_luong() + gioHang.getSo_luong());
+                        int soLuong = dhct.getSo_luong() + gioHang.getSo_luong();
+                        if(soLuong > 50) {
+                            OverUtils.makeToast(ShowProductActivity.this,"Số lượng hàng của 1 sản phẩm phẩm không quá 50 sp");
+                        } else {
+                            dhct.setSo_luong(soLuong);
+                        }
                     }
                 }
                 postGioHang(gioHangList);
@@ -257,15 +268,17 @@ public class ShowProductActivity extends AppCompatActivity {
 
     private void postGioHang(List<GioHang> gioHangList) {
         HomeActivity.userLogin.setGio_hang(gioHangList);
-        UserUtils.getDbRefUser().child(HomeActivity.userLogin.getId()).child("gio_hang")
-                .setValue(HomeActivity.userLogin.getGio_hang(), new DatabaseReference.CompletionListener() {
+        GioHangDao.getInstance().insertGioHang(HomeActivity.userLogin,
+                HomeActivity.userLogin.getGio_hang(),
+                new IAfterInsertObject() {
                     @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        if (error == null) {
-                            OverUtils.makeToast(ShowProductActivity.this, "Thêm thành công");
-                            soLuong = 1;
-                            tvQuantity.setText(String.valueOf(soLuong));
-                        }
+                    public void onSuccess(Object obj) {
+                        OverUtils.makeToast(ShowProductActivity.this, "Thêm thành công");
+                    }
+
+                    @Override
+                    public void onError(DatabaseError exception) {
+                        OverUtils.makeToast(ShowProductActivity.this, ERROR_MESSAGE);
                     }
                 });
     }
