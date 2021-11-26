@@ -115,6 +115,19 @@ public class User implements Serializable {
         return map;
     }
 
+    public Map<String, Object> editUser() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("password", password);
+        map.put("name", name);
+        return map;
+    }
+
+    public Map<String, Object> editAdress() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("address", address);
+        return map;
+    }
+
     public Map<String, Object> toMapThongTinGiaoHang() {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("phone_number", phone_number);
@@ -123,20 +136,17 @@ public class User implements Serializable {
         return map;
     }
 
+    public Map<String, Object> toMapSPDaThich() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("ma_sp_da_thich", ma_sp_da_thich);
+        return map;
+    }
+
     public Map<String, Object> toMapGioHang() {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("gio_hang", gio_hang);
         return map;
     }
-
-    public Map<String, Object> toMapSPDaThich() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("ma_sp_da_thich",ma_sp_da_thich);
-        return map;
-    }
-
-
-
 
 }
 

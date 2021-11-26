@@ -74,10 +74,21 @@ public class HomeActivity extends AppCompatActivity {
                     bottomNavigationView.setSelectedItemId(R.id.nav_order);
                 }
             }
-
+            if(intent.getAction() != null && intent.getAction().equals(OverUtils.GO_TO_ORDER_FROFILE_FRAGMENT)) {
+                Fragment fragment = new ProfileFragment();
+                Bundle bundle = new Bundle();
+                String imgLink = intent.getStringExtra("img");
+                bundle.putString("img", imgLink);
+                fragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerViewHome, fragment)
+                        .commit();
+                bottomNavigationView.setSelectedItemId(R.id.nav_profile);
+            }
         }
 
     }
+
 
 
     private void getUserLogining() {
@@ -93,6 +104,30 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CartActivity.class);
         startActivity(intent);
     }
+//    private void getUserLogining() {
+//        Intent intent = getIntent();
+//        User user = (User) intent.getSerializableExtra("user");
+//        if (user != null) {
+//            userLogin = user;
+//        }
+//    }
+
+    //    private void getUserLogining() {
+//        Intent intent = getIntent();
+//        User user = (User) intent.getSerializableExtra("user");
+//        if (user != null) {
+//            userLogin = user;
+//        }
+//    }
+
+    //    private void getUserLogining() {
+//        Intent intent = getIntent();
+//        User user = (User) intent.getSerializableExtra("user");
+//        if (user != null) {
+//            userLogin = user;
+//        }
+//    }fdsf
+
 
 
 }
