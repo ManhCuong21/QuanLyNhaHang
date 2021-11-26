@@ -16,10 +16,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.nhomduan.quanlyungdungdathang.Fragment.DanhSachDonHangByTTFragment;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterDeleteObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
+import com.nhomduan.quanlyungdungdathang.Model.DonHang;
 import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.User;
 
@@ -164,5 +166,29 @@ public class UserDao {
                         iAfterGetAllObject.onError(error);
                     }
                 });
+    }
+
+    public void getDonHangByUser(User user, IAfterGetAllObject iAfterGetAllObject) {
+        Query query = FirebaseDatabase.getInstance().getReference().child("don_hang")
+                .orderByChild("user_id").equalTo(user.getUsername());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<DonHang> donHangList = new ArrayList<>();
+                for(DataSnapshot data : snapshot.getChildren()) {
+                    DonHang donHang = data.getValue(DonHang.class);
+                    if(donHang != null) {
+                        donHangList.add(donHang);
+                    }
+                }
+                iAfterGetAllObject.iAfterGetAllObject(donHangList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                iAfterGetAllObject.onError(error);
+            }
+        });
+
     }
 }

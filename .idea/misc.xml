@@ -121,6 +121,13 @@
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/QuanLyNhaHang/app/src/main/res/layout/viewholder_cat.xml" value="0.6" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/QuanLyNhaHang/app/src/main/res/layout/viewholder_product.xml" value="0.5" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/QuanLyNhaHang/app/src/main/res/menu/bottom_nav_home.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/hp/Desktop/QuanLyNhaHang/app/src/main/res/drawable/tab_indicator.xml" value="0.3712962962962963" />
+        <entry key="..\:/Users/hp/Desktop/QuanLyNhaHang/app/src/main/res/layout/activity_chi_tiet_don_hang.xml" value="0.28940217391304346" />
+        <entry key="..\:/Users/hp/Desktop/QuanLyNhaHang/app/src/main/res/layout/activity_home.xml" value="0.3625" />
+        <entry key="..\:/Users/hp/Desktop/QuanLyNhaHang/app/src/main/res/layout/fragment_danh_sach_don_hang_by_t_t.xml" value="0.28940217391304346" />
+        <entry key="..\:/Users/hp/Desktop/QuanLyNhaHang/app/src/main/res/layout/fragment_order.xml" value="0.28940217391304346" />
+        <entry key="..\:/Users/hp/Desktop/QuanLyNhaHang/app/src/main/res/layout/item_don_hang_chi_tiet.xml" value="0.28940217391304346" />
+        <entry key="..\:/Users/hp/Desktop/QuanLyNhaHang/app/src/main/res/layout/item_donhang.xml" value="0.28940217391304346" />
       </map>
     </option>
   </component>

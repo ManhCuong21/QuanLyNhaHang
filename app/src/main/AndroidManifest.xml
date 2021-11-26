@@ -3,7 +3,7 @@
     package="com.nhomduan.quanlyungdungdathang">
 
     <application
-        android:hardwareAccelerated="true"
+        android:hardwareAccelerated="false"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,6 +16,8 @@
         <activity
             android:name=".Activity.SearchActivity"
             android:exported="false" />
+        <activity android:name=".Activity.ChiTietDonHangActivity"
+            android:exported="false"/>
         <activity
             android:name=".Activity.ThanhToanNgayActivity"
             android:exported="false" />
