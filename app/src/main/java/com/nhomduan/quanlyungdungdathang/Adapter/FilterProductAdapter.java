@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class FilterProductAdapter extends RecyclerView.Adapter<FilterProductAdapter.FilterProductViewHolder> implements Filterable {
-
+    //
     private List<Product> productList = new ArrayList<>();
     private List<Product> mainProductList;
     private OnClickItem onClickItem;
