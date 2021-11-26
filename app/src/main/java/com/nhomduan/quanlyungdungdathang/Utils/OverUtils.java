@@ -35,7 +35,7 @@ public class OverUtils {
     public final static int TYPE_KHUYEN_MAI_ADAPTER = 1;
     public final static int TYPE_SP_MOI_ADAPTER = 2;
 
-
+    public final static String GO_TO_ORDER_FROFILE_FRAGMENT="GO TO FROFILE FRAMENT";
     public final static String GO_TO_ORDER_FRAGMENT = "GO TO ORDER FRAGMENT";
 
     private static Locale locale = new Locale("vi", "VN");
