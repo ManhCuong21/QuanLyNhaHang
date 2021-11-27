@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginRight="16dp"
-            android:background="@drawable/search_back"
+            android:background="@drawable/card_background"
             android:iconifiedByDefault="false"
             android:queryHint="Nhập tên sản phẩm"
             android:searchHintIcon="@null" />
