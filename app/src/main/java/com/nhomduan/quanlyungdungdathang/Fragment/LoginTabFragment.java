@@ -139,6 +139,10 @@ public class LoginTabFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void iAfterGetAllObject(Object obj) {
                     User user = (User) obj;
+                    if(user == null) {
+                        OverUtils.makeToast(getContext(), "Tài khoản không tồn tại");
+                        return;
+                    }
                     if (user.getUsername() != null) {
                         if(user.getPassword().equals(password)) {
                             rememberAccount(userName, password);

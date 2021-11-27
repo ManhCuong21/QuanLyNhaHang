@@ -30,6 +30,7 @@ import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DanhSachDonHangByTTFragment extends Fragment implements OnClickItem {
@@ -73,6 +74,7 @@ public class DanhSachDonHangByTTFragment extends Fragment implements OnClickItem
             @Override
             public void iAfterGetAllObject(Object obj) {
                 donHangList = loc(trangThai, (List<DonHang>) obj);
+                Collections.reverse(donHangList);
                 donHangAdapter.setData(donHangList);
             }
 

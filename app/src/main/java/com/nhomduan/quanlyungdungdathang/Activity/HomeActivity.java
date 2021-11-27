@@ -104,29 +104,7 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CartActivity.class);
         startActivity(intent);
     }
-//    private void getUserLogining() {
-//        Intent intent = getIntent();
-//        User user = (User) intent.getSerializableExtra("user");
-//        if (user != null) {
-//            userLogin = user;
-//        }
-//    }
 
-    //    private void getUserLogining() {
-//        Intent intent = getIntent();
-//        User user = (User) intent.getSerializableExtra("user");
-//        if (user != null) {
-//            userLogin = user;
-//        }
-//    }
-
-    //    private void getUserLogining() {
-//        Intent intent = getIntent();
-//        User user = (User) intent.getSerializableExtra("user");
-//        if (user != null) {
-//            userLogin = user;
-//        }
-//    }fdsf
 
 
 

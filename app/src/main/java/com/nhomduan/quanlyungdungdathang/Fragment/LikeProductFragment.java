@@ -66,7 +66,6 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        Log.e("dsf", "fsdf");
         activity.setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(v -> fragmentManager.beginTransaction()
@@ -96,14 +95,18 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
             @Override
             public void iAfterGetAllObject(Object obj) {
                 List<String> maSanPhamYeuThichList = (List<String>) obj;
+                productList.clear();
                 for(String maSP : maSanPhamYeuThichList) {
-                    ProductDao.getInstance().queryProductById(maSP, new IAfterGetAllObject() {
+                    ProductDao.getInstance().getProductById(maSP, new IAfterGetAllObject() {
                         @SuppressLint("NotifyDataSetChanged")
                         @Override
                         public void iAfterGetAllObject(Object obj) {
-                            if(obj != null) {
-                                productList.add((Product) obj);
-                                favoriteProductAdapter.notifyDataSetChanged();
+                            if(obj != null ) {
+                                Product product = (Product) obj;
+                                if(product.getId() != null) {
+                                    productList.add(product);
+                                    favoriteProductAdapter.notifyDataSetChanged();
+                                }
                             }
                         }
 

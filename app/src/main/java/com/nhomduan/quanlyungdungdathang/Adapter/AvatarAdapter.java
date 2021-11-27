@@ -24,6 +24,7 @@ public class AvatarAdapter extends RecyclerView.Adapter<AvatarAdapter.AvatarView
     private Context context;
     private List<Avatar> list;
     private ClickAvatar clickAvatar;
+
     public AvatarAdapter(Context context, List<Avatar> list) {
         this.context = context;
         this.list = list;
@@ -44,17 +45,20 @@ public class AvatarAdapter extends RecyclerView.Adapter<AvatarAdapter.AvatarView
     @Override
     public void onBindViewHolder(@NonNull AvatarViewHolder holder, int position) {
         Avatar avatar = list.get(position);
-        Picasso.get()
-                .load(avatar.getImage())
-                .placeholder(R.drawable.ic_image)
-                .into(holder.imageAvatar);
-        holder.nameAvatar.setText(avatar.getTitle());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickAvatar.onClickAvatar(list.get(position));
-            }
-        });
+        if (avatar.getImage().equals("null")) {
+            holder.imageAvatar.setImageResource(R.drawable.ic_image);
+            holder.nameAvatar.setText(avatar.getTitle());
+            holder.itemView.setOnClickListener(v -> {
+                clickAvatar.onClickAvatar(avatar);
+            });
+        } else {
+            Picasso.get()
+                    .load(avatar.getImage())
+                    .placeholder(R.drawable.ic_image)
+                    .into(holder.imageAvatar);
+            holder.nameAvatar.setText(avatar.getTitle());
+            holder.itemView.setOnClickListener(v -> clickAvatar.onClickAvatar(avatar));
+        }
     }
 
 
