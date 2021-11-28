@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back"
         app:title="Tài khoản"
-        app:titleTextColor="@color/white"></androidx.appcompat.widget.Toolbar>
+        app:titleTextColor="@color/white"/>
 
     <ImageView
         android:id="@+id/img_edit_profile"
@@ -28,14 +28,14 @@
         android:layout_marginRight="20dp"
         android:src="@drawable/edit" />
 
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_avatar_profile"
         android:layout_width="130dp"
         android:layout_height="130dp"
         android:layout_below="@id/img_edit_profile"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:src="@drawable/ozil3"
+        android:src="@drawable/ic_image"
         app:civ_border_color="#03A9F4"
         app:civ_border_width="2dp" />
 
@@ -165,7 +165,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/bg_border_button"
         android:text="Đăng xuất"
         android:textSize="16sp"

@@ -148,5 +148,10 @@ public class User implements Serializable {
         return map;
     }
 
+    public Map<String, Object> toMapAvatar() {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("hinhanh", hinhanh);
+        return map;
+    }
 }
 

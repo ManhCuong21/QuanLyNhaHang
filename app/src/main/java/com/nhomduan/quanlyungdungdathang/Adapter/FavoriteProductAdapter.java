@@ -113,7 +113,7 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
         ProductDao.getInstance().updateProduct(product, product.toMapRate());
         
         list.remove(index);
-        notifyItemRemoved(index);
+        notifyDataSetChanged();
     }
 
     public void undoItem(Product product,int index) {
@@ -128,6 +128,6 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
         ProductDao.getInstance().updateProduct(product, product.toMapRate());
 
         list.add(index, product);
-        notifyItemInserted(index);
+        notifyDataSetChanged();
     }
 }

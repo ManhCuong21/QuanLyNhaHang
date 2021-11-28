@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -12,7 +11,7 @@
     android:layout_marginRight="12dp"
     android:layout_marginBottom="10dp"
     android:background="@drawable/card_background"
-    android:elevation="3dp"
+    android:elevation="8dp"
     android:padding="12dp">
 
     <ImageView
@@ -85,10 +84,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:drawableStart="@drawable/ic_bag_24"
         android:drawableLeft="@drawable/ic_bag_24"
         android:gravity="center"
         android:text="23 ps"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgProduct" />
@@ -130,7 +129,7 @@
         android:paddingTop="5dp"
         android:paddingRight="10dp"
         android:paddingBottom="5dp"
-        android:text="+ Add"
+        android:text="+ Thêm"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"

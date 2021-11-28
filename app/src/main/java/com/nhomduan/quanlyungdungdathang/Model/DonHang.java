@@ -1,7 +1,9 @@
 package com.nhomduan.quanlyungdungdathang.Model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DonHang implements Serializable {
     private String id;
@@ -114,5 +116,11 @@ public class DonHang implements Serializable {
 
     public void setSdt(String sdt) {
         this.sdt = sdt;
+    }
+
+    public Map<String, Object> toMapHuyDon() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("trang_thai", trang_thai);
+        return map;
     }
 }

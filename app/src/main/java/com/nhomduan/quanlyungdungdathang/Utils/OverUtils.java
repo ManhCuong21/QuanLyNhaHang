@@ -2,9 +2,12 @@ package com.nhomduan.quanlyungdungdathang.Utils;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -61,6 +64,12 @@ public class OverUtils {
             sharedPreferences = context.getSharedPreferences(nameFile, MODE_PRIVATE);
         }
         return sharedPreferences;
+    }
+
+    public static String getExtensionFile(Context context, Uri uri) {
+        ContentResolver cr = context.getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cr.getType(uri));
     }
 
 

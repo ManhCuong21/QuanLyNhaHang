@@ -1,5 +1,7 @@
 package com.nhomduan.quanlyungdungdathang.Activity;
 
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,8 +18,10 @@ import com.google.firebase.database.DatabaseError;
 import com.nhomduan.quanlyungdungdathang.Adapter.ChiTietDonHangAdapter;
 import com.nhomduan.quanlyungdungdathang.Dao.OrderDao;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
 import com.nhomduan.quanlyungdungdathang.Model.DonHang;
 import com.nhomduan.quanlyungdungdathang.Model.Shipper;
+import com.nhomduan.quanlyungdungdathang.Model.TrangThai;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 
@@ -38,11 +42,13 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
     private TextView tvTongTien;
     private TextView tvMaGiamGia;
     private TextView tvGhiChu;
+    private TextView tvHuyDon;
     private TextView tvThoiGianGiaoHang;
     private LinearLayout lyThoiGianGiaoHang;
 
     private RecyclerView rcvChiTietDonHang;
     private ChiTietDonHangAdapter chiTietDonHangAdapter;
+    private String id;
 
 
     @Override
@@ -50,14 +56,17 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chi_tiet_don_hang);
         init();
+        getDuLieu();
         getDonHangDaChon();
-
-
     }
 
-    private void getDonHangDaChon() {
+    private void getDuLieu() {
         Intent intent = getIntent();
-        String id = intent.getStringExtra("donHangID");
+        id = intent.getStringExtra("donHangID");
+    }
+
+
+    private void getDonHangDaChon() {
         OrderDao.getInstance().getDonHangById(id, new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
@@ -74,6 +83,29 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
                 chiTietDonHangAdapter = new ChiTietDonHangAdapter(ChiTietDonHangActivity.this, donHang.getDon_hang_chi_tiets());
                 rcvChiTietDonHang.setAdapter(chiTietDonHangAdapter);
 
+                if(!donHang.getTrang_thai().equals(TrangThai.CXN.getTrangThai())) {
+                    tvHuyDon.setVisibility(View.GONE);
+                }
+
+                tvHuyDon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        donHang.setTrang_thai(TrangThai.HD.getTrangThai());
+                        OrderDao.getInstance().updateDonHang(donHang, donHang.toMapHuyDon(), new IAfterUpdateObject() {
+                            @Override
+                            public void onSuccess(Object obj) {
+                                Intent intent = new Intent(ChiTietDonHangActivity.this, HomeActivity.class);
+                                intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
+                                startActivity(intent);
+                            }
+
+                            @Override
+                            public void onError(DatabaseError error) {
+                                OverUtils.makeToast(ChiTietDonHangActivity.this, ERROR_MESSAGE);
+                            }
+                        });
+                    }
+                });
 
                 if (donHang.getGhi_chu().isEmpty()) {
                     tvGhiChu.setText("None");
@@ -126,6 +158,7 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
         tvTitleShipper = findViewById(R.id.tvTitleShipper);
         tvThoiGianGiaoHang = findViewById(R.id.tvThoiGianGiaoHang_ChiTietGiaoHang);
         lyThoiGianGiaoHang = findViewById(R.id.layout_tggh);
+        tvHuyDon = findViewById(R.id.tvHuyDon);
 
         rcvChiTietDonHang = findViewById(R.id.rcv_ChiTietDonHang);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChiTietDonHangActivity.this);

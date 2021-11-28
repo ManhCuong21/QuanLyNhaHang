@@ -52,7 +52,6 @@ dependencies {
 
     // fix gradle
 
-    implementation 'com.android.support:multidex:1.0.3'
 
     // fibase UI
     implementation 'com.firebaseui:firebase-ui-database:8.0.0'

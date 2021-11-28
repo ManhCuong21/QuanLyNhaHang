@@ -6,6 +6,8 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,6 +62,27 @@ public class ProductDao {
     }
 
     public void getProductById(String id, IAfterGetAllObject iAfterGetAllObject) {
+        FirebaseDatabase.getInstance().getReference().child("san_pham").child(id)
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DataSnapshot snapshot = task.getResult();
+                    if(snapshot != null) {
+                        Product product = snapshot.getValue(Product.class);
+                        iAfterGetAllObject.iAfterGetAllObject(product);
+                    } else {
+                        iAfterGetAllObject.iAfterGetAllObject(new Product());
+                    }
+                } else {
+                    iAfterGetAllObject.iAfterGetAllObject(null);
+                }
+            }
+        });
+    }
+
+
+    public void getProductByIdListener(String id, IAfterGetAllObject iAfterGetAllObject) {
         FirebaseDatabase.getInstance().getReference().child("san_pham").child(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override

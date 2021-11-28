@@ -277,7 +277,7 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
         String productId = intent.getStringExtra("productId");
         int soLuongDaChon = intent.getIntExtra("so_luong", 0);
 
-        ProductDao.getInstance().getProductById(productId, new IAfterGetAllObject() {
+        ProductDao.getInstance().getProductByIdListener(productId, new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 productDaChon = (Product) obj;

@@ -138,10 +138,14 @@
         <entry key="app/src/main/res/layout/activity_show_product.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/activity_status_don_hang.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/activity_thanh_toan.xml" value="0.33177083333333335" />
+        <entry key="app/src/main/res/layout/activity_thanh_toan_ngay.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/dialog_address_user.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_order.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/layout_them_dia_chi.xml" value="0.33177083333333335" />
+        <entry key="app/src/main/res/layout/viewholder_order.xml" value="0.33177083333333335" />
+        <entry key="app/src/main/res/layout/viewholder_popular.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/viewholder_product.xml" value="0.33177083333333335" />
       </map>
     </option>
   </component>

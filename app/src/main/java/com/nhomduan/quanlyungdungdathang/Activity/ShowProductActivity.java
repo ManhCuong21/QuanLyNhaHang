@@ -75,7 +75,7 @@ public class ShowProductActivity extends AppCompatActivity {
     private void getDuLieu() {
         Intent intent = getIntent();
         String productId = intent.getStringExtra("productId");
-        ProductDao.getInstance().getProductById(productId, new IAfterGetAllObject() {
+        ProductDao.getInstance().getProductByIdListener(productId, new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 if(obj != null) {

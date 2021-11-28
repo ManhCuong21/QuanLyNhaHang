@@ -53,6 +53,15 @@
                     android:text="Giao đến: "
                     android:textColor="@color/black"
                     android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tvHuyDon"
+                    android:text="Hủy Đơn"
+                    android:textColor="@color/white"
+                    android:padding="5dp"
+                    android:layout_marginRight="12dp"
+                    android:background="#F81A1A"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
