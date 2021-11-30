@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
@@ -75,7 +76,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         }
         viewBinderHelper.bind(holder.swipeRevealLayoutCart, gioHang.getMa_sp());
         holder.tvQuantity.setText(String.valueOf(gioHang.getSo_luong()));
-
         ProductDao.getInstance().queryProductById(gioHang.getMa_sp(), new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
@@ -86,6 +86,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                             .placeholder(R.drawable.ic_image)
                             .into(holder.imgProduct);
                     holder.tvNameProduct.setText(product.getName());
+                    if(!product.getTrang_thai().equals(OverUtils.HOAT_DONG)) {
+                        holder.tvStop.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.tvStop.setVisibility(View.INVISIBLE);
+                    }
 
                     if (product.getKhuyen_mai() > 0) {
                         holder.tvPriceProduct.setPaintFlags(holder.tvPriceProduct.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -114,22 +119,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 }
             }
         });
-        holder.btnIncrease.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (gioHang.getSo_luong() < 50) {
-                    gioHang.setSo_luong(gioHang.getSo_luong() + 1);
-                    onChangeSoLuongItem.onChangeItem(position, gioHang);
-                }
+        holder.btnIncrease.setOnClickListener(v -> {
+            if (gioHang.getSo_luong() < 50) {
+                gioHang.setSo_luong(gioHang.getSo_luong() + 1);
+                onChangeSoLuongItem.onChangeItem(position, gioHang);
             }
         });
 
-        holder.layoutDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickItem.onDeleteItem(gioHang);
-            }
-        });
+        holder.layoutDelete.setOnClickListener(v -> onClickItem.onDeleteItem(gioHang));
+
+        holder.layoutProduct.setOnClickListener(v -> onClickItem.onClickItem(gioHang.getMa_sp()));
 
     }
 
@@ -147,7 +146,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
         private SwipeRevealLayout swipeRevealLayoutCart;
         private LinearLayout layoutDelete;
-        private LinearLayout layoutProduct;
+        private ConstraintLayout layoutProduct;
         private ImageView imgProduct;
         private TextView tvNameProduct;
         private TextView tvPriceProduct;
@@ -155,6 +154,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         private TextView btnDecrease;
         private TextView tvQuantity;
         private TextView btnIncrease;
+        private ImageView tvStop;
+
+
+
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -169,6 +172,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
             btnDecrease = itemView.findViewById(R.id.btnDecrease);
             tvQuantity = itemView.findViewById(R.id.tvQuantity);
             btnIncrease = itemView.findViewById(R.id.btnIncrease);
+            tvStop = itemView.findViewById(R.id.tvStop);
         }
     }
 }

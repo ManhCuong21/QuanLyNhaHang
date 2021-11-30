@@ -19,10 +19,12 @@ import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
+import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -82,6 +84,8 @@ public class ProductDao {
     }
 
 
+
+
     public void getProductByIdListener(String id, IAfterGetAllObject iAfterGetAllObject) {
         FirebaseDatabase.getInstance().getReference().child("san_pham").child(id)
                 .addValueEventListener(new ValueEventListener() {
@@ -111,8 +115,12 @@ public class ProductDao {
                         result.add(product);
                     }
                 }
-                Product product = result.get(0);
-                iAfterGetAllObject.iAfterGetAllObject(product);
+                if(result.size() != 0) {
+                    Product product = result.get(0);
+                    iAfterGetAllObject.iAfterGetAllObject(product);
+                } else {
+                    iAfterGetAllObject.iAfterGetAllObject(null);
+                }
             }
 
             @Override
@@ -183,8 +191,9 @@ public class ProductDao {
                         result.add(product);
                     }
                 }
-                Collections.reverse(result);
-                iAfterGetAllObject.iAfterGetAllObject(result);
+                List<Product> resultList = OverUtils.filterProduct2(result);
+                Collections.reverse(resultList);
+                iAfterGetAllObject.iAfterGetAllObject(resultList);
             }
 
             @Override
@@ -207,7 +216,8 @@ public class ProductDao {
                         result.add(product);
                     }
                 }
-                Collections.sort(result, (o1, o2) -> {
+                List<Product> resultList = OverUtils.filterProduct(result);
+                Collections.sort(resultList, (o1, o2) -> {
                     if (o1.getKhuyen_mai() > o2.getKhuyen_mai()) {
                         return -1;
                     } else if (o1.getKhuyen_mai() < o2.getKhuyen_mai()) {
@@ -217,10 +227,10 @@ public class ProductDao {
                     }
                 });
 
-                if (soLuong >= result.size()) {
-                    iAfterGetAllObject.iAfterGetAllObject(result);
+                if (soLuong >= resultList.size()) {
+                    iAfterGetAllObject.iAfterGetAllObject(resultList);
                 } else {
-                    iAfterGetAllObject.iAfterGetAllObject(result.subList(0, soLuong - 1));
+                    iAfterGetAllObject.iAfterGetAllObject(resultList.subList(0, soLuong - 1));
                 }
             }
 
@@ -243,12 +253,13 @@ public class ProductDao {
                         result.add(product);
                     }
                 }
-                Collections.sort(result,
+                List<Product> resultList = OverUtils.filterProduct(result);
+                Collections.sort(resultList,
                         (o1, o2) -> Integer.compare(o2.getSo_luong_da_ban(), o1.getSo_luong_da_ban()));
-                if (soLuong >= result.size()) {
-                    iAfterGetAllObject.iAfterGetAllObject(result);
+                if (soLuong >= resultList.size()) {
+                    iAfterGetAllObject.iAfterGetAllObject(resultList);
                 } else {
-                    iAfterGetAllObject.iAfterGetAllObject(result.subList(0, soLuong - 1));
+                    iAfterGetAllObject.iAfterGetAllObject(resultList.subList(0, soLuong - 1));
                 }
             }
 

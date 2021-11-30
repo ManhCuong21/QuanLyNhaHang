@@ -86,11 +86,11 @@ public class ProfileFragment extends Fragment {
                         .commit();
             }
         });
-        imgEdit.setOnClickListener(v -> openDiaLog(user));
+
         btnLogout.setOnClickListener(v -> logoutMethod());
         imgAvatar.setOnClickListener(v -> startActivity(new Intent(getContext(), AvatarActivity.class)));
 
-        cvAddress.setOnClickListener(v -> openDiaLogAddress(user));
+
         cvOrder.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), OrderActivity.class));
         });
@@ -109,11 +109,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserLogin() {
-        UserDao.getInstance().getUserByUserName(HomeActivity.userLogin.getUsername(), new IAfterGetAllObject() {
+        UserDao.getInstance().getUserByUserNameListener(HomeActivity.userLogin.getUsername(), new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 user = (User) obj;
-                buildComponentUser(user);
+                if(user.getUsername() != null) {
+                    buildComponentUser(user);
+                }
             }
 
             @Override
@@ -135,6 +137,8 @@ public class ProfileFragment extends Fragment {
         } else {
             tvUsername.setText(user.getUsername());
         }
+        imgEdit.setOnClickListener(v -> openDiaLog(user));
+        cvAddress.setOnClickListener(v -> openDiaLogAddress(user));
     }
 
     public void requestPermissions(String permission, IAfterRequestPermission onAfterRequestPermission) {
@@ -198,10 +202,12 @@ public class ProfileFragment extends Fragment {
         builder.setView(view);
         Dialog dialog = builder.create();
         dialog.show();
+
         edAddress = view.findViewById(R.id.edtAddressUser_profile);
         btnChangeAdress = view.findViewById(R.id.btnChangeAddress_profile);
         btnComfirm = view.findViewById(R.id.btnComfirmAddress_profile);
-        edAddress.setText(HomeActivity.userLogin.getAddress());
+
+        edAddress.setText(user.getAddress());
         btnChangeAdress.setOnClickListener(v -> {
             String address = edAddress.getText().toString();
             if (address.isEmpty()) {
@@ -244,9 +250,9 @@ public class ProfileFragment extends Fragment {
 
 
         btnChange.setOnClickListener(v -> {
-            String name = edUsername.getText().toString();
-            String pass = edPass.getText().toString();
-            String passRepeat = edPassRepeat.getText().toString();
+            String name = edUsername.getText().toString().trim();
+            String pass = edPass.getText().toString().trim();
+            String passRepeat = edPassRepeat.getText().toString().trim();
             if (validate(name, pass, passRepeat)) {
                 user.setPassword(pass);
                 user.setName(name);

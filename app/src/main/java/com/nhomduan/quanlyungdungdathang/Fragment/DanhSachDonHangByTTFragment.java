@@ -33,15 +33,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DanhSachDonHangByTTFragment extends Fragment implements OnClickItem {
-    private final TrangThai trangThai;
+public class DanhSachDonHangByTTFragment extends Fragment {
+    private TrangThai trangThai;
 
     private RecyclerView rcvDanhSachDonHang;
     private List<DonHang> donHangList;
     private DonHangAdapter donHangAdapter;
 
-    public DanhSachDonHangByTTFragment(TrangThai trangThai) {
-        this.trangThai = trangThai;
+    public static DanhSachDonHangByTTFragment newInstance(TrangThai trangThai) {
+        Bundle args = new Bundle();
+        args.putSerializable("trang_thai", trangThai);
+        DanhSachDonHangByTTFragment fragment = new DanhSachDonHangByTTFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
@@ -55,8 +59,17 @@ public class DanhSachDonHangByTTFragment extends Fragment implements OnClickItem
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getDuLieu();
         initView(view);
         setUpListDonHang();
+    }
+
+    private void getDuLieu() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            trangThai = (TrangThai) bundle.getSerializable("trang_thai");
+        }
+
     }
 
     private void initView(View view) {
@@ -87,27 +100,14 @@ public class DanhSachDonHangByTTFragment extends Fragment implements OnClickItem
     }
 
 
-
-
     public List<DonHang> loc(TrangThai trangThai, List<DonHang> donHangList) {
         List<DonHang> result = new ArrayList<>();
-        for(DonHang donHang : donHangList) {
-            if(donHang.getTrang_thai().equals(trangThai.getTrangThai())) {
+        for (DonHang donHang : donHangList) {
+            if (donHang.getTrang_thai().equals(trangThai.getTrangThai())) {
                 result.add(donHang);
             }
         }
         return result;
     }
 
-
-
-    @Override
-    public void onClickItem(Object obj) {
-        Intent intent = new Intent(getContext(), ChiTietDonHangActivity.class);
-        intent.putExtra("don_hang", (DonHang) obj);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onDeleteItem(Object obj) {}
 }

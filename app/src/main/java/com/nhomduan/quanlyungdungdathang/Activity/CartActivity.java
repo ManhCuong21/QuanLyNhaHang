@@ -41,6 +41,7 @@ public class CartActivity extends AppCompatActivity implements OnClickItem, OnCh
     private List<GioHang> gioHangList;
     private CartAdapter cartAdapter;
 
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +50,48 @@ public class CartActivity extends AppCompatActivity implements OnClickItem, OnCh
         initView();
         setUpToolbar();
         setUpGioHangList();
-
-        tvThanhToan.setOnClickListener(v -> {
-            if (gioHangList == null || gioHangList.size() == 0) {
-                OverUtils.makeToast(CartActivity.this, "Giỏ hàng của quý khách đang trống");
-            } else {
-                Intent intent = new Intent(CartActivity.this, ThanhToanActivity.class);
-                startActivity(intent);
-            }
-
-        });
-
+        setUpTvThanhToan();
     }
 
+    private void setUpTvThanhToan() {
+        tvThanhToan.setOnClickListener(v -> {
+            if(gioHangList.size() == 0) {
+                OverUtils.makeToast(CartActivity.this, "Giỏ hàng quý khách đang trống");
+                return;
+            }
+            List<GioHang> gioHangListValid = new ArrayList<>();
+            for(GioHang gioHang : gioHangList) {
+                ProductDao.getInstance().getProductById(gioHang.getMa_sp(), new IAfterGetAllObject() {
+                    @Override
+                    public void iAfterGetAllObject(Object obj) {
+                        count++;
+                        Product product = (Product) obj;
+                        if(product.getTrang_thai().equals(OverUtils.HOAT_DONG)) {
+                            gioHangListValid.add(gioHang);
+                        }
+                        if(count == gioHangList.size()) {
+                            if (gioHangListValid.size() == 0) {
+                                OverUtils.makeToast(CartActivity.this, "Giỏ hàng của quý khách không có sản phẩm phù hợp");
+                            } else {
+                                Intent intent = new Intent(CartActivity.this, ThanhToanActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(DatabaseError error) {}
+                });
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        count = 0;
+    }
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
@@ -81,7 +111,7 @@ public class CartActivity extends AppCompatActivity implements OnClickItem, OnCh
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(CartActivity.this));
         recyclerViewCart.setAdapter(cartAdapter);
 
-        UserDao.getInstance().getGioHangOfUser(HomeActivity.userLogin, new IAfterGetAllObject() {
+        UserDao.getInstance().getGioHangOfUserListener(HomeActivity.userLogin, new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 gioHangList = (List<GioHang>) obj;
@@ -99,6 +129,10 @@ public class CartActivity extends AppCompatActivity implements OnClickItem, OnCh
 
     @Override
     public void onClickItem(Object obj) {
+        String productId = (String) obj;
+        Intent intent = new Intent(CartActivity.this, ShowProductActivity.class);
+        intent.putExtra("productId", productId);
+        startActivity(intent);
     }
 
     @Override
@@ -118,4 +152,9 @@ public class CartActivity extends AppCompatActivity implements OnClickItem, OnCh
         UserDao.getInstance().updateUser(HomeActivity.userLogin, HomeActivity.userLogin.toMapGioHang());
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

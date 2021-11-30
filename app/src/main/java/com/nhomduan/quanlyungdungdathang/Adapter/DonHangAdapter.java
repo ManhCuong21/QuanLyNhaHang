@@ -47,6 +47,9 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.DonHangV
     @Override
     public void onBindViewHolder(@NonNull DonHangViewHolder holder, int position) {
         DonHang donHang = donHangList.get(position);
+        if(donHang.getDon_hang_chi_tiets() == null) {
+            return;
+        }
         holder.tvMaDonHang.setText(donHang.getId());
         holder.tvNgayDatHang.setText(donHang.getThoiGianDatHang());
         holder.tvTongTien.setText(donHang.getTong_tien()+ " VND");

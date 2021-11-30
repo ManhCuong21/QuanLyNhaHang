@@ -35,6 +35,7 @@
 
 
             <ImageView
+
                 android:id="@+id/imgProduct"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
@@ -359,12 +360,12 @@
             android:textStyle="bold" />
 
         <Button
+            android:id="@+id/btnMuaNgay"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="2dp"
             android:layout_weight="1"
             android:background="@color/orange"
-            android:onClick="btnBuyNow"
             android:text="Buy now"
             android:textAllCaps="false"
             android:textSize="22dp"

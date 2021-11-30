@@ -121,4 +121,10 @@ public class ProductActivity extends AppCompatActivity implements UpdateRecycler
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

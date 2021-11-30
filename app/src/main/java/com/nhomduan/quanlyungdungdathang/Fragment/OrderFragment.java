@@ -36,6 +36,7 @@ public class OrderFragment extends Fragment {
     private ViewPager2 viewPager2;
     private ImageView imgBack;
     private DanhSachDonHangPagerAdapter danhSachDonHangPagerAdapter;
+    private HomeActivity homeActivity;
 
 
     @Override
@@ -47,6 +48,7 @@ public class OrderFragment extends Fragment {
     }
 
     private void init(View v) {
+        homeActivity = (HomeActivity) requireActivity();
         tabLayout = v.findViewById(R.id.tabLayout_order);
         viewPager2 = v.findViewById(R.id.viewpager2_order);
         imgBack = v.findViewById(R.id.imgBack);
@@ -62,8 +64,10 @@ public class OrderFragment extends Fragment {
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), HomeActivity.class);
-                startActivity(intent);
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerViewHome, new HomeFragment())
+                        .commit();
+                homeActivity.getBottomNavigationView().setSelectedItemId(R.id.nav_home);
             }
         });
     }

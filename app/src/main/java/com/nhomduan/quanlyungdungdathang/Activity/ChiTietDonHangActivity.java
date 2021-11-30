@@ -167,11 +167,14 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
         rcvChiTietDonHang.setHasFixedSize(true);
 
 
-        toolbarChiTietDonHang.setOnClickListener(v -> onBackPressed());
+        toolbarChiTietDonHang.setNavigationOnClickListener(v -> {
+            onBackPressed();
+        });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
     }
 }

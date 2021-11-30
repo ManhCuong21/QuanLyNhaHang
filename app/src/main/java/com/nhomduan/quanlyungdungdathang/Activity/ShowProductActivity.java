@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +47,10 @@ public class ShowProductActivity extends AppCompatActivity {
     private TextView tvTimeManagement;
     private TextView tvProcessingTime;
     private ImageView imgProduct;
+    private Button btnMuaNgay;
+
+
+
 
     private ToggleButton btnLike;
     private int soLuong = 1;
@@ -66,12 +71,6 @@ public class ShowProductActivity extends AppCompatActivity {
         setUpBtnLike();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e("TAG", "detroy");
-    }
-
     private void getDuLieu() {
         Intent intent = getIntent();
         String productId = intent.getStringExtra("productId");
@@ -79,8 +78,21 @@ public class ShowProductActivity extends AppCompatActivity {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 if(obj != null) {
-                    productDaChon = (Product) obj;
-                    setText();
+                    Product product = (Product) obj;
+                    if(product.getId() == null) {
+                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                        intent.setAction(OverUtils.FROM_SHOW_PRODUCT);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        productDaChon = product;
+                        buildComponent();
+                    }
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    intent.setAction(OverUtils.FROM_SHOW_PRODUCT);
+                    startActivity(intent);
+                    finish();
                 }
             }
 
@@ -135,7 +147,7 @@ public class ShowProductActivity extends AppCompatActivity {
         });
     }
 
-    private void setText() {
+    private void buildComponent() {
         String name = productDaChon.getName();
         String img = productDaChon.getImage();
         int price = productDaChon.getGia_ban();
@@ -145,6 +157,26 @@ public class ShowProductActivity extends AppCompatActivity {
         String khauPhan = productDaChon.getKhau_phan();
         String Daysofstorage = productDaChon.getBao_quan();
         int Processingtime = productDaChon.getThoiGianCheBien();
+
+
+        if(!productDaChon.getTrang_thai().equals(OverUtils.HOAT_DONG)) {
+            if(productDaChon.getTrang_thai().equals(OverUtils.DUNG_KINH_DOANH)) {
+                btnMuaNgay.setText("Dừng Bán");
+            } else if(productDaChon.getTrang_thai().equals(OverUtils.HET_HANG)){
+                btnMuaNgay.setText("Hết Hàng");
+            } else if(productDaChon.getTrang_thai().equals(OverUtils.SAP_RA_MAT)) {
+                btnMuaNgay.setText("Sắp ra mắt");
+            }
+            btnMuaNgay.setEnabled(false);
+        } else {
+            btnMuaNgay.setEnabled(true);
+            btnMuaNgay.setOnClickListener(v -> {
+                Intent intent = new Intent(ShowProductActivity.this, ThanhToanNgayActivity.class);
+                intent.putExtra("productId", productDaChon.getId());
+                intent.putExtra("so_luong", soLuong);
+                startActivity(intent);
+            });
+        }
 
         tvNameProduct.setText(name);
         Picasso.get()
@@ -184,7 +216,6 @@ public class ShowProductActivity extends AppCompatActivity {
 
     }
 
-
     private void updateQuantity() {
         btnDecrease.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,17 +251,13 @@ public class ShowProductActivity extends AppCompatActivity {
         tvProcessingTime = findViewById(R.id.tvProcessingTime);
         imgProduct = findViewById(R.id.imgProduct);
         tvSalePriceProduct = findViewById(R.id.tvSalePriceProduct);
+        btnMuaNgay = findViewById(R.id.btnMuaNgay);
 
         btnLike = findViewById(R.id.btnLike);
         tvQuantity.setText(String.valueOf(soLuong));
     }
 
-    public void btnBuyNow(View view) {
-        Intent intent = new Intent(ShowProductActivity.this, ThanhToanNgayActivity.class);
-        intent.putExtra("productId", productDaChon.getId());
-        intent.putExtra("so_luong", soLuong);
-        startActivity(intent);
-    }
+
 
     public void btnAddToCard(View view) {
         GioHang gioHang = new GioHang(productDaChon.getId(), soLuong);

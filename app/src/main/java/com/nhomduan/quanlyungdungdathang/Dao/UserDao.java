@@ -27,6 +27,7 @@ import com.nhomduan.quanlyungdungdathang.Model.User;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -125,7 +126,7 @@ public class UserDao {
     }
 
 
-    public void getGioHangOfUser(User user, IAfterGetAllObject iAfterGetAllObject) {
+    public void getGioHangOfUserListener(User user, IAfterGetAllObject iAfterGetAllObject) {
         FirebaseDatabase.getInstance().getReference().child("user").child(user.getUsername())
                 .child("gio_hang").addValueEventListener(new ValueEventListener() {
             @Override
@@ -135,6 +136,7 @@ public class UserDao {
                     GioHang gioHang = data.getValue(GioHang.class);
                     gioHangList.add(gioHang);
                 }
+                Collections.reverse(gioHangList);
                 iAfterGetAllObject.iAfterGetAllObject(gioHangList);
             }
 
@@ -190,5 +192,43 @@ public class UserDao {
             }
         });
 
+    }
+
+    public void getUserByUserNameListener(String username, IAfterGetAllObject iAfterGetAllObject) {
+        FirebaseDatabase.getInstance().getReference().child("user").child(username)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
+                        iAfterGetAllObject.iAfterGetAllObject(user);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        iAfterGetAllObject.onError(error);
+                    }
+                });
+    }
+
+    public void getGioHangOfUser(User user, IAfterGetAllObject iAfterGetAllObject) {
+        FirebaseDatabase.getInstance().getReference().child("user").child(user.getUsername())
+                .child("gio_hang").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DataSnapshot snapshot = task.getResult();
+                    if(snapshot != null) {
+                        List<GioHang> gioHangList = new ArrayList<>();
+                        for(DataSnapshot data : snapshot.getChildren()) {
+                            GioHang gioHang = data.getValue(GioHang.class);
+                            gioHangList.add(gioHang);
+                        }
+                        iAfterGetAllObject.iAfterGetAllObject(gioHangList);
+                    } else {
+                        iAfterGetAllObject.onError(null);
+                    }
+                }
+            }
+        });
     }
 }

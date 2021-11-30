@@ -43,7 +43,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.DonHangV
             return;
         }
 
-        ProductDao.getInstance().queryProductById(gioHang.getMa_sp(), new IAfterGetAllObject() {
+        ProductDao.getInstance().getProductById(gioHang.getMa_sp(), new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 if(obj != null) {

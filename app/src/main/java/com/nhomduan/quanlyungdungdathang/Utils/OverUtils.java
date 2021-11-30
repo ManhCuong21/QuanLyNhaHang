@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.nhomduan.quanlyungdungdathang.Model.Product;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,9 +24,18 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class OverUtils {
+    public static final String HOAT_DONG = "HOAT_DONG";
+    public static final String DUNG_KINH_DOANH = "DUNG_KINH_DOANH";
+    public static final String HET_HANG = "HET_HANG";
+    public static final String SAP_RA_MAT = "SAP_RA_MAT";
+
+    public static final String FROM_SHOW_PRODUCT = "FROM_SHOW_PRODUCT";
+
     private static SharedPreferences sharedPreferences;
 
     public static final String PASS_FILE = "PASS_FILE";
@@ -70,6 +81,26 @@ public class OverUtils {
         ContentResolver cr = context.getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cr.getType(uri));
+    }
+
+    public static List<Product> filterProduct(List<Product> products) {
+        List<Product> result = new ArrayList<>();
+        for(Product product : products) {
+            if(product.getTrang_thai().equals(HOAT_DONG)) {
+                result.add(product);
+            }
+        }
+        return result;
+    }
+
+    public static List<Product> filterProduct2(List<Product> products) {
+        List<Product> result = new ArrayList<>();
+        for(Product product : products) {
+            if(product.getTrang_thai().equals(HOAT_DONG) || product.getTrang_thai().equals(SAP_RA_MAT)) {
+                result.add(product);
+            }
+        }
+        return result;
     }
 
 

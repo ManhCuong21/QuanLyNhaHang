@@ -115,4 +115,10 @@ public class SearchActivity extends AppCompatActivity implements OnClickItem {
 
     @Override
     public void onDeleteItem(Object obj) {}
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

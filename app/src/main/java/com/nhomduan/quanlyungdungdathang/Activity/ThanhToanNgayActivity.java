@@ -145,6 +145,7 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
                         Intent intent = new Intent(ThanhToanNgayActivity.this, HomeActivity.class);
                         intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
                         startActivity(intent);
+                        finish();
                     }
 
                     @Override
@@ -349,5 +350,11 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
         ghiChu = "";
         soTienThanhToan = 0;
         soTienVanChuyen = 0;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
