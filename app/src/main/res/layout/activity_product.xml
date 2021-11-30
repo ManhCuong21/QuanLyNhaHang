@@ -32,7 +32,7 @@
             android:background="@drawable/card_background"
             android:drawableLeft="@drawable/ic_search_24"
             android:drawablePadding="8dp"
-            android:hint="Find your food"
+            android:hint="Tìm kiếm"
             android:imeOptions="actionSearch"
             android:maxLines="1"
             android:paddingLeft="10dp" />

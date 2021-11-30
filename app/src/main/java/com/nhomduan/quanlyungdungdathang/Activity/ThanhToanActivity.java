@@ -382,7 +382,6 @@ public class ThanhToanActivity extends AppCompatActivity {
         if (hoTen == null || diaChi == null) {
             rcvDiaChi.setVisibility(INVISIBLE);
         } else {
-            tvDangHang.setBackgroundColor(Color.RED);
             tvDangHang.setClickable(true);
             rcvDiaChi.setVisibility(VISIBLE);
             tvThemDiaChi.setText("Sửa địa chỉ");

@@ -14,7 +14,7 @@
         android:background="@color/orange"
         app:navigationIcon="@drawable/ic_back"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="Your Cart"
+        app:title="Giỏ hàng"
         app:titleTextColor="@color/white" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCart"
