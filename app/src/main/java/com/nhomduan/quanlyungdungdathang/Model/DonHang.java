@@ -16,7 +16,7 @@ public class DonHang implements Serializable {
     private String ghi_chu;
     private String trang_thai;
     private String thoiGianDatHang;
-    private String thoiGianGiaoHang;
+    private long thoiGianGiaoHang;
     private String sdt;
 
     public DonHang() {
@@ -102,11 +102,11 @@ public class DonHang implements Serializable {
         this.thoiGianDatHang = thoiGianDatHang;
     }
 
-    public String getThoiGianGiaoHang() {
+    public long getThoiGianGiaoHang() {
         return thoiGianGiaoHang;
     }
 
-    public void setThoiGianGiaoHang(String thoiGianGiaoHang) {
+    public void setThoiGianGiaoHang(long thoiGianGiaoHang) {
         this.thoiGianGiaoHang = thoiGianGiaoHang;
     }
 

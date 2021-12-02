@@ -123,10 +123,9 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
                     tvTitleShipper.setVisibility(View.GONE);
                 }
 
-                if (donHang.getThoiGianGiaoHang() != null) {
-                    long time = Long.parseLong(donHang.getThoiGianGiaoHang());
+                if (donHang.getThoiGianGiaoHang() != 0) {
                     lyThoiGianGiaoHang.setVisibility(View.VISIBLE);
-                    tvThoiGianGiaoHang.setText(OverUtils.getSimpleDateFormat().format(new Date(time)));
+                    tvThoiGianGiaoHang.setText(OverUtils.getSimpleDateFormat().format(new Date(donHang.getThoiGianGiaoHang())));
                 } else {
                     lyThoiGianGiaoHang.setVisibility(View.GONE);
                 }
