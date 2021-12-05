@@ -70,7 +70,7 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.DonHangV
         StringBuilder stringBuilder = new StringBuilder();
         for(int i = 0; i < donHang.getDon_hang_chi_tiets().size(); i++) {
             DonHangChiTiet donHangChiTiet = donHang.getDon_hang_chi_tiets().get(i);
-            stringBuilder.append(donHangChiTiet.getProduct().getName()).append("(").append(donHangChiTiet.getSo_luong()).append(")").append("\n");
+            stringBuilder.append(donHangChiTiet.getProduct().getName()).append(" (").append(donHangChiTiet.getSo_luong()).append(")").append("\n");
         }
         holder.tvTenSanPhams.setText(stringBuilder.toString());
 

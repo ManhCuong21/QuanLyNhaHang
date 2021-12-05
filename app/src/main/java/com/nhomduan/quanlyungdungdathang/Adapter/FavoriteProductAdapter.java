@@ -49,7 +49,7 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
                 .placeholder(R.drawable.ic_image)
                 .into(holder.imgProduct);
         holder.tvNameProduct.setText(product.getName());
-        holder.tvTimeProduct.setText(product.getThoiGianCheBien() +" min");
+        holder.tvTimeProduct.setText(product.getThoiGianCheBien() +" phút");
         holder.tvSoNguoiThichSP.setText(String.valueOf(product.getRate()));
         holder.tvSoNguoiMuaSP.setText(String.valueOf(product.getSo_luong_da_ban()));
 

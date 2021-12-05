@@ -3,24 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nav_home"
-        android:title="Home"
+        android:title="Trang chủ"
         android:icon="@drawable/ic_home_24"/>
     <item
         android:id="@+id/nav_order"
-        android:title="Order"
-        android:icon="@drawable/ic_bag_24"
+        android:title="Đơn hàng"
+        android:icon="@drawable/ic_shopping_bag_24"
         app:showAsAction="ifRoom"/>
     <item
         android:title=""
         android:enabled="false"/>
     <item
         android:id="@+id/nav_like"
-        android:title="Like"
-        android:icon="@drawable/ic_heart_24"
+        android:title="Yêu thích"
+        android:icon="@drawable/ic_hearth_24"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/nav_profile"
-        android:title="Profile"
+        android:title="Thông tin"
         android:icon="@drawable/ic_person_24"/>
 
 </menu>

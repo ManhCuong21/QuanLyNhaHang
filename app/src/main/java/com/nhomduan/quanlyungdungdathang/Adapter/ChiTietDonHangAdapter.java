@@ -70,9 +70,8 @@ public class ChiTietDonHangAdapter extends RecyclerView.Adapter<ChiTietDonHangAd
 
         private ImageView imgSanPham;
         private TextView tvTenSP, tvGiaSP, tvSoLuongSP;
-
         public ViewHolderChiTietDonHang(@NonNull View v) {
-            super(v);
+                super(v);
             imgSanPham = v.findViewById(R.id.imgSanPham);
             tvTenSP = v.findViewById(R.id.tvTenSanPham);
             tvGiaSP = v.findViewById(R.id.tvGiaSanPham);

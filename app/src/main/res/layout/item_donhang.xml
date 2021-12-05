@@ -25,7 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-            android:text="-MoaTRiIOUgq6wNioFKu"/>
+            android:text="-MoaTRiIOUgq6wNioFKu"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 
@@ -47,7 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-            android:text="-MoaTRiIOUgq6wNioFKu"/>
+            android:text="-MoaTRiIOUgq6wNioFKu"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 
@@ -68,7 +70,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-            android:text="09:00 - 16/11/2021"/>
+            android:text="09:00 - 16/11/2021"
+            android:textColor="@color/black"/>
     </LinearLayout>
 
     <LinearLayout
@@ -90,7 +93,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-            android:text="Shipper 01"/>
+            android:text="Shipper 01"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 
@@ -111,8 +115,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
-            android:textColor="@color/red"
-            android:text="100.000 VND"/>
+            android:textColor="#4CAF50"
+            android:text="100.000 VND"
+            android:textStyle="bold"/>
     </LinearLayout>
 
     <LinearLayout

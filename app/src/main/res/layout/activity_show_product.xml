@@ -214,8 +214,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="2dp"
-                        android:text="Ration:"
-                        android:textSize="18dp" />
+                        android:text="Khẩu phần:"
+                        android:textSize="18dp"
+                        android:textColor="@color/black"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -230,7 +231,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:text="1 people"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textColor="@color/black"/>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -252,8 +254,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="2dp"
-                        android:text="Days of storage:"
-                        android:textSize="18dp" />
+                        android:text="Thời gian bảo quản:"
+                        android:textSize="18dp"
+                        android:textColor="@color/black"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -268,7 +271,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:text="1 day"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textColor="@color/black"/>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -290,8 +294,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="2dp"
-                        android:text="Processing time:"
-                        android:textSize="18dp" />
+                        android:text="Thời gian chế biến:"
+                        android:textSize="18dp"
+                        android:textColor="@color/black"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -306,7 +311,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:text="10 min"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textColor="@color/black"/>
                     </LinearLayout>
 
                 </LinearLayout>

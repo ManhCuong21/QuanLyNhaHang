@@ -36,7 +36,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:src="@drawable/ic_image"
-        app:civ_border_color="#03A9F4"
+        app:civ_border_color="@color/orange"
         app:civ_border_width="2dp" />
 
     <TextView
@@ -69,13 +69,15 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             app:cardBackgroundColor="#D0F6D2"
-            app:cardElevation="8dp"
+            app:cardElevation="5dp"
             app:cardCornerRadius="8dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:paddingVertical="5dp"
+                android:paddingLeft="8dp">
 
                 <ImageView
                     android:id="@+id/img_donhang"
@@ -101,13 +103,15 @@
             android:layout_height="40dp"
             android:layout_marginTop="16dp"
             app:cardBackgroundColor="#D0F6D2"
-            app:cardElevation="8dp"
+            app:cardElevation="5dp"
             app:cardCornerRadius="8dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:paddingVertical="5dp"
+                android:paddingLeft="8dp">
 
                 <ImageView
                     android:id="@+id/img_address"
@@ -133,13 +137,15 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="10dp"
             app:cardBackgroundColor="#D0F6D2"
-            app:cardElevation="8dp"
+            app:cardElevation="5dp"
             app:cardCornerRadius="8dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:paddingVertical="5dp"
+                android:paddingLeft="8dp">
 
                 <ImageView
                     android:id="@+id/img_support"

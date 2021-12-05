@@ -29,39 +29,42 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar_ChiTietDonHang"
         app:layout_constraintVertical_bias="1.0">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#F4F4F4"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="2dp">
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="8dp"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_location"
                     android:drawableLeft="@drawable/ic_location"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:text="Giao đến: "
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:background="@color/orange"/>
+
                 <TextView
                     android:id="@+id/tvHuyDon"
                     android:text="Hủy Đơn"
                     android:textColor="@color/white"
-                    android:padding="5dp"
-                    android:layout_marginRight="12dp"
                     android:background="#F81A1A"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:paddingHorizontal="15dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="match_parent"/>
 
             </LinearLayout>
 
@@ -201,33 +204,35 @@
 
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="170dp"
                         android:layout_height="40dp"
-                        android:layout_marginLeft="8dp"
-                        android:drawableStart="@drawable/ic_time_png"
+                        android:background="@color/orange"
                         android:drawableLeft="@drawable/ic_time_png"
                         android:drawablePadding="4dp"
                         android:gravity="center_vertical"
                         android:maxLines="1"
-                        android:text="Thời gian đặt hàng: " />
+                        android:paddingLeft="8dp"
+                        android:text="Thời gian đặt hàng: "
+                        android:textColor="@color/white"/>
 
                     <TextView
                         android:id="@+id/tvThoiGianDatHang_ChiTietGiaoHang"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginLeft="2dp"
                         android:layout_weight="1"
-
+                        android:background="@color/orange"
                         android:gravity="center_vertical"
                         android:maxLines="1"
+                        android:paddingLeft="10dp"
                         android:text="14:32 - 23/12/2021"
-                        android:textColor="@color/black"
-                        android:textSize="10sp" />
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
 
                 </LinearLayout>
 
-
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -238,35 +243,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="#F4F4F4"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp">
 
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="170dp"
                         android:layout_height="40dp"
-                        android:layout_marginLeft="8dp"
-                        android:drawableStart="@drawable/ic_time_png"
+                        android:background="@color/orange"
                         android:drawableLeft="@drawable/ic_time_png"
                         android:drawablePadding="4dp"
                         android:gravity="center_vertical"
                         android:maxLines="1"
-                        android:text="Thời gian giao hàng: " />
+                        android:paddingLeft="8dp"
+                        android:text="Thời gian giao hàng: "
+                        android:textColor="@color/white" />
 
                     <TextView
                         android:id="@+id/tvThoiGianGiaoHang_ChiTietGiaoHang"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_weight="1"
-
+                        android:layout_marginLeft="2dp"
+                        android:background="@color/orange"
                         android:gravity="center_vertical"
                         android:maxLines="1"
+                        android:paddingLeft="10dp"
                         android:text="14:32 - 23/12/2021"
-                        android:textColor="@color/black"
-                        android:textSize="10sp" />
+                        android:textColor="@color/white"
+                        android:textSize="15sp"/>
 
                 </LinearLayout>
-
 
             </LinearLayout>
 
@@ -292,21 +298,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="left"
-                    android:layout_marginLeft="8dp"
+                    android:paddingLeft="8dp"
                     android:layout_weight="1"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
                     android:maxLines="1"
                     android:text="Tổng 3 sản phẩm" />
 
                 <TextView
                     android:id="@+id/tvTien_ChiTietDonHang"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:layout_gravity="right"
-                    android:layout_marginRight="16dp"
                     android:gravity="center_vertical"
-                    android:text="60.000đ" />
+                    android:text="60.000đ"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="2dp"
+                    android:paddingLeft="10dp"/>
 
             </LinearLayout>
 
@@ -315,28 +326,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#F4F4F4"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="2dp">
 
                 <TextView
                     android:id="@+id/tvTitlePhiVanChuyen_ChiTietGiaoHang"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="left"
-                    android:layout_marginLeft="8dp"
+                    android:paddingLeft="8dp"
                     android:layout_weight="1"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="Phí vận chuyển" />
+                    android:text="Phí vận chuyển"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"/>
 
                 <TextView
                     android:id="@+id/tvPhiVanChuyen_ChiTietGiaoHang"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:layout_gravity="right"
-                    android:layout_marginRight="16dp"
                     android:gravity="center_vertical"
-                    android:text="miễn phí" />
+                    android:text="Miễn phí"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
+                    android:paddingLeft="10dp"
+                    android:layout_marginLeft="2dp"/>
 
             </LinearLayout>
 
@@ -344,27 +361,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="#F4F4F4"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="2dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_gravity="left"
-                    android:layout_marginLeft="8dp"
+                    android:paddingLeft="8dp"
                     android:layout_weight="1"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="Tổng cộng" />
+                    android:text="Tổng cộng"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"/>
 
                 <TextView
                     android:id="@+id/tvTongTien_ChiTietDonHang"
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:layout_gravity="right"
-                    android:layout_marginRight="16dp"
                     android:gravity="center_vertical"
-                    android:text="60.000đ" />
+                    android:text="60.000đ"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
+                    android:paddingLeft="10dp"
+                    android:layout_marginLeft="2dp"/>
 
             </LinearLayout>
 
@@ -376,25 +399,29 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="110dp"
                     android:layout_height="40dp"
                     android:layout_gravity="left"
-                    android:layout_marginLeft="8dp"
-                    android:drawableStart="@drawable/ic_sale"
+                    android:paddingLeft="8dp"
                     android:drawableLeft="@drawable/ic_sale"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="Mã giảm giá: " />
+                    android:text="Mã giảm giá: "
+                    android:background="@color/orange"
+                    android:textColor="@color/white"/>
 
                 <TextView
                     android:id="@+id/tvMaGiamGia_ChiTietDonHang"
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="None"
-                    android:textStyle="bold"/>
+                    android:layout_height="match_parent"
+                    android:text="Không"
+                    android:textStyle="bold"
+                    android:background="@color/orange"
+                    android:layout_marginLeft="2dp"
+                    android:textColor="@color/white"/>
 
             </LinearLayout>
 
@@ -402,28 +429,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#F4F4F4"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_marginTop="2dp">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_width="110dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="left"
-                    android:layout_marginLeft="8dp"
-                    android:drawableStart="@drawable/ic_note"
+                    android:paddingLeft="8dp"
                     android:drawableLeft="@drawable/ic_note"
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="Ghi chú: " />
+                    android:text="Ghi chú: "
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
+                    android:paddingVertical="10dp"/>
 
                 <TextView
                     android:gravity="center"
                     android:id="@+id/tv_GhiChu_ChiTietDonHang"
-                    android:padding="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textStyle="bold"
-                    android:text="None"/>
+                    android:text="Không"
+                    android:background="@color/orange"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="2dp"
+                    android:paddingVertical="10dp"/>
 
             </LinearLayout>
 

@@ -106,6 +106,7 @@
                     app:layout_constraintVertical_bias=".1" />
 
                 <TextView
+                    android:onClick="btnMuaNgay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"
@@ -121,7 +122,7 @@
                     app:layout_constraintHorizontal_bias="0.405"
                     app:layout_constraintStart_toEndOf="@+id/imageView4"
                     app:layout_constraintTop_toBottomOf="@+id/textView5"
-                    app:layout_constraintVertical_bias="1.0" />
+                    app:layout_constraintVertical_bias="1.0"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -134,7 +135,7 @@
                 android:text="Loại đồ ăn"
                 android:textColor="#000"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewCategoryList"
@@ -142,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
                 android:layout_marginTop="8dp"
-                android:clipToPadding="false" />
+                android:clipToPadding="false"/>
 
             <TextView
                 android:id="@+id/textView7"
@@ -162,7 +163,7 @@
                 android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="8dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/banner_popular" />
+                android:src="@drawable/banner_popular"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewPopular"
@@ -187,11 +188,11 @@
             <ImageView
                 android:id="@+id/imgSanPhamKhuyenMais"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="8dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/banner_popular" />
+                android:src="@drawable/banner_sale" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcvSanPhamKhuyenMai"
@@ -215,11 +216,11 @@
             <ImageView
                 android:id="@+id/imgMoiNhat"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="8dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/banner_popular" />
+                android:src="@drawable/banner_new_menu" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcvSanPhamMoiNhat"
@@ -227,7 +228,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
                 android:layout_marginTop="8dp"/>
-
 
         </LinearLayout>
     </ScrollView>

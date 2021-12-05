@@ -277,4 +277,8 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
                     }
                 });
     }
+
+    public void btnMuaNgay(View view){
+
+    }
 }

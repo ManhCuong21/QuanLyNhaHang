@@ -202,7 +202,7 @@ public class ShowProductActivity extends AppCompatActivity {
         tvPreservation.setText(preservation);
         tvRation.setText(khauPhan);
         tvTimeManagement.setText(Daysofstorage);
-        tvProcessingTime.setText(Processingtime + " min");
+        tvProcessingTime.setText(Processingtime + " phút");
 
         // xử lý phần yêu thích của người dùng, nếu người dùng đã yêu thích từ trước hiển thị tim màu cam, ngược lại tim màu trắng
         List<String> sanPhamYeuThichList = HomeActivity.userLogin.getMa_sp_da_thich();
