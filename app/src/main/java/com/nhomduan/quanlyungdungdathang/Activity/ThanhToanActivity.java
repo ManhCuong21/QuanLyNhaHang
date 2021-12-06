@@ -310,67 +310,64 @@ public class ThanhToanActivity extends AppCompatActivity {
     }
 
     private void setUpThemDiaChi() {
-        tvThemDiaChi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ThanhToanActivity.this);
-                bottomSheetDialog.setContentView(R.layout.layout_them_dia_chi);
+        tvThemDiaChi.setOnClickListener(v -> {
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ThanhToanActivity.this);
+            bottomSheetDialog.setContentView(R.layout.layout_them_dia_chi);
 
-                EditText edtHoTen;
-                EditText edtDiaChi;
-                EditText edtSDT;
-                Button btnHuy;
-                Button btnThemDiaChi;
+            EditText edtHoTen;
+            EditText edtDiaChi;
+            EditText edtSDT;
+            Button btnHuy;
+            Button btnThemDiaChi;
 
-                edtHoTen = bottomSheetDialog.findViewById(R.id.edtHoTen);
-                edtDiaChi = bottomSheetDialog.findViewById(R.id.edtDiaChi);
-                edtSDT = bottomSheetDialog.findViewById(R.id.edtSDT);
-                btnHuy = bottomSheetDialog.findViewById(R.id.btnHuy);
-                btnThemDiaChi = bottomSheetDialog.findViewById(R.id.btnThemDiaChi);
+            edtHoTen = bottomSheetDialog.findViewById(R.id.edtHoTen);
+            edtDiaChi = bottomSheetDialog.findViewById(R.id.edtDiaChi);
+            edtSDT = bottomSheetDialog.findViewById(R.id.edtSDT);
+            btnHuy = bottomSheetDialog.findViewById(R.id.btnHuy);
+            btnThemDiaChi = bottomSheetDialog.findViewById(R.id.btnThemDiaChi);
 
 
-                if (sdt != null) {
-                    edtSDT.setText(sdt);
-                }
-                if (hoTen != null) {
-                    edtHoTen.setText(hoTen);
-                    btnThemDiaChi.setText("Sửa");
-                }
-                if (diaChi != null) {
-                    edtDiaChi.setText(diaChi);
-                }
-                btnHuy.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        bottomSheetDialog.cancel();
-                    }
-                });
-
-                btnThemDiaChi.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String hoTen = edtHoTen.getText().toString().trim();
-                        String diaChi = edtDiaChi.getText().toString().trim();
-                        String sdt = edtSDT.getText().toString().trim();
-                        if (hoTen.isEmpty() || diaChi.isEmpty() || sdt.isEmpty()) {
-                            OverUtils.makeToast(getApplicationContext(), "Vui lòng nhập đầy đủ thông tin");
-                            return;
-                        }
-                        if (!sdt.matches("^\\+84\\d{9,10}$")) {
-                            OverUtils.makeToast(getApplicationContext(), "Vui lòng nhập đúng định dạng số điện thoại (vd: +84868358175)");
-                            return;
-                        }
-                        rcvDiaChi.setVisibility(VISIBLE);
-                        tvHoTen.setText(hoTen);
-                        tvDiaChiGiaoHang.setText(diaChi);
-                        tvSDT.setText(sdt);
-                        bottomSheetDialog.cancel();
-                        OverUtils.makeToast(getApplicationContext(), "Cập nhật địa chỉ thành công");
-                    }
-                });
-
-                bottomSheetDialog.show();
+            if (sdt != null) {
+                edtSDT.setText(sdt);
             }
+            if (hoTen != null) {
+                edtHoTen.setText(hoTen);
+                btnThemDiaChi.setText("Sửa");
+            }
+            if (diaChi != null) {
+                edtDiaChi.setText(diaChi);
+            }
+            btnHuy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetDialog.cancel();
+                }
+            });
+
+            btnThemDiaChi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String hoTen = edtHoTen.getText().toString().trim();
+                    String diaChi = edtDiaChi.getText().toString().trim();
+                    String sdt = edtSDT.getText().toString().trim();
+                    if (hoTen.isEmpty() || diaChi.isEmpty() || sdt.isEmpty()) {
+                        OverUtils.makeToast(getApplicationContext(), "Vui lòng nhập đầy đủ thông tin");
+                        return;
+                    }
+                    if (!sdt.matches("^\\+84\\d{9,10}$")) {
+                        OverUtils.makeToast(getApplicationContext(), "Vui lòng nhập đúng định dạng số điện thoại (vd: +84868358175)");
+                        return;
+                    }
+                    rcvDiaChi.setVisibility(VISIBLE);
+                    tvHoTen.setText(hoTen);
+                    tvDiaChiGiaoHang.setText(diaChi);
+                    tvSDT.setText(sdt);
+                    bottomSheetDialog.cancel();
+                    OverUtils.makeToast(getApplicationContext(), "Cập nhật địa chỉ thành công");
+                }
+            });
+
+            bottomSheetDialog.show();
         });
     }
 
