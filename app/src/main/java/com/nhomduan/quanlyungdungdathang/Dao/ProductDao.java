@@ -254,12 +254,13 @@ public class ProductDao {
                     }
                 }
                 List<Product> resultList = OverUtils.filterProduct(result);
-                Collections.sort(resultList,
+                List<Product> resultList2 = OverUtils.filterProduct3(resultList);
+                Collections.sort(resultList2,
                         (o1, o2) -> Integer.compare(o2.getSo_luong_da_ban(), o1.getSo_luong_da_ban()));
-                if (soLuong >= resultList.size()) {
-                    iAfterGetAllObject.iAfterGetAllObject(resultList);
+                if (soLuong >= resultList2.size()) {
+                    iAfterGetAllObject.iAfterGetAllObject(resultList2);
                 } else {
-                    iAfterGetAllObject.iAfterGetAllObject(resultList.subList(0, soLuong - 1));
+                    iAfterGetAllObject.iAfterGetAllObject(resultList2.subList(0, soLuong - 1));
                 }
             }
 

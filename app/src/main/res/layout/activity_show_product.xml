@@ -361,7 +361,7 @@
             android:onClick="btnAddToCard"
             android:text="Thêm vào giỏ"
             android:textAllCaps="false"
-            android:textSize="20dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <Button
@@ -373,7 +373,7 @@
             android:background="@color/orange"
             android:text="Mua ngay"
             android:textAllCaps="false"
-            android:textSize="22dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
 

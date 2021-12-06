@@ -1,22 +1,33 @@
 package com.nhomduan.quanlyungdungdathang.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
+import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.nhomduan.quanlyungdungdathang.Fragment.OrderFragment;
+import com.google.firebase.database.DatabaseError;
+import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
 import com.nhomduan.quanlyungdungdathang.Fragment.HomeFragment;
 import com.nhomduan.quanlyungdungdathang.Fragment.LikeProductFragment;
+import com.nhomduan.quanlyungdungdathang.Fragment.OrderFragment;
 import com.nhomduan.quanlyungdungdathang.Fragment.ProfileFragment;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterRequestPermission;
 import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
@@ -38,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         initView();
         getUserLogining();
         triggerOrderFragment();
+        listenLockAccount();
 
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -60,6 +72,46 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerViewHome, selected).commit();
                 return true;
+            }
+        });
+    }
+
+    private void listenLockAccount() {
+        UserDao.getInstance().getUserByUserNameListener(userLogin.getUsername(), new IAfterGetAllObject() {
+            @Override
+            public void iAfterGetAllObject(Object obj) {
+                User user = (User) obj;
+                if(user.getUsername() != null) {
+                    if(!user.isEnable()) {
+                        new AlertDialog.Builder(HomeActivity.this)
+                                .setTitle("Tài khoản")
+                                .setMessage("Tài khoản của bạn đã vi phạm một số điều khoản khi sử dụng." +
+                                        "\nVì vậy, chúng tôi tạm thời khóa tài khoản này." +
+                                        "\nLiên hệ 19001000 để tìm hiểu chi tiết")
+                                .setNegativeButton("Hủy", (dialog, which) -> {
+                                    SharedPreferences.Editor editor = OverUtils.getSPInstance(getApplicationContext(), OverUtils.PASS_FILE).edit();
+                                    editor.putString("pass", OverUtils.PASS_FLASH_ACTIVITY);
+                                    editor.apply();
+
+                                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                })
+                                .setPositiveButton("OK", (dialog, which) -> {
+                                    SharedPreferences.Editor editor = OverUtils.getSPInstance(getApplicationContext(), OverUtils.PASS_FILE).edit();
+                                    editor.putString("pass", OverUtils.PASS_FLASH_ACTIVITY);
+                                    editor.apply();
+                                    Intent intent = new Intent("CALL_PHONE");
+                                    intent.setClass(HomeActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                })
+                                .setCancelable(false)
+                                .create().show();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(DatabaseError error) {
+
             }
         });
     }
@@ -118,7 +170,7 @@ public class HomeActivity extends AppCompatActivity {
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainerViewHome);
         if(fragment instanceof HomeFragment) {
-            super.onBackPressed();
+            finish();
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainerViewHome, new HomeFragment()).commit();
             bottomNavigationView.setSelectedItemId(R.id.nav_home);

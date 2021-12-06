@@ -4,6 +4,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 
+import static com.nhomduan.quanlyungdungdathang.Activity.HomeActivity.userLogin;
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import com.nhomduan.quanlyungdungdathang.Model.DonHang;
 import com.nhomduan.quanlyungdungdathang.Model.DonHangChiTiet;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
 import com.nhomduan.quanlyungdungdathang.Model.TrangThai;
+import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 import com.squareup.picasso.Picasso;
@@ -73,7 +75,6 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
     private TextView tvSoLuong;
 
     private Product productDaChon;
-    private int soLuongDaChon;
 
     private String ghiChu;
     private List<DonHangChiTiet> donHangChiTietList;
@@ -126,33 +127,49 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
         tvDangHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DonHang donHang = new DonHang();
-                donHang.setUser_id(HomeActivity.userLogin.getUsername());
-                donHang.setDia_chi(HomeActivity.userLogin.getAddress());
-                donHang.setHo_ten(HomeActivity.userLogin.getName());
-                donHang.setDon_hang_chi_tiets(donHangChiTietList);
-                donHang.setGhi_chu(ghiChu);
-                donHang.setSdt(HomeActivity.userLogin.getPhone_number());
-                donHang.setTrang_thai(TrangThai.CXN.getTrangThai());
-                donHang.setThoiGianDatHang(OverUtils.getSimpleDateFormat().format(new Date(System.currentTimeMillis())));
-                donHang.setTong_tien(soTienThanhToan + soTienVanChuyen);
-                String key = FirebaseDatabase.getInstance().getReference().child("don_hang").push().getKey();
-                donHang.setId(key);
-                OrderDao.getInstance().insertDonHang(donHang, new IAfterInsertObject() {
+                UserDao.getInstance().getUserByUserName(userLogin.getUsername(), new IAfterGetAllObject() {
                     @Override
-                    public void onSuccess(Object obj) {
-                        OverUtils.makeToast(ThanhToanNgayActivity.this, "Đặt hàng thành công");
-                        Intent intent = new Intent(ThanhToanNgayActivity.this, HomeActivity.class);
-                        intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
-                        startActivity(intent);
-                        finish();
+                    public void iAfterGetAllObject(Object obj) {
+                        User user = (User) obj;
+                        if(user.getUsername() != null && user.isEnable()) {
+                            DonHang donHang = new DonHang();
+                            donHang.setUser_id(userLogin.getUsername());
+                            donHang.setDia_chi(userLogin.getAddress());
+                            donHang.setHo_ten(userLogin.getName());
+                            donHang.setDon_hang_chi_tiets(donHangChiTietList);
+                            donHang.setGhi_chu(ghiChu);
+                            donHang.setSdt(userLogin.getPhone_number());
+                            donHang.setTrang_thai(TrangThai.CXN.getTrangThai());
+                            donHang.setThoiGianDatHang(OverUtils.getSimpleDateFormat().format(new Date(System.currentTimeMillis())));
+                            donHang.setTong_tien(soTienThanhToan + soTienVanChuyen);
+                            String key = FirebaseDatabase.getInstance().getReference().child("don_hang").push().getKey();
+                            donHang.setId(key);
+                            OrderDao.getInstance().insertDonHang(donHang, new IAfterInsertObject() {
+                                @Override
+                                public void onSuccess(Object obj) {
+                                    OverUtils.makeToast(ThanhToanNgayActivity.this, "Đặt hàng thành công");
+                                    Intent intent = new Intent(ThanhToanNgayActivity.this, HomeActivity.class);
+                                    intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
+                                    startActivity(intent);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onError(DatabaseError exception) {
+                                    OverUtils.makeToast(ThanhToanNgayActivity.this, ERROR_MESSAGE);
+                                }
+                            });
+                        } else {
+                            OverUtils.makeToast(ThanhToanNgayActivity.this, "Tài khoản của bạn đã bị khóa");
+                        }
                     }
 
                     @Override
-                    public void onError(DatabaseError exception) {
-                        OverUtils.makeToast(ThanhToanNgayActivity.this, ERROR_MESSAGE);
+                    public void onError(DatabaseError error) {
+
                     }
                 });
+
             }
         });
     }
@@ -209,12 +226,12 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
                             OverUtils.makeToast(getApplicationContext(), "Vui lòng nhập đúng định dạng số điện thoại (vd: +84868358175)");
                             return;
                         }
-                        HomeActivity.userLogin.setPhone_number(sdt);
-                        HomeActivity.userLogin.setAddress(diaChi);
-                        HomeActivity.userLogin.setName(hoTen);
+                        userLogin.setPhone_number(sdt);
+                        userLogin.setAddress(diaChi);
+                        userLogin.setName(hoTen);
 
-                        UserDao.getInstance().updateUser(HomeActivity.userLogin,
-                                HomeActivity.userLogin.toMapThongTinGiaoHang(),
+                        UserDao.getInstance().updateUser(userLogin,
+                                userLogin.toMapThongTinGiaoHang(),
                                 new IAfterUpdateObject() {
                                     @Override
                                     public void onSuccess(Object obj) {
@@ -243,9 +260,9 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
     }
 
     private void setUpCarDiaChi() {
-        hoTen = HomeActivity.userLogin.getName();
-        diaChi = HomeActivity.userLogin.getAddress();
-        sdt = HomeActivity.userLogin.getPhone_number();
+        hoTen = userLogin.getName();
+        diaChi = userLogin.getAddress();
+        sdt = userLogin.getPhone_number();
         if (hoTen == null || diaChi == null) {
             rcvDiaChi.setVisibility(INVISIBLE);
         } else {

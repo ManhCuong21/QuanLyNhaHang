@@ -104,4 +104,13 @@ public class OverUtils {
     }
 
 
+    public static List<Product> filterProduct3(List<Product> resultList) {
+        List<Product> result = new ArrayList<>();
+        for(Product product : resultList) {
+            if(product.getSo_luong_da_ban() > 0) {
+                result.add(product);
+            }
+        }
+        return result;
+    }
 }
