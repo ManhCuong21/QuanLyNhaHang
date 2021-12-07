@@ -94,6 +94,7 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
                         OrderDao.getInstance().updateDonHang(donHang, donHang.toMapHuyDon(), new IAfterUpdateObject() {
                             @Override
                             public void onSuccess(Object obj) {
+                                OverUtils.makeToast(ChiTietDonHangActivity.this, "Hủy thành công đơn hàng");
                                 Intent intent = new Intent(ChiTietDonHangActivity.this, HomeActivity.class);
                                 intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
                                 startActivity(intent);
