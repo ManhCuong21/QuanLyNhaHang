@@ -76,7 +76,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         }
         viewBinderHelper.bind(holder.swipeRevealLayoutCart, gioHang.getMa_sp());
         holder.tvQuantity.setText(String.valueOf(gioHang.getSo_luong()));
-        ProductDao.getInstance().queryProductById(gioHang.getMa_sp(), new IAfterGetAllObject() {
+        ProductDao.getInstance().getProductByIdListener(gioHang.getMa_sp(), new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 if(obj != null) {

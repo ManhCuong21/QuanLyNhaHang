@@ -75,11 +75,8 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgProduct;
-        ToggleButton imgHearthLike;
         TextView tvNameProduct,tvTimeProduct,tvPriceProduct;
         public LinearLayout viewHolderProduct;
-
-        //
         private TextView tvSoNguoiThichSP;
         private TextView tvSoNguoiMuaSP;
 
@@ -93,41 +90,5 @@ public class FavoriteProductAdapter extends RecyclerView.Adapter<FavoriteProduct
             tvSoNguoiThichSP = itemView.findViewById(R.id.tvSoNguoiThichSP);
             tvSoNguoiMuaSP = itemView.findViewById(R.id.tvSoNguoiMuaSP);
         }
-    }
-
-    public void removeItem(Product product,int index) {
-        List<String> maSanPhamYeuThich = HomeActivity.userLogin.getMa_sp_da_thich();
-        int viTri = -1;
-        for(int i = 0; i < maSanPhamYeuThich.size(); i++) {
-            if(maSanPhamYeuThich.get(i).equals(product.getId())) {
-                viTri = i;
-            }
-        }
-        // remove mã sản phẩm yêu thích
-        maSanPhamYeuThich.remove(viTri);
-        HomeActivity.userLogin.setMa_sp_da_thich(maSanPhamYeuThich);
-        UserDao.getInstance().updateUser(HomeActivity.userLogin, HomeActivity.userLogin.toMapSPDaThich());
-        
-        // thay đổi lượng yêu thích của sản phẩm
-        product.setRate(product.getRate() - 1);
-        ProductDao.getInstance().updateProduct(product, product.toMapRate());
-        
-        list.remove(index);
-        notifyDataSetChanged();
-    }
-
-    public void undoItem(Product product,int index) {
-        List<String> maSanPhamYeuThich = HomeActivity.userLogin.getMa_sp_da_thich();
-
-        maSanPhamYeuThich.add(product.getId());
-        HomeActivity.userLogin.setMa_sp_da_thich(maSanPhamYeuThich);
-        UserDao.getInstance().updateUser(HomeActivity.userLogin, HomeActivity.userLogin.toMapSPDaThich());
-
-
-        product.setRate(product.getRate() + 1);
-        ProductDao.getInstance().updateProduct(product, product.toMapRate());
-
-        list.add(index, product);
-        notifyDataSetChanged();
     }
 }

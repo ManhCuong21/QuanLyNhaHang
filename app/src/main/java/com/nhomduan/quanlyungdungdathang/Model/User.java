@@ -1,17 +1,27 @@
 package com.nhomduan.quanlyungdungdathang.Model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Entity
 public class User implements Serializable {
+
+
+    @NonNull
+    @PrimaryKey
     private String username;
+
     private String password;
     private String phone_number;
     private boolean enable;
     private String hinhanh;
-
     private List<String> ma_sp_da_thich;
     private List<GioHang> gio_hang;
     private String address;
@@ -21,11 +31,13 @@ public class User implements Serializable {
     public User() {
     }
 
+    @Ignore
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
+    @Ignore
     public User(String username, String password, String phone_number, boolean enable) {
         this.username = username;
         this.password = password;

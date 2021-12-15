@@ -65,25 +65,20 @@ public class ProductDao {
 
     public void getProductById(String id, IAfterGetAllObject iAfterGetAllObject) {
         FirebaseDatabase.getInstance().getReference().child("san_pham").child(id)
-                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()) {
-                    DataSnapshot snapshot = task.getResult();
-                    if(snapshot != null) {
-                        Product product = snapshot.getValue(Product.class);
-                        iAfterGetAllObject.iAfterGetAllObject(product);
-                    } else {
-                        iAfterGetAllObject.iAfterGetAllObject(new Product());
-                    }
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DataSnapshot snapshot = task.getResult();
+                if (snapshot != null) {
+                    Product product = snapshot.getValue(Product.class);
+                    iAfterGetAllObject.iAfterGetAllObject(product);
                 } else {
                     iAfterGetAllObject.iAfterGetAllObject(null);
                 }
+            } else {
+                iAfterGetAllObject.iAfterGetAllObject(null);
             }
         });
     }
-
-
 
 
     public void getProductByIdListener(String id, IAfterGetAllObject iAfterGetAllObject) {
@@ -100,34 +95,6 @@ public class ProductDao {
                         iAfterGetAllObject.onError(error);
                     }
                 });
-    }
-
-    public void queryProductById(String id, IAfterGetAllObject iAfterGetAllObject) {
-        Query query = FirebaseDatabase.getInstance().getReference().child("san_pham")
-                .orderByChild("id").equalTo(id);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Product> result = new ArrayList<>();
-                for (DataSnapshot obj : snapshot.getChildren()) {
-                    Product product = obj.getValue(Product.class);
-                    if (product != null) {
-                        result.add(product);
-                    }
-                }
-                if(result.size() != 0) {
-                    Product product = result.get(0);
-                    iAfterGetAllObject.iAfterGetAllObject(product);
-                } else {
-                    iAfterGetAllObject.iAfterGetAllObject(null);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                iAfterGetAllObject.onError(error);
-            }
-        });
     }
 
     public void insertProduct(Product product, IAfterInsertObject iAfterInsertObject) {

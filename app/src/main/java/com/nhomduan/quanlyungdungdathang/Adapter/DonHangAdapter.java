@@ -18,7 +18,9 @@ import com.nhomduan.quanlyungdungdathang.Model.DonHangChiTiet;
 import com.nhomduan.quanlyungdungdathang.Model.Shipper;
 import com.nhomduan.quanlyungdungdathang.Model.TrangThai;
 import com.nhomduan.quanlyungdungdathang.R;
+import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 
+import java.util.Date;
 import java.util.List;
 
 public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.DonHangViewHolder>{
@@ -51,9 +53,13 @@ public class DonHangAdapter extends RecyclerView.Adapter<DonHangAdapter.DonHangV
             return;
         }
         holder.tvMaDonHang.setText(donHang.getId());
-        holder.tvNgayDatHang.setText(donHang.getThoiGianDatHang());
+        if(donHang.getThoiGianGiaoHangDuKien() == 0) {
+            holder.tvNgayDatHang.setText(donHang.getThoiGianDatHang());
+        } else {
+            holder.tvNgayDatHang.setText(OverUtils.getSimpleDateFormat().format(new Date(donHang.getThoiGianGiaoHangDuKien())));
+        }
         holder.tvTongTien.setText(donHang.getTong_tien()+ " VND");
-        if(donHang.getTrang_thai().equals(TrangThai.HT.getTrangThai())) {
+        if(donHang.getTrang_thai().equals(TrangThai.HOAN_THANH.getTrangThai())) {
             holder.tvTrangThai.setTextColor(Color.GREEN);
         } else {
             holder.tvTrangThai.setTextColor(Color.RED);

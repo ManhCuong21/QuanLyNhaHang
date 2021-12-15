@@ -14,6 +14,7 @@
         <entry key="..\:/DuAn1/QuanLyNhaHang/app/src/main/res/layout/fragment_processing__don_hang_.xml" value="0.24954710144927536" />
         <entry key="..\:/DuAn1/QuanLyNhaHang/app/src/main/res/layout/fragment_waitconfirmation__don_hang_.xml" value="0.24954710144927536" />
         <entry key="..\:/DuAn1/QuanLyNhaHang/app/src/main/res/layout/test.xml" value="0.24954710144927536" />
+        <entry key="..\:/Users/Admin/AppData/Local/Android/Sdk/platforms/android-31/data/res/drawable/ic_clear.xml" value="0.2703125" />
         <entry key="..\:/Users/Admin/Desktop/DuAn_2/QuanLyNhaHang/app/src/main/res/drawable/ic_next.xml" value="0.24947916666666667" />
         <entry key="..\:/Users/Admin/Desktop/DuAn_2/QuanLyNhaHang/app/src/main/res/drawable/ic_time_png.xml" value="0.24947916666666667" />
         <entry key="..\:/Users/Admin/Desktop/DuAn_2/QuanLyNhaHang/app/src/main/res/drawable/update_hearth.xml" value="0.23229166666666667" />
@@ -75,8 +76,13 @@
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/layout/activity_product.xml" value="0.1" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/layout/viewholder_cat.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang/app/src/main/res/layout/viewholder_product.xml" value="0.15104166666666666" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/drawable/card_background.xml" value="0.2703125" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/drawable/ic_back.xml" value="0.2703125" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/drawable/ic_delete.xml" value="0.2703125" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/drawable/search_back.xml" value="0.13072916666666667" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/drawable/update_hearth.xml" value="0.2703125" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/activity_avatar.xml" value="0.15104166666666666" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/activity_chi_tiet_don_hang.xml" value="0.264" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/activity_flash.xml" value="0.1" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/activity_home.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
@@ -86,12 +92,18 @@
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/activity_thanh_toan.xml" value="0.264" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/activity_thanh_toan_ngay.xml" value="0.264" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/dialog_address_user.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_completed__don_hang_.xml" value="0.2" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_danh_sach_don_hang_by_t_t.xml" value="0.203125" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_home.xml" value="0.1793372319688109" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_like_product.xml" value="0.23854166666666668" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_login_tab.xml" value="0.6" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_order.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_signup_tab.xml" value="0.121875" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_profile.xml" value="0.1111111111111111" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/fragment_signup_tab.xml" value="0.4" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/item_don_hang_chi_tiet.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/item_donhang.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/item_san_pham_yeu_thich.xml" value="0.23854166666666668" />
+        <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/layout_get_time.xml" value="0.264" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/layout_ghi_chu.xml" value="0.16770833333333332" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/layout_lock_account.xml" value="0.264" />
         <entry key="..\:/Users/Admin/Desktop/du_an/QuanLyNhaHang_Customer/app/src/main/res/layout/layout_them_dia_chi.xml" value="0.264" />

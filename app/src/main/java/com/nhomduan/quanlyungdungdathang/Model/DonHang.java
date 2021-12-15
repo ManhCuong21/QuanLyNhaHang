@@ -17,9 +17,18 @@ public class DonHang implements Serializable {
     private String trang_thai;
     private String thoiGianDatHang;
     private long thoiGianGiaoHang;
+    private long thoiGianGiaoHangDuKien;
     private String sdt;
 
     public DonHang() {
+    }
+
+    public long getThoiGianGiaoHangDuKien() {
+        return thoiGianGiaoHangDuKien;
+    }
+
+    public void setThoiGianGiaoHangDuKien(long thoiGianGiaoHangDuKien) {
+        this.thoiGianGiaoHangDuKien = thoiGianGiaoHangDuKien;
     }
 
     public String getId() {

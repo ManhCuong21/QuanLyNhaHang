@@ -75,7 +75,11 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
                 tvHoTen.setText(donHang.getHo_ten());
                 tvDiaChi.setText(donHang.getDia_chi());
                 tvSDT.setText(donHang.getSdt());
-                tvThoiGianDatHang.setText(donHang.getThoiGianDatHang());
+                if(donHang.getThoiGianGiaoHangDuKien() != 0) {
+                    tvThoiGianDatHang.setText(OverUtils.getSimpleDateFormat().format(new Date(donHang.getThoiGianGiaoHangDuKien())));
+                } else {
+                    tvThoiGianDatHang.setText(donHang.getThoiGianDatHang());
+                }
                 tvTien.setText(donHang.getTong_tien() + "đ");
                 tvTongTien.setText(donHang.getTong_tien() + "đ");
                 tvTongSoSanPham.setText("Tổng " + donHang.getDon_hang_chi_tiets().size() + " sản phẩm");
@@ -83,14 +87,14 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
                 chiTietDonHangAdapter = new ChiTietDonHangAdapter(ChiTietDonHangActivity.this, donHang.getDon_hang_chi_tiets());
                 rcvChiTietDonHang.setAdapter(chiTietDonHangAdapter);
 
-                if(!donHang.getTrang_thai().equals(TrangThai.CXN.getTrangThai())) {
+                if(!donHang.getTrang_thai().equals(TrangThai.CHUA_XAC_NHAN.getTrangThai())) {
                     tvHuyDon.setVisibility(View.GONE);
                 }
 
                 tvHuyDon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        donHang.setTrang_thai(TrangThai.HD.getTrangThai());
+                        donHang.setTrang_thai(TrangThai.HUY_DON.getTrangThai());
                         OrderDao.getInstance().updateDonHang(donHang, donHang.toMapHuyDon(), new IAfterUpdateObject() {
                             @Override
                             public void onSuccess(Object obj) {
@@ -108,9 +112,9 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
                     }
                 });
 
-                if (donHang.getGhi_chu().isEmpty()) {
+                if (donHang.getGhi_chu() == null) {
                     tvGhiChu.setText("None");
-                } else if (!donHang.getGhi_chu().isEmpty()) {
+                } else if (donHang.getGhi_chu() != null || donHang.getGhi_chu().isEmpty()) {
                     tvGhiChu.setText(donHang.getGhi_chu());
                 }
 
@@ -164,7 +168,6 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChiTietDonHangActivity.this);
         rcvChiTietDonHang.setLayoutManager(linearLayoutManager);
         rcvChiTietDonHang.addItemDecoration(new DividerItemDecoration(ChiTietDonHangActivity.this, DividerItemDecoration.VERTICAL));
-        rcvChiTietDonHang.setHasFixedSize(true);
 
 
         toolbarChiTietDonHang.setNavigationOnClickListener(v -> {

@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:text="Thời gian đặt hàng: "
+            android:text="Giao hàng dự kiến: "
             android:textSize="18dp"/>
         <TextView
             android:id="@+id/tv_NgayDatHang"

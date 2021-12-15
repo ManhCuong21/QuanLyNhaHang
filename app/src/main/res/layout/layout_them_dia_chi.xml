@@ -29,7 +29,7 @@
         android:layout_marginEnd="32dp"
         android:hint="Nhập họ tên">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtHoTen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         android:layout_marginEnd="32dp"
         android:hint="Nhập địa chỉ">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtDiaChi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
         android:layout_marginEnd="32dp"
         android:hint="Nhập số điện thoại">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtSDT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
             android:layout_marginLeft="24dp"
             android:backgroundTint="@color/orange"
             android:minWidth="100dp"
-            android:text="Thêm"
+            android:text="Lưu"
             android:textColor="@color/white" />
     </LinearLayout>
 

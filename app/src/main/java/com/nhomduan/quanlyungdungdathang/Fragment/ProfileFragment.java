@@ -2,33 +2,29 @@ package com.nhomduan.quanlyungdungdathang.Fragment;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.firebase.database.DatabaseError;
 import com.nhomduan.quanlyungdungdathang.Activity.AvatarActivity;
@@ -37,29 +33,26 @@ import com.nhomduan.quanlyungdungdathang.Activity.LoginActivity;
 import com.nhomduan.quanlyungdungdathang.Activity.OrderActivity;
 import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
-import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterRequestPermission;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
+import com.nhomduan.quanlyungdungdathang.LocalDatabase.LocalUserDatabase;
 import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 import com.squareup.picasso.Picasso;
 
 public class ProfileFragment extends Fragment {
-    private View mView;
     private ImageView imgEdit, imgAvatar;
     private TextView tvUsername;
     private Button btnCancel, btnChange, btnLogout, btnChangeAdress, btnComfirm;
     private EditText edUsername, edPass, edPassRepeat, edAddress;
-    private HomeActivity homeActivity;
-    private ToggleButton btnCheckPass2;
-    private ToggleButton btnCheckPass;
-    private Toolbar toolbar;
     private CardView cvAddress, cvOrder, cvSupport;
-    private FragmentManager fragmentManager;
+
+    private FragmentActivity fragmentActivity;
+    private Context mContext;
     private User user;
 
-    private ActivityResultLauncher<String> requestPermissionLauncher =
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     callPhone();
@@ -68,82 +61,117 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        fragmentActivity = getActivity();
+        mContext = context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        homeActivity= (HomeActivity) getActivity();
-        mView = inflater.inflate(R.layout.fragment_profile, container, false);
-        initView();
+        return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initView(view);
         getUserLogin();
+        setUpBtnLogout();
+        setUpChangeAvatarAction();
+        setUpToOrderAction();
+        setUpToSupportAction();
+    }
 
-        homeActivity.setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerViewHome, new HomeFragment())
-                        .commit();
-            }
-        });
-
-        btnLogout.setOnClickListener(v -> logoutMethod());
-        imgAvatar.setOnClickListener(v -> startActivity(new Intent(getContext(), AvatarActivity.class)));
-
-
-        cvOrder.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), OrderActivity.class));
-        });
-        cvSupport.setOnClickListener(v -> {
-            requestPermissions(Manifest.permission.CALL_PHONE, new IAfterRequestPermission() {
-                @Override
-                public void onAfterRequestPermission(boolean request) {
-                    if(request) {
-                        callPhone();
-                    }
-                }
-            });
-        });
-
-        return mView;
+    private void initView(View view) {
+        cvAddress = view.findViewById(R.id.cv_diachi);
+        cvOrder = view.findViewById(R.id.cv_donhang);
+        cvSupport = view.findViewById(R.id.cv_trungtamhotro);
+        imgAvatar = view.findViewById(R.id.img_avatar_profile);
+        imgEdit = view.findViewById(R.id.img_edit_profile);
+        tvUsername = view.findViewById(R.id.tv_accountname_profile);
+        btnLogout = view.findViewById(R.id.btn_logout_account);
     }
 
     private void getUserLogin() {
-        UserDao.getInstance().getUserByUserNameListener(HomeActivity.userLogin.getUsername(), new IAfterGetAllObject() {
-            @Override
-            public void iAfterGetAllObject(Object obj) {
-                user = (User) obj;
-                if(user.getUsername() != null) {
-                    buildComponentUser(user);
-                }
-            }
+        UserDao.getInstance().getUserByUserNameListener(OverUtils.getUserLogin(mContext).getUsername(),
+                new IAfterGetAllObject() {
+                    @Override
+                    public void iAfterGetAllObject(Object obj) {
+                        user = (User) obj;
+                        if (user.getUsername() != null) {
+                            buildComponentUser(user);
+                        }
+                    }
 
-            @Override
-            public void onError(DatabaseError error) {
+                    @Override
+                    public void onError(DatabaseError error) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void buildComponentUser(User user) {
-        if(user.getHinhanh() != null) {
+        if (user.getHinhanh() != null) {
             Picasso.get()
                     .load(user.getHinhanh())
                     .placeholder(R.drawable.ic_image)
                     .into(imgAvatar);
         }
-        if(user.getName() != null) {
+        if (user.getName() != null) {
             tvUsername.setText(user.getName());
         } else {
             tvUsername.setText(user.getUsername());
         }
-        imgEdit.setOnClickListener(v -> openDiaLog(user));
-        cvAddress.setOnClickListener(v -> openDiaLogAddress(user));
+        imgEdit.setOnClickListener(v -> openDialogToChangePassAndName(user));
+        cvAddress.setOnClickListener(v -> openDiaLogToChangeAddress(user));
+    }
+
+    private void setUpBtnLogout() {
+        btnLogout.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("Bạn có chắc muốn đăng xuất?")
+                    .setPositiveButton("CÓ", (dialog, which) -> {
+                        SharedPreferences.Editor editor = OverUtils.getSPInstance(getContext(), OverUtils.PASS_FILE).edit();
+                        editor.putString("pass", OverUtils.PASS_FLASH_ACTIVITY);
+                        editor.apply();
+                        LocalUserDatabase.getInstance(mContext).getUserDao().delete(OverUtils.getUserLogin(mContext));
+                        startActivity(new Intent(getContext(), LoginActivity.class));
+                        fragmentActivity.finish();
+                    })
+                    .setNegativeButton("HỦY", (dialog, which) -> dialog.dismiss());
+            Dialog dialog = builder.create();
+            dialog.show();
+        });
+    }
+
+    private void setUpChangeAvatarAction() {
+        imgAvatar.setOnClickListener(v -> {
+            startActivity(new Intent(mContext, AvatarActivity.class));
+        });
+    }
+
+    private void setUpToOrderAction() {
+        cvOrder.setOnClickListener(v -> {
+            startActivity(new Intent(mContext, OrderActivity.class));
+        });
+    }
+
+    private void setUpToSupportAction() {
+        cvSupport.setOnClickListener(v -> {
+            requestPermissions(Manifest.permission.CALL_PHONE, request -> {
+                if (request) {
+                    callPhone();
+                }
+            });
+        });
     }
 
     public void requestPermissions(String permission, IAfterRequestPermission onAfterRequestPermission) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(homeActivity.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (requireActivity().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
                 onAfterRequestPermission.onAfterRequestPermission(true);
             } else {
                 requestPermissionLauncher.launch(permission);
@@ -159,45 +187,9 @@ public class ProfileFragment extends Fragment {
         intent.setData(Uri.parse("tel:1900 1000"));
         startActivity(intent);
     }
-    private void initView() {
-        cvAddress = mView.findViewById(R.id.cv_diachi);
-        cvOrder = mView.findViewById(R.id.cv_donhang);
-        cvSupport = mView.findViewById(R.id.cv_trungtamhotro);
-        homeActivity = (HomeActivity) getActivity();
-        toolbar = mView.findViewById(R.id.toolbar_profile);
-        imgAvatar = mView.findViewById(R.id.img_avatar_profile);
-        imgEdit = mView.findViewById(R.id.img_edit_profile);
-        tvUsername = mView.findViewById(R.id.tv_accountname_profile);
-        btnLogout = mView.findViewById(R.id.btn_logout_account);
-        fragmentManager = getParentFragmentManager();
-    }
 
-    private void logoutMethod() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Bạn có muốn thoát không")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor editor = OverUtils.getSPInstance(getContext(), OverUtils.PASS_FILE).edit();
-                        editor.putString("pass", OverUtils.PASS_FLASH_ACTIVITY);
-                        editor.apply();
-
-                        startActivity(new Intent(getContext(), LoginActivity.class));
-                        getActivity().finish();
-                    }
-                })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        Dialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void openDiaLogAddress(User user) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    private void openDiaLogToChangeAddress(User user) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_address_user, null);
         builder.setView(view);
         Dialog dialog = builder.create();
@@ -218,6 +210,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Object obj) {
                         OverUtils.makeToast(getContext(), "Thay đổi địa chỉ thành công");
+                        LocalUserDatabase.getInstance(mContext).getUserDao().update(user);
                         dialog.dismiss();
                     }
 
@@ -232,8 +225,8 @@ public class ProfileFragment extends Fragment {
         btnComfirm.setOnClickListener(v -> dialog.dismiss());
     }
 
-    private void openDiaLog(User user) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+    private void openDialogToChangePassAndName(User user) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_user, null);
         builder.setView(view);
         Dialog dialog = builder.create();
@@ -244,9 +237,9 @@ public class ProfileFragment extends Fragment {
         btnChange = view.findViewById(R.id.btnChangeThongTin_profile);
         btnCancel = view.findViewById(R.id.btnHuyChangeThongTin_profile);
 
-        edPass.setText(HomeActivity.userLogin.getPassword());
-        edPassRepeat.setText(HomeActivity.userLogin.getPassword());
-        edUsername.setText(HomeActivity.userLogin.getName());
+        edPass.setText(user.getPassword());
+        edPassRepeat.setText(user.getPassword());
+        edUsername.setText(user.getName());
 
 
         btnChange.setOnClickListener(v -> {
@@ -260,6 +253,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Object obj) {
                         OverUtils.makeToast(getContext(), "Thay đổi thông tin thành công");
+                        LocalUserDatabase.getInstance(mContext).getUserDao().update(user);
                         dialog.dismiss();
                     }
 

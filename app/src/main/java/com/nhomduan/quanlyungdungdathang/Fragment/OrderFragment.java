@@ -31,13 +31,9 @@ import java.util.List;
 
 public class OrderFragment extends Fragment {
 
-
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
-    private ImageView imgBack;
     private DanhSachDonHangPagerAdapter danhSachDonHangPagerAdapter;
-    private HomeActivity homeActivity;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,10 +44,8 @@ public class OrderFragment extends Fragment {
     }
 
     private void init(View v) {
-        homeActivity = (HomeActivity) requireActivity();
         tabLayout = v.findViewById(R.id.tabLayout_order);
         viewPager2 = v.findViewById(R.id.viewpager2_order);
-        imgBack = v.findViewById(R.id.imgBack);
 
         List<TrangThai> trangThaiList = getListTrangThai();
         danhSachDonHangPagerAdapter = new DanhSachDonHangPagerAdapter(getActivity(), trangThaiList);
@@ -60,22 +54,12 @@ public class OrderFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             tab.setText(TrangThai.values()[position].getTrangThai());
         }).attach();
-
-        imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerViewHome, new HomeFragment())
-                        .commit();
-                homeActivity.getBottomNavigationView().setSelectedItemId(R.id.nav_home);
-            }
-        });
     }
 
     private List<TrangThai> getListTrangThai() {
         List<TrangThai> result = new ArrayList<>();
         for(int i = 0; i < TrangThai.values().length; i++) {
-            if(!TrangThai.values()[i].getTrangThai().equals(TrangThai.HD.getTrangThai())) {
+            if(!TrangThai.values()[i].getTrangThai().equals(TrangThai.HUY_DON.getTrangThai())) {
                 result.add(TrangThai.values()[i]);
             }
         }

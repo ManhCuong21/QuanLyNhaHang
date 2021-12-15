@@ -51,7 +51,7 @@ public class OrderActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(OrderActivity.this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(donHangAdapter);
-        UserDao.getInstance().getDonHangByUser(HomeActivity.userLogin, new IAfterGetAllObject() {
+        UserDao.getInstance().getDonHangByUser(OverUtils.getUserLogin(OrderActivity.this), new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 donHangList = (List<DonHang>) obj;

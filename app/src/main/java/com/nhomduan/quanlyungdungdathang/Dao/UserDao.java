@@ -3,28 +3,20 @@ package com.nhomduan.quanlyungdungdathang.Dao;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.nhomduan.quanlyungdungdathang.Fragment.DanhSachDonHangByTTFragment;
-import com.nhomduan.quanlyungdungdathang.Interface.IAfterDeleteObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
 import com.nhomduan.quanlyungdungdathang.Model.DonHang;
 import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.User;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +35,8 @@ public class UserDao {
         }
         return instance;
     }
+
+
 
 
     public void getAllUserListener(IAfterGetAllObject iAfterGetAllObject) {
@@ -119,8 +113,10 @@ public class UserDao {
                     User user = dataSnapshot.getValue(User.class);
                     iAfterGetAllObject.iAfterGetAllObject(user);
                 } else {
-                    iAfterGetAllObject.iAfterGetAllObject(new User());
+                    iAfterGetAllObject.iAfterGetAllObject(null);
                 }
+            } else {
+                iAfterGetAllObject.onError(null);
             }
         });
     }
@@ -156,7 +152,7 @@ public class UserDao {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         List<String> sanPhamYeuThichList = new ArrayList<>();
-                        for(DataSnapshot data : snapshot.getChildren()) {
+                        for (DataSnapshot data : snapshot.getChildren()) {
                             String maSP = data.getValue(String.class);
                             sanPhamYeuThichList.add(maSP);
                         }
@@ -177,9 +173,9 @@ public class UserDao {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<DonHang> donHangList = new ArrayList<>();
-                for(DataSnapshot data : snapshot.getChildren()) {
+                for (DataSnapshot data : snapshot.getChildren()) {
                     DonHang donHang = data.getValue(DonHang.class);
-                    if(donHang != null) {
+                    if (donHang != null) {
                         donHangList.add(donHang);
                     }
                 }
@@ -215,11 +211,11 @@ public class UserDao {
                 .child("gio_hang").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     DataSnapshot snapshot = task.getResult();
-                    if(snapshot != null) {
+                    if (snapshot != null) {
                         List<GioHang> gioHangList = new ArrayList<>();
-                        for(DataSnapshot data : snapshot.getChildren()) {
+                        for (DataSnapshot data : snapshot.getChildren()) {
                             GioHang gioHang = data.getValue(GioHang.class);
                             gioHangList.add(gioHang);
                         }
@@ -228,6 +224,40 @@ public class UserDao {
                         iAfterGetAllObject.onError(null);
                     }
                 }
+            }
+        });
+    }
+
+    public void isDuplicatePhoneNumber(String phone_number, IAfterGetAllObject iAfterGetAllObject) {
+        Query query = FirebaseDatabase.getInstance().getReference().child("user").orderByChild("phone_number")
+                .equalTo(phone_number);
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DataSnapshot snapshot = task.getResult();
+                assert snapshot != null;
+                if (snapshot.getChildrenCount() == 0) {
+                    iAfterGetAllObject.iAfterGetAllObject(false);
+                } else {
+                    iAfterGetAllObject.iAfterGetAllObject(true);
+                }
+            }
+        });
+    }
+
+    public void isDuplicateUserName(String userName, IAfterGetAllObject iAfterGetAllObject) {
+        Query query = FirebaseDatabase.getInstance().getReference().child("user").orderByChild("username")
+                .equalTo(userName);
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DataSnapshot snapshot = task.getResult();
+                assert snapshot != null;
+                if (snapshot.getChildrenCount() == 0) {
+                    iAfterGetAllObject.iAfterGetAllObject(false);
+                } else {
+                    iAfterGetAllObject.iAfterGetAllObject(true);
+                }
+            } else {
+                Log.e("TAG", task.getException().toString() + "");
             }
         });
     }

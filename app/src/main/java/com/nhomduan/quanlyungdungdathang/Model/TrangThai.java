@@ -3,7 +3,7 @@ package com.nhomduan.quanlyungdungdathang.Model;
 import java.io.Serializable;
 
 public enum TrangThai implements Serializable {
-    CXN("Chưa xác nhận"), CB("Chế biến"), DGH("Đang giao hàng"), HT("Hoàn thành"), HD("Hủy đơn");
+    CHUA_XAC_NHAN("Chưa xác nhận"), CHE_BIEN("Chế biến"), DANG_GIAO_HANG("Đang giao hàng"), HOAN_THANH("Hoàn thành"), HUY_DON("Hủy đơn");
 
     private String trangThai;
 

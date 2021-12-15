@@ -52,8 +52,7 @@
                     android:drawableTint="@color/white"
                     android:gravity="center_vertical"
                     android:text="Giao đến: "
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/white"/>
 
                 <TextView
                     android:id="@+id/tvThemDiaChi"
@@ -64,8 +63,7 @@
                     android:drawablePadding="4dp"
                     android:gravity="center_vertical"
                     android:text="Thêm địa chỉ"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 

@@ -2,6 +2,7 @@ package com.nhomduan.quanlyungdungdathang.Activity;
 
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -33,7 +34,9 @@ import com.nhomduan.quanlyungdungdathang.Adapter.AvatarAdapter;
 import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
 import com.nhomduan.quanlyungdungdathang.Interface.ClickAvatar;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
+import com.nhomduan.quanlyungdungdathang.LocalDatabase.LocalUserDatabase;
 import com.nhomduan.quanlyungdungdathang.Model.Avatar;
+import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 
@@ -45,6 +48,7 @@ public class AvatarActivity extends AppCompatActivity {
     private AvatarAdapter adapter;
     private ProgressDialog progressDialog;
     private List<Avatar> list = new ArrayList<>();
+    private User user;
     ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
             uri -> {
                 progressDialog = new ProgressDialog(AvatarActivity.this);
@@ -57,12 +61,13 @@ public class AvatarActivity extends AppCompatActivity {
                     fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            HomeActivity.userLogin.setHinhanh(String.valueOf(uri));
-                            UserDao.getInstance().updateUser(HomeActivity.userLogin, HomeActivity.userLogin.toMapAvatar(), new IAfterUpdateObject() {
+                            user.setHinhanh(String.valueOf(uri));
+                            UserDao.getInstance().updateUser(user, user.toMapAvatar(), new IAfterUpdateObject() {
                                 @Override
                                 public void onSuccess(Object obj) {
                                     progressDialog.cancel();
                                     OverUtils.makeToast(getApplicationContext(), "cập nhật ảnh thành công");
+                                    LocalUserDatabase.getInstance(AvatarActivity.this).getUserDao().update(user);
                                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                                     intent.setAction(OverUtils.GO_TO_ORDER_FROFILE_FRAGMENT);
                                     startActivity(intent);
@@ -81,16 +86,20 @@ public class AvatarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_avatar);
+        user = OverUtils.getUserLogin(this);
         initView();
-        getListAvatar();
-        adapter = new AvatarAdapter(this, list);
-        recyclerView.setAdapter(adapter);
+        setUpAvatarList();
+        setUpSelectImg();
+
+    }
+
+    private void setUpSelectImg() {
         adapter.setClickAvatar(avatar -> {
             if(avatar.getImage().equals("null")) {
                 mGetContent.launch("image/*");
             } else {
-                HomeActivity.userLogin.setHinhanh(avatar.getImage());
-                UserDao.getInstance().updateUser(HomeActivity.userLogin, HomeActivity.userLogin.toMapAvatar(), new IAfterUpdateObject() {
+                user.setHinhanh(avatar.getImage());
+                UserDao.getInstance().updateUser(user, user.toMapAvatar(), new IAfterUpdateObject() {
                     @Override
                     public void onSuccess(Object obj) {
                         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
@@ -107,18 +116,17 @@ public class AvatarActivity extends AppCompatActivity {
         });
     }
 
-
-    private void initView() {
-        recyclerView = findViewById(R.id.rv_avatar);
+    private void setUpAvatarList() {
+        adapter = new AvatarAdapter(this, list);
+        recyclerView.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-    }
 
-    private void getListAvatar() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("avatar");
         myRef.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (list != null) {
@@ -136,6 +144,11 @@ public class AvatarActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
+
+
+    private void initView() {
+        recyclerView = findViewById(R.id.rv_avatar);
     }
 
     @Override

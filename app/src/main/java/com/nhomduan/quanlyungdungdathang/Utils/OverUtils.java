@@ -12,7 +12,9 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
+import com.nhomduan.quanlyungdungdathang.LocalDatabase.LocalUserDatabase;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
+import com.nhomduan.quanlyungdungdathang.Model.User;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -112,5 +114,10 @@ public class OverUtils {
             }
         }
         return result;
+    }
+
+    public static User getUserLogin(Context context) {
+        List<User> userList = LocalUserDatabase.getInstance(context).getUserDao().getAll();
+        return userList.get(0);
     }
 }

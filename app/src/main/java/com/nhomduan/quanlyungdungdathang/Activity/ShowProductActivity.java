@@ -21,8 +21,11 @@ import com.nhomduan.quanlyungdungdathang.Dao.ProductDao;
 import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IAfterUpdateObject;
+import com.nhomduan.quanlyungdungdathang.LocalDatabase.LocalUserDatabase;
 import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
+import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 import com.squareup.picasso.Picasso;
@@ -49,13 +52,11 @@ public class ShowProductActivity extends AppCompatActivity {
     private ImageView imgProduct;
     private Button btnMuaNgay;
 
-
-
-
     private ToggleButton btnLike;
     private int soLuong = 1;
 
     private Product productDaChon;
+    private User user;
 
 
     @Override
@@ -72,6 +73,7 @@ public class ShowProductActivity extends AppCompatActivity {
     }
 
     private void getDuLieu() {
+        user = OverUtils.getUserLogin(ShowProductActivity.this);
         Intent intent = getIntent();
         String productId = intent.getStringExtra("productId");
         ProductDao.getInstance().getProductByIdListener(productId, new IAfterGetAllObject() {
@@ -110,14 +112,24 @@ public class ShowProductActivity extends AppCompatActivity {
                 if (btnLike.isChecked()) {
 
                     // xử lý phần user
-                    List<String> sanPhamYeuThichList = HomeActivity.userLogin.getMa_sp_da_thich();
+                    List<String> sanPhamYeuThichList = user.getMa_sp_da_thich();
                     if(sanPhamYeuThichList == null) {
                         sanPhamYeuThichList = new ArrayList<>();
                     }
                     sanPhamYeuThichList.add(productDaChon.getId());
-                    HomeActivity.userLogin.setMa_sp_da_thich(sanPhamYeuThichList);
-                    UserDao.getInstance().updateUser(HomeActivity.userLogin,
-                            HomeActivity.userLogin.toMapSPDaThich());
+                    user.setMa_sp_da_thich(sanPhamYeuThichList);
+                    UserDao.getInstance().updateUser(user,
+                            user.toMapSPDaThich(), new IAfterUpdateObject() {
+                                @Override
+                                public void onSuccess(Object obj) {
+                                    LocalUserDatabase.getInstance(ShowProductActivity.this).getUserDao().update(user);
+                                }
+
+                                @Override
+                                public void onError(DatabaseError error) {
+
+                                }
+                            });
 
                     // xử lý phần sản phẩm
                     productDaChon.setRate(productDaChon.getRate() + 1);
@@ -127,7 +139,7 @@ public class ShowProductActivity extends AppCompatActivity {
                 } else {
 
                     // xử lý phần user
-                    List<String> sanPhamYeuThichList = HomeActivity.userLogin.getMa_sp_da_thich();
+                    List<String> sanPhamYeuThichList = user.getMa_sp_da_thich();
                     int viTri = 0; // vị trí này dùng để xóa cái sp mà user đã thích từ trước
                     for (int i = 0; i < sanPhamYeuThichList.size(); i++) {
                         if (sanPhamYeuThichList.get(i).equals(productDaChon.getId())) {
@@ -135,9 +147,19 @@ public class ShowProductActivity extends AppCompatActivity {
                         }
                     }
                     sanPhamYeuThichList.remove(viTri);
-                    HomeActivity.userLogin.setMa_sp_da_thich(sanPhamYeuThichList);
-                    UserDao.getInstance().updateUser(HomeActivity.userLogin,
-                            HomeActivity.userLogin.toMapSPDaThich());
+                    user.setMa_sp_da_thich(sanPhamYeuThichList);
+                    UserDao.getInstance().updateUser(user,
+                            user.toMapSPDaThich(), new IAfterUpdateObject() {
+                                @Override
+                                public void onSuccess(Object obj) {
+                                    LocalUserDatabase.getInstance(ShowProductActivity.this).getUserDao().update(user);
+                                }
+
+                                @Override
+                                public void onError(DatabaseError error) {
+
+                                }
+                            });
 
                     // xử lý phần sản phẩm
                     productDaChon.setRate(productDaChon.getRate() - 1);
@@ -205,7 +227,7 @@ public class ShowProductActivity extends AppCompatActivity {
         tvProcessingTime.setText(Processingtime + " phút");
 
         // xử lý phần yêu thích của người dùng, nếu người dùng đã yêu thích từ trước hiển thị tim màu cam, ngược lại tim màu trắng
-        List<String> sanPhamYeuThichList = HomeActivity.userLogin.getMa_sp_da_thich();
+        List<String> sanPhamYeuThichList = user.getMa_sp_da_thich();
         if (sanPhamYeuThichList != null) {
             for (String spYT : sanPhamYeuThichList) {
                 if (spYT.equals(productDaChon.getId())) {
@@ -261,7 +283,7 @@ public class ShowProductActivity extends AppCompatActivity {
 
     public void btnAddToCard(View view) {
         GioHang gioHang = new GioHang(productDaChon.getId(), soLuong);
-        List<GioHang> gioHangList = HomeActivity.userLogin.getGio_hang();
+        List<GioHang> gioHangList = user.getGio_hang();
         if (gioHangList == null) {
             gioHangList = new ArrayList<>();
             gioHangList.add(gioHang);
@@ -294,12 +316,13 @@ public class ShowProductActivity extends AppCompatActivity {
     }
 
     private void postGioHang(List<GioHang> gioHangList) {
-        HomeActivity.userLogin.setGio_hang(gioHangList);
-        GioHangDao.getInstance().insertGioHang(HomeActivity.userLogin,
-                HomeActivity.userLogin.getGio_hang(),
+        user.setGio_hang(gioHangList);
+        GioHangDao.getInstance().insertGioHang(user,
+                user.getGio_hang(),
                 new IAfterInsertObject() {
                     @Override
                     public void onSuccess(Object obj) {
+                        LocalUserDatabase.getInstance(ShowProductActivity.this).getUserDao().update(user);
                         OverUtils.makeToast(ShowProductActivity.this, "Thêm thành công");
                     }
 

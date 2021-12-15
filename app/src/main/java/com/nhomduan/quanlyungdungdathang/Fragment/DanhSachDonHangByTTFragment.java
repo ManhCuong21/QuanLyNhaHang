@@ -28,6 +28,7 @@ import com.nhomduan.quanlyungdungdathang.Model.DonHang;
 import com.nhomduan.quanlyungdungdathang.Model.TrangThai;
 import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
+import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,24 +36,14 @@ import java.util.List;
 
 public class DanhSachDonHangByTTFragment extends Fragment {
     private TrangThai trangThai;
-
     private RecyclerView rcvDanhSachDonHang;
     private List<DonHang> donHangList;
     private DonHangAdapter donHangAdapter;
-
-    public static DanhSachDonHangByTTFragment newInstance(TrangThai trangThai) {
-        Bundle args = new Bundle();
-        args.putSerializable("trang_thai", trangThai);
-        DanhSachDonHangByTTFragment fragment = new DanhSachDonHangByTTFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_danh_sach_don_hang_by_t_t, container, false);
     }
 
@@ -80,10 +71,9 @@ public class DanhSachDonHangByTTFragment extends Fragment {
         donHangList = new ArrayList<>();
         donHangAdapter = new DonHangAdapter(getContext(), donHangList);
         rcvDanhSachDonHang.setLayoutManager(new LinearLayoutManager(getContext()));
-        rcvDanhSachDonHang.setHasFixedSize(true);
         rcvDanhSachDonHang.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         rcvDanhSachDonHang.setAdapter(donHangAdapter);
-        UserDao.getInstance().getDonHangByUser(HomeActivity.userLogin, new IAfterGetAllObject() {
+        UserDao.getInstance().getDonHangByUser(OverUtils.getUserLogin(getContext()), new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 donHangList = loc(trangThai, (List<DonHang>) obj);

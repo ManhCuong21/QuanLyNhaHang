@@ -32,9 +32,11 @@ import com.nhomduan.quanlyungdungdathang.Interface.IAfterInsertObject;
 import com.nhomduan.quanlyungdungdathang.Interface.OnAddToCard;
 import com.nhomduan.quanlyungdungdathang.Interface.OnClickItem;
 import com.nhomduan.quanlyungdungdathang.Interface.UpdateRecyclerView;
+import com.nhomduan.quanlyungdungdathang.LocalDatabase.LocalUserDatabase;
 import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.LoaiSP;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
+import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 
@@ -70,17 +72,19 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
     private HorizontalProductAdapter moiNhatAdapter;
 
     View view;
+    private User user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home, container, false);
+        view =  inflater.inflate(R.layout.fragment_home, container, false);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        user = OverUtils.getUserLogin(getContext());
         initView(view);
         setUpTvHoTen();
         setUpTvTimKiem();
@@ -164,11 +168,11 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
     }
 
     private void setUpTvHoTen() {
-        String hoTen = HomeActivity.userLogin.getName();
+        String hoTen = user.getName();
         if (hoTen != null) {
             tvTenNguoiDung.setText("Hi " + hoTen);
         } else {
-            String userName = HomeActivity.userLogin.getUsername();
+            String userName = user.getUsername();
             tvTenNguoiDung.setText("Hi " + userName);
         }
     }
@@ -227,7 +231,7 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
     @Override
     public void onAddToCard(Product product) {
         GioHang gioHang = new GioHang(product.getId(), 1);
-        List<GioHang> gioHangList = HomeActivity.userLogin.getGio_hang();
+        List<GioHang> gioHangList = user.getGio_hang();
         if (gioHangList == null) {
             gioHangList = new ArrayList<>();
             gioHangList.add(gioHang);
@@ -262,12 +266,13 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
     }
 
     private void postGioHang(List<GioHang> gioHangList) {
-        HomeActivity.userLogin.setGio_hang(gioHangList);
-        GioHangDao.getInstance().insertGioHang(HomeActivity.userLogin,
-                HomeActivity.userLogin.getGio_hang(),
+        user.setGio_hang(gioHangList);
+        GioHangDao.getInstance().insertGioHang(user,
+                user.getGio_hang(),
                 new IAfterInsertObject() {
                     @Override
                     public void onSuccess(Object obj) {
+                        LocalUserDatabase.getInstance(getContext()).getUserDao().update(user);
                         OverUtils.makeToast(getContext(), "Thêm thành công");
                     }
 
@@ -276,9 +281,5 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
                         OverUtils.makeToast(getContext(), ERROR_MESSAGE);
                     }
                 });
-    }
-
-    public void btnMuaNgay(View view){
-
     }
 }

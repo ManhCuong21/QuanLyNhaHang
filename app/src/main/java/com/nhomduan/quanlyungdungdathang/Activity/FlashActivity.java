@@ -4,6 +4,7 @@ import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,59 +25,49 @@ import java.util.TimerTask;
 
 
 public class FlashActivity extends AppCompatActivity {
-    private ProgressBar progressCircular;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String pass = OverUtils.getSPInstance(FlashActivity.this, OverUtils.PASS_FILE)
+        String passState = OverUtils.getSPInstance(FlashActivity.this, OverUtils.PASS_FILE)
                 .getString("pass", OverUtils.NO_PASS);
-        if (pass.equals(OverUtils.NO_PASS)) {
-            setContentView(R.layout.activity_main);
-        } else if (pass.equals(OverUtils.PASS_FLASH_ACTIVITY)) {
-            setContentView(R.layout.activity_flash);
-            progressCircular = findViewById(R.id.progress_circular);
-            progressCircular.setIndeterminateDrawable(new Wave());
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(FlashActivity.this, LoginActivity.class));
-                    finish();
-                }
-            }, 500);
+        setUpPassAction(passState);
+    }
 
-        } else if (pass.equals(OverUtils.PASS_LOGIN_ACTIVITY)) {
-            setContentView(R.layout.activity_flash);
-            progressCircular = findViewById(R.id.progress_circular);
-            progressCircular.setIndeterminateDrawable(new Wave());
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    String userName = OverUtils.getSPInstance(FlashActivity.this, OverUtils.ACCOUNT_FILE)
-                            .getString("username", "");
-                    UserDao.getInstance().getUserByUserName(userName, new IAfterGetAllObject() {
-                        @Override
-                        public void iAfterGetAllObject(Object obj) {
-                            User user = (User) obj;
-                            if (user.getUsername() != null) {
-                                Intent intent = new Intent(FlashActivity.this, HomeActivity.class);
-                                intent.putExtra("user", user);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                OverUtils.makeToast(FlashActivity.this, "Không tồn tại user này!");
-                            }
-                        }
-
-                        @Override
-                        public void onError(DatabaseError error) {
-                        }
-                    });
-                }
-            }, 500);
+    private void setUpPassAction(String passState) {
+        switch (passState) {
+            case OverUtils.NO_PASS:
+                setContentView(R.layout.activity_main);
+                break;
+            case OverUtils.PASS_FLASH_ACTIVITY:
+                Intent loginIntent = new Intent(FlashActivity.this, LoginActivity.class);
+                goToActivity(loginIntent);
+                break;
+            case OverUtils.PASS_LOGIN_ACTIVITY:
+                Intent homeIntent = new Intent(FlashActivity.this, HomeActivity.class);
+                goToActivity(homeIntent);
+                break;
+            default:
+                break;
         }
+    }
+
+    private void goToActivity(Intent intent) {
+        ProgressBar progressCircular;
+        Timer timer = new Timer();
+        // cài đặt view
+        setContentView(R.layout.activity_flash);
+        progressCircular = findViewById(R.id.progress_circular);
+        progressCircular.setIndeterminateDrawable(new Wave());
+
+        // cài đặt delay vào màn hình login
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                startActivity(intent);
+                finish();
+            }
+        }, 1500);
     }
 
 
@@ -85,5 +76,6 @@ public class FlashActivity extends AppCompatActivity {
         editor.putString("pass", OverUtils.PASS_FLASH_ACTIVITY);
         editor.apply();
         startActivity(new Intent(FlashActivity.this, LoginActivity.class));
+        finish();
     }
 }

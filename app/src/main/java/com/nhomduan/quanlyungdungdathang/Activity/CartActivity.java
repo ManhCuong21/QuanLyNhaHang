@@ -1,6 +1,7 @@
 package com.nhomduan.quanlyungdungdathang.Activity;
 
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
+import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.HOAT_DONG;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -48,9 +49,9 @@ public class CartActivity extends AppCompatActivity implements OnClickItem, OnCh
         setContentView(R.layout.activity_cart);
         initView();
         setUpToolbar();
-
     }
 
+    static int soLuongSPPhuHop = 0;
     @Override
     protected void onStart() {
         super.onStart();
@@ -60,8 +61,37 @@ public class CartActivity extends AppCompatActivity implements OnClickItem, OnCh
             if (gioHangList == null || gioHangList.size() == 0) {
                 OverUtils.makeToast(CartActivity.this, "Giỏ hàng của quý khách đang trống");
             } else {
-                Intent intent = new Intent(CartActivity.this, ThanhToanActivity.class);
-                startActivity(intent);
+                int count = 0;
+                for(int i = 0; i < gioHangList.size(); i++) {
+                    count++;
+                    int finalCount = count;
+                    ProductDao.getInstance().getProductById(gioHangList.get(i).getMa_sp(), new IAfterGetAllObject() {
+                        @Override
+                        public void iAfterGetAllObject(Object obj) {
+                            if(obj != null) {
+                                Product product = (Product) obj;
+                                if(product.getTrang_thai().equals(HOAT_DONG)) {
+                                    soLuongSPPhuHop++;
+                                }
+                                if(finalCount == gioHangList.size()) {
+                                    if(soLuongSPPhuHop == 0) {
+                                        OverUtils.makeToast(CartActivity.this, "Giỏ hàng không có sản phẩm phù hợp");
+                                    } else {
+                                        soLuongSPPhuHop = 0;
+                                        Intent intent = new Intent(CartActivity.this, ThanhToanActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(DatabaseError error) {
+
+                        }
+                    });
+                }
+
             }
 
         });
@@ -85,7 +115,7 @@ public class CartActivity extends AppCompatActivity implements OnClickItem, OnCh
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(CartActivity.this));
         recyclerViewCart.setAdapter(cartAdapter);
 
-        UserDao.getInstance().getGioHangOfUser(HomeActivity.userLogin, new IAfterGetAllObject() {
+        UserDao.getInstance().getGioHangOfUser(OverUtils.getUserLogin(CartActivity.this), new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 gioHangList = (List<GioHang>) obj;
@@ -114,17 +144,18 @@ public class CartActivity extends AppCompatActivity implements OnClickItem, OnCh
         GioHang gioHang = (GioHang) obj;
         gioHangList.remove(gioHang);
         cartAdapter.setData(gioHangList);
-        HomeActivity.userLogin.setGio_hang(gioHangList);
-        UserDao.getInstance().updateUser(HomeActivity.userLogin,
-                HomeActivity.userLogin.toMapGioHang());
+        OverUtils.getUserLogin(CartActivity.this).setGio_hang(gioHangList);
+        UserDao.getInstance().updateUser(OverUtils.getUserLogin(CartActivity.this),
+                OverUtils.getUserLogin(CartActivity.this).toMapGioHang());
     }
 
 
     @Override
     public void onChangeItem(int viTriItem, GioHang gioHang) {
         gioHangList.set(viTriItem, gioHang);
-        HomeActivity.userLogin.setGio_hang(gioHangList);
-        UserDao.getInstance().updateUser(HomeActivity.userLogin, HomeActivity.userLogin.toMapGioHang());
+        OverUtils.getUserLogin(CartActivity.this).setGio_hang(gioHangList);
+        UserDao.getInstance().updateUser(OverUtils.getUserLogin(CartActivity.this),
+                OverUtils.getUserLogin(CartActivity.this).toMapGioHang());
         cartAdapter.setData(gioHangList);
     }
 
