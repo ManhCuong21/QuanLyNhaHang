@@ -16,6 +16,7 @@ import com.github.ybq.android.spinkit.style.Wave;
 import com.google.firebase.database.DatabaseError;
 import com.nhomduan.quanlyungdungdathang.Dao.UserDao;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IDone;
 import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
@@ -25,7 +26,7 @@ import java.util.TimerTask;
 
 
 public class FlashActivity extends AppCompatActivity {
-
+    public static User userLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,14 +61,29 @@ public class FlashActivity extends AppCompatActivity {
         progressCircular = findViewById(R.id.progress_circular);
         progressCircular.setIndeterminateDrawable(new Wave());
 
-        // cài đặt delay vào màn hình login
-        timer.schedule(new TimerTask() {
+        UserDao.getInstance().getUserByUserName(OverUtils.getUserLogin(FlashActivity.this).getUsername(), new IAfterGetAllObject() {
             @Override
-            public void run() {
-                startActivity(intent);
-                finish();
+            public void iAfterGetAllObject(Object obj) {
+                if(obj != null) {
+                    userLogin = (User) obj;
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, 500);
+                }
             }
-        }, 1500);
+
+            @Override
+            public void onError(DatabaseError error) {
+                OverUtils.makeToast(FlashActivity.this, ERROR_MESSAGE);
+            }
+        });
+
+        // cài đặt delay vào màn hình login
+
     }
 
 

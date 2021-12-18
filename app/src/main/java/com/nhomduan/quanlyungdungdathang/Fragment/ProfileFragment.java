@@ -1,5 +1,7 @@
 package com.nhomduan.quanlyungdungdathang.Fragment;
 
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
+
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
@@ -96,7 +98,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserLogin() {
-        UserDao.getInstance().getUserByUserNameListener(OverUtils.getUserLogin(mContext).getUsername(),
+        UserDao.getInstance().getUserByUserNameListener(userLogin.getUsername(),
                 new IAfterGetAllObject() {
                     @Override
                     public void iAfterGetAllObject(Object obj) {

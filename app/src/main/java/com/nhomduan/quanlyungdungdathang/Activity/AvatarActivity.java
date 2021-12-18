@@ -1,5 +1,6 @@
 package com.nhomduan.quanlyungdungdathang.Activity;
 
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
 import android.annotation.SuppressLint;
@@ -48,45 +49,46 @@ public class AvatarActivity extends AppCompatActivity {
     private AvatarAdapter adapter;
     private ProgressDialog progressDialog;
     private List<Avatar> list = new ArrayList<>();
-    private User user;
     ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
             uri -> {
-                progressDialog = new ProgressDialog(AvatarActivity.this);
-                progressDialog.setMessage("Cập nhật ảnh ...");
-                progressDialog.show();
-                StorageReference fileRef =
-                        FirebaseStorage.getInstance().getReference("imageAvater/").
-                                child(System.currentTimeMillis() + "." + OverUtils.getExtensionFile(AvatarActivity.this, uri));
-                fileRef.putFile(uri).addOnSuccessListener(taskSnapshot -> {
-                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            user.setHinhanh(String.valueOf(uri));
-                            UserDao.getInstance().updateUser(user, user.toMapAvatar(), new IAfterUpdateObject() {
-                                @Override
-                                public void onSuccess(Object obj) {
-                                    progressDialog.cancel();
-                                    OverUtils.makeToast(getApplicationContext(), "cập nhật ảnh thành công");
-                                    LocalUserDatabase.getInstance(AvatarActivity.this).getUserDao().update(user);
-                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                                    intent.setAction(OverUtils.GO_TO_ORDER_FROFILE_FRAGMENT);
-                                    startActivity(intent);
-                                }
-                                @Override
-                                public void onError(DatabaseError error) {
-                                    OverUtils.makeToast(AvatarActivity.this, ERROR_MESSAGE);
-                                }
-                            });
-                        }
+                if (uri != null) {
+                    progressDialog = new ProgressDialog(AvatarActivity.this);
+                    progressDialog.setMessage("Cập nhật ảnh ...");
+                    progressDialog.show();
+                    StorageReference fileRef =
+                            FirebaseStorage.getInstance().getReference("imageAvater/").
+                                    child(System.currentTimeMillis() + "." + OverUtils.getExtensionFile(AvatarActivity.this, uri));
+                    fileRef.putFile(uri).addOnSuccessListener(taskSnapshot -> {
+                        fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                userLogin.setHinhanh(String.valueOf(uri));
+                                UserDao.getInstance().updateUser(userLogin, userLogin.toMapAvatar(), new IAfterUpdateObject() {
+                                    @Override
+                                    public void onSuccess(Object obj) {
+                                        progressDialog.cancel();
+                                        OverUtils.makeToast(getApplicationContext(), "cập nhật ảnh thành công");
+                                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                        intent.setAction(OverUtils.GO_TO_ORDER_FROFILE_FRAGMENT);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onError(DatabaseError error) {
+                                        OverUtils.makeToast(AvatarActivity.this, ERROR_MESSAGE);
+                                    }
+                                });
+                            }
+                        });
                     });
-                });
+                }
+
             });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_avatar);
-        user = OverUtils.getUserLogin(this);
         initView();
         setUpAvatarList();
         setUpSelectImg();
@@ -95,11 +97,11 @@ public class AvatarActivity extends AppCompatActivity {
 
     private void setUpSelectImg() {
         adapter.setClickAvatar(avatar -> {
-            if(avatar.getImage().equals("null")) {
+            if (avatar.getImage().equals("null")) {
                 mGetContent.launch("image/*");
             } else {
-                user.setHinhanh(avatar.getImage());
-                UserDao.getInstance().updateUser(user, user.toMapAvatar(), new IAfterUpdateObject() {
+                userLogin.setHinhanh(avatar.getImage());
+                UserDao.getInstance().updateUser(userLogin, userLogin.toMapAvatar(), new IAfterUpdateObject() {
                     @Override
                     public void onSuccess(Object obj) {
                         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);

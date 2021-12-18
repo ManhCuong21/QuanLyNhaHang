@@ -17,10 +17,19 @@ public class DonHang implements Serializable {
     private String trang_thai;
     private String thoiGianDatHang;
     private long thoiGianGiaoHang;
-    private long thoiGianGiaoHangDuKien;
     private String sdt;
+    private String thong_tin_huy_don;
+    private long thoiGianGiaoHangDuKien;
 
     public DonHang() {
+    }
+
+    public String getThong_tin_huy_don() {
+        return thong_tin_huy_don;
+    }
+
+    public void setThong_tin_huy_don(String thong_tin_huy_don) {
+        this.thong_tin_huy_don = thong_tin_huy_don;
     }
 
     public long getThoiGianGiaoHangDuKien() {
@@ -130,6 +139,7 @@ public class DonHang implements Serializable {
     public Map<String, Object> toMapHuyDon() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("trang_thai", trang_thai);
+        map.put("thong_tin_huy_don", thong_tin_huy_don);
         return map;
     }
 }

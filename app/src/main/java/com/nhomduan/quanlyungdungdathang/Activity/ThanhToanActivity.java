@@ -2,6 +2,7 @@ package com.nhomduan.quanlyungdungdathang.Activity;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.HOAT_DONG;
 
@@ -81,14 +82,12 @@ public class ThanhToanActivity extends AppCompatActivity {
     private static int soTienThanhToan;
 
     private String ghiChu;
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thanh_toan);
         initView();
-        user = OverUtils.getUserLogin(this);
         setUpToolbar();
         setUpCarDiaChi();
         setUpThemDiaChi();
@@ -135,9 +134,9 @@ public class ThanhToanActivity extends AppCompatActivity {
     }
 
     private void setUpCarDiaChi() {
-        String hoTen = user.getName();
-        String diaChi = user.getAddress();
-        String phoneNumber = user.getPhone_number();
+        String hoTen = userLogin.getName();
+        String diaChi = userLogin.getAddress();
+        String phoneNumber = userLogin.getPhone_number();
         if (hoTen == null || diaChi == null) {
             rcvDiaChi.setVisibility(INVISIBLE);
         } else {
@@ -167,14 +166,14 @@ public class ThanhToanActivity extends AppCompatActivity {
             btnThemDiaChi = bottomSheetDialog.findViewById(R.id.btnThemDiaChi);
 
 
-            if (user.getPhone_number() != null) {
-                edtSDT.setText(user.getPhone_number());
+            if (userLogin.getPhone_number() != null) {
+                edtSDT.setText(userLogin.getPhone_number());
             }
-            if (user.getName() != null) {
-                edtHoTen.setText(user.getName());
+            if (userLogin.getName() != null) {
+                edtHoTen.setText(userLogin.getName());
             }
-            if (user.getAddress() != null) {
-                edtDiaChi.setText(user.getAddress());
+            if (userLogin.getAddress() != null) {
+                edtDiaChi.setText(userLogin.getAddress());
             }
             btnHuy.setOnClickListener(v1 -> bottomSheetDialog.cancel());
 
@@ -191,12 +190,12 @@ public class ThanhToanActivity extends AppCompatActivity {
                     return;
                 }
 
-                user.setPhone_number(sdt);
-                user.setAddress(diaChi);
-                user.setName(hoTen);
+                userLogin.setPhone_number(sdt);
+                userLogin.setAddress(diaChi);
+                userLogin.setName(hoTen);
 
-                UserDao.getInstance().updateUser(OverUtils.getUserLogin(ThanhToanActivity.this),
-                        OverUtils.getUserLogin(ThanhToanActivity.this).toMapThongTinGiaoHang(),
+                UserDao.getInstance().updateUser(userLogin,
+                        userLogin.toMapThongTinGiaoHang(),
                         new IAfterUpdateObject() {
                             @Override
                             public void onSuccess(Object obj) {
@@ -205,7 +204,6 @@ public class ThanhToanActivity extends AppCompatActivity {
                                 tvHoTen.setText(hoTen);
                                 tvDiaChiGiaoHang.setText(diaChi);
                                 tvSDT.setText(sdt);
-                                LocalUserDatabase.getInstance(ThanhToanActivity.this).getUserDao().update(user);
                                 bottomSheetDialog.cancel();
                             }
 
@@ -291,7 +289,7 @@ public class ThanhToanActivity extends AppCompatActivity {
     private void setUpSanPhamList() {
         gioHangList = new ArrayList<>();
         gioHangListNoValid = new ArrayList<>();
-        UserDao.getInstance().getGioHangOfUser(user, new IAfterGetAllObject() {
+        UserDao.getInstance().getGioHangOfUser(userLogin, new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 List<GioHang> gioHangsOfUser = (List<GioHang>) obj;
@@ -349,7 +347,7 @@ public class ThanhToanActivity extends AppCompatActivity {
                         donHangChiTietList.add(donHangChiTiet);
 
                         // lấy thời gian giao hàng và phí
-                        thoiGianGiaoHang += (product.getThoiGianCheBien() * gioHang.getSo_luong());
+                        thoiGianGiaoHang += product.getThoiGianCheBien();
                         soTienThanhToan += ((product.getGia_ban() - (product.getGia_ban() * product.getKhuyen_mai())) * gioHang.getSo_luong());
                         if (count == gioHangList.size()) {
                             tvSoSanPham.setText(tongSoSP + " sản phẩm");
@@ -373,70 +371,75 @@ public class ThanhToanActivity extends AppCompatActivity {
         }
     }
 
+    private boolean datHang = true;
     private void setUpDatHang() {
         tvDangHang.setOnClickListener(v -> {
-            if (user.getAddress() == null || user.getName() == null) {
-                OverUtils.makeToast(ThanhToanActivity.this, "Cần thêm địa chỉ");
-                return;
-            }
-            UserDao.getInstance().getUserByUserName(user.getUsername(), new IAfterGetAllObject() {
-                @Override
-                public void iAfterGetAllObject(Object obj) {
-                    User user = (User) obj;
-                    if (user.getUsername() != null && user.isEnable()) {
-                        if (!donHangChiTietList.isEmpty()) {
-                            DonHang donHang = new DonHang();
-                            donHang.setUser_id(user.getUsername());
-                            donHang.setDia_chi(user.getAddress());
-                            donHang.setHo_ten(user.getName());
-                            donHang.setDon_hang_chi_tiets(donHangChiTietList);
-                            if(ghiChu != null) {
-                                donHang.setGhi_chu(ghiChu);
-                            }
-                            donHang.setSdt(user.getPhone_number());
-                            donHang.setTrang_thai(TrangThai.CHUA_XAC_NHAN.getTrangThai());
-                            donHang.setThoiGianDatHang(OverUtils.getSimpleDateFormat().format(new Date(System.currentTimeMillis())));
-                            donHang.setThoiGianGiaoHangDuKien(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(thoiGianGiaoHang) + TimeUnit.MINUTES.toMillis(30));
-                            donHang.setTong_tien(soTienThanhToan + soTienVanChuyen);
-                            String key = FirebaseDatabase.getInstance().getReference().child("don_hang").push().getKey();
-                            donHang.setId(key);
-                            OrderDao.getInstance().insertDonHang(donHang, new IAfterInsertObject() {
-                                @Override
-                                public void onSuccess(Object obj) {
-                                    xoaGioHang();
+            if(datHang) {
+                datHang = false;
+                if (userLogin.getAddress() == null || userLogin.getName() == null) {
+                    OverUtils.makeToast(ThanhToanActivity.this, "Cần thêm địa chỉ");
+                    return;
+                }
+                UserDao.getInstance().getUserByUserName(userLogin.getUsername(), new IAfterGetAllObject() {
+                    @Override
+                    public void iAfterGetAllObject(Object obj) {
+                        User user = (User) obj;
+                        if (user.getUsername() != null && user.isEnable()) {
+                            if (!donHangChiTietList.isEmpty()) {
+                                DonHang donHang = new DonHang();
+                                donHang.setUser_id(user.getUsername());
+                                donHang.setDia_chi(user.getAddress());
+                                donHang.setHo_ten(user.getName());
+                                donHang.setDon_hang_chi_tiets(donHangChiTietList);
+                                if(ghiChu != null) {
+                                    donHang.setGhi_chu(ghiChu);
                                 }
+                                donHang.setSdt(user.getPhone_number());
+                                donHang.setTrang_thai(TrangThai.CHUA_XAC_NHAN.getTrangThai());
+                                donHang.setThoiGianDatHang(OverUtils.getSimpleDateFormat().format(new Date(System.currentTimeMillis())));
+                                donHang.setThoiGianGiaoHangDuKien(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(thoiGianGiaoHang) + TimeUnit.MINUTES.toMillis(30));
+                                donHang.setTong_tien(soTienThanhToan + soTienVanChuyen);
+                                String key = FirebaseDatabase.getInstance().getReference().child("don_hang").push().getKey();
+                                donHang.setId(key);
+                                OrderDao.getInstance().insertDonHang(donHang, new IAfterInsertObject() {
+                                    @Override
+                                    public void onSuccess(Object obj) {
+                                        xoaGioHang();
+                                    }
 
-                                @Override
-                                public void onError(DatabaseError exception) {
-                                    OverUtils.makeToast(ThanhToanActivity.this, ERROR_MESSAGE);
-                                }
-                            });
+                                    @Override
+                                    public void onError(DatabaseError exception) {
+                                        OverUtils.makeToast(ThanhToanActivity.this, ERROR_MESSAGE);
+                                    }
+                                });
+                            } else {
+                                OverUtils.makeToast(ThanhToanActivity.this, "Quý khánh vui lòng chọn sản phẩm");
+                            }
                         } else {
-                            OverUtils.makeToast(ThanhToanActivity.this, "Quý khánh vui lòng chọn sản phẩm");
-                        }
-                    } else {
-                        if (user.getUsername() != null) {
-                            OverUtils.makeToast(ThanhToanActivity.this, "Tài khoản của bạn đã bị khóa");
+                            if (user.getUsername() != null) {
+                                OverUtils.makeToast(ThanhToanActivity.this, "Tài khoản của bạn đã bị khóa");
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onError(DatabaseError error) {
+                    @Override
+                    public void onError(DatabaseError error) {
 
-                }
-            });
+                    }
+                });
+            }
+
 
         });
     }
 
     private void xoaGioHang() {
-        user.setGio_hang(gioHangListNoValid);
-        GioHangDao.getInstance().insertGioHang(user, user.getGio_hang(), new IAfterInsertObject() {
+        userLogin.setGio_hang(gioHangListNoValid);
+        GioHangDao.getInstance().insertGioHang(userLogin, userLogin.getGio_hang(), new IAfterInsertObject() {
             @Override
             public void onSuccess(Object obj) {
-                LocalUserDatabase.getInstance(ThanhToanActivity.this).getUserDao().update(user);
                 OverUtils.makeToast(ThanhToanActivity.this, "Đặt hàng thành công");
+                datHang = true;
                 Intent intent = new Intent(ThanhToanActivity.this, HomeActivity.class);
                 intent.setAction(OverUtils.GO_TO_ORDER_FRAGMENT);
                 startActivity(intent);
