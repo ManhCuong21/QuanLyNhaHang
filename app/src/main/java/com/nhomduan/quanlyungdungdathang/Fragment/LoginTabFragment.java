@@ -1,5 +1,6 @@
 package com.nhomduan.quanlyungdungdathang.Fragment;
 
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
 import android.content.Intent;
@@ -132,6 +133,7 @@ public class LoginTabFragment extends Fragment {
                         User user = (User) obj;
                         if (user.getPassword().equals(password)) {
                             storageAccount(user);
+                            userLogin = user;
                             SharedPreferences.Editor editor = OverUtils.getSPInstance(getContext(), OverUtils.PASS_FILE).edit();
                             editor.putString("pass", OverUtils.PASS_LOGIN_ACTIVITY);
                             editor.apply();

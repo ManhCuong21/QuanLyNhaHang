@@ -1,5 +1,8 @@
 package com.nhomduan.quanlyungdungdathang.Fragment;
 
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
+
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -73,7 +76,7 @@ public class DanhSachDonHangByTTFragment extends Fragment {
         rcvDanhSachDonHang.setLayoutManager(new LinearLayoutManager(getContext()));
         rcvDanhSachDonHang.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         rcvDanhSachDonHang.setAdapter(donHangAdapter);
-        UserDao.getInstance().getDonHangByUser(OverUtils.getUserLogin(getContext()), new IAfterGetAllObject() {
+        UserDao.getInstance().getDonHangByUser(userLogin, new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 donHangList = loc(trangThai, (List<DonHang>) obj);

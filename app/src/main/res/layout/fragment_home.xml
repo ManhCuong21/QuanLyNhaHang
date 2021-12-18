@@ -106,7 +106,6 @@
                     app:layout_constraintVertical_bias=".1" />
 
                 <TextView
-                    android:onClick="btnMuaNgay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="6dp"

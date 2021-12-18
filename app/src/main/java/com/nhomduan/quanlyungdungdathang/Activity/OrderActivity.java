@@ -1,5 +1,6 @@
 package com.nhomduan.quanlyungdungdathang.Activity;
 
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
 import android.content.Intent;
@@ -51,7 +52,7 @@ public class OrderActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(OrderActivity.this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(donHangAdapter);
-        UserDao.getInstance().getDonHangByUser(OverUtils.getUserLogin(OrderActivity.this), new IAfterGetAllObject() {
+        UserDao.getInstance().getDonHangByUser(userLogin, new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
                 donHangList = (List<DonHang>) obj;

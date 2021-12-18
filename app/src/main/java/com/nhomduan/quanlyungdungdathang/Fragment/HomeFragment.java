@@ -1,9 +1,16 @@
 package com.nhomduan.quanlyungdungdathang.Fragment;
 
+
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,14 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.google.firebase.database.DatabaseError;
-import com.nhomduan.quanlyungdungdathang.Activity.HomeActivity;
 import com.nhomduan.quanlyungdungdathang.Activity.ProductActivity;
 import com.nhomduan.quanlyungdungdathang.Activity.SearchActivity;
 import com.nhomduan.quanlyungdungdathang.Activity.ShowProductActivity;
@@ -36,7 +36,6 @@ import com.nhomduan.quanlyungdungdathang.LocalDatabase.LocalUserDatabase;
 import com.nhomduan.quanlyungdungdathang.Model.GioHang;
 import com.nhomduan.quanlyungdungdathang.Model.LoaiSP;
 import com.nhomduan.quanlyungdungdathang.Model.Product;
-import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
 import com.nhomduan.quanlyungdungdathang.Utils.OverUtils;
 
@@ -72,7 +71,6 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
     private HorizontalProductAdapter moiNhatAdapter;
 
     View view;
-    private User user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,7 +82,6 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        user = OverUtils.getUserLogin(getContext());
         initView(view);
         setUpTvHoTen();
         setUpTvTimKiem();
@@ -158,21 +155,18 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
     }
 
     private void setUpTvTimKiem() {
-        tvTimKiem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), SearchActivity.class);
-                startActivity(intent);
-            }
+        tvTimKiem.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), SearchActivity.class);
+            startActivity(intent);
         });
     }
 
     private void setUpTvHoTen() {
-        String hoTen = user.getName();
+        String hoTen = userLogin.getName();
         if (hoTen != null) {
             tvTenNguoiDung.setText("Hi " + hoTen);
         } else {
-            String userName = user.getUsername();
+            String userName = userLogin.getUsername();
             tvTenNguoiDung.setText("Hi " + userName);
         }
     }
@@ -231,7 +225,7 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
     @Override
     public void onAddToCard(Product product) {
         GioHang gioHang = new GioHang(product.getId(), 1);
-        List<GioHang> gioHangList = user.getGio_hang();
+        List<GioHang> gioHangList = userLogin.getGio_hang();
         if (gioHangList == null) {
             gioHangList = new ArrayList<>();
             gioHangList.add(gioHang);
@@ -266,13 +260,13 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
     }
 
     private void postGioHang(List<GioHang> gioHangList) {
-        user.setGio_hang(gioHangList);
-        GioHangDao.getInstance().insertGioHang(user,
-                user.getGio_hang(),
+        userLogin.setGio_hang(gioHangList);
+        GioHangDao.getInstance().insertGioHang(userLogin,
+                userLogin.getGio_hang(),
                 new IAfterInsertObject() {
                     @Override
                     public void onSuccess(Object obj) {
-                        LocalUserDatabase.getInstance(getContext()).getUserDao().update(user);
+                        LocalUserDatabase.getInstance(getContext()).getUserDao().update(userLogin);
                         OverUtils.makeToast(getContext(), "Thêm thành công");
                     }
 
@@ -282,4 +276,6 @@ public class HomeFragment extends Fragment implements UpdateRecyclerView, OnClic
                     }
                 });
     }
+
+
 }

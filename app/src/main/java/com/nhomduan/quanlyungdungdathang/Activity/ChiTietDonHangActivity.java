@@ -45,6 +45,7 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
     private TextView tvHuyDon;
     private TextView tvThoiGianGiaoHang;
     private LinearLayout lyThoiGianGiaoHang;
+    private TextView tvTTHuyDon;
 
     private RecyclerView rcvChiTietDonHang;
     private ChiTietDonHangAdapter chiTietDonHangAdapter;
@@ -91,10 +92,17 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
                     tvHuyDon.setVisibility(View.GONE);
                 }
 
+                if(donHang.getThong_tin_huy_don() == null) {
+                    tvTTHuyDon.setText("None");
+                } else {
+                    tvTTHuyDon.setText(donHang.getThong_tin_huy_don());
+                }
+
                 tvHuyDon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         donHang.setTrang_thai(TrangThai.HUY_DON.getTrangThai());
+                        donHang.setThong_tin_huy_don("Do khách hàng hủy khi đơn hàng chưa xác nhận");
                         OrderDao.getInstance().updateDonHang(donHang, donHang.toMapHuyDon(), new IAfterUpdateObject() {
                             @Override
                             public void onSuccess(Object obj) {
@@ -163,6 +171,8 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
         tvThoiGianGiaoHang = findViewById(R.id.tvThoiGianGiaoHang_ChiTietGiaoHang);
         lyThoiGianGiaoHang = findViewById(R.id.layout_tggh);
         tvHuyDon = findViewById(R.id.tvHuyDon);
+        tvTTHuyDon = findViewById(R.id.tv_TTHuyDon);
+
 
         rcvChiTietDonHang = findViewById(R.id.rcv_ChiTietDonHang);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChiTietDonHangActivity.this);

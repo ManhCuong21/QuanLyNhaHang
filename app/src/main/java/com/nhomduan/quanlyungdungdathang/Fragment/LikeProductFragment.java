@@ -1,6 +1,7 @@
 package com.nhomduan.quanlyungdungdathang.Fragment;
 
 
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
 import android.annotation.SuppressLint;
@@ -46,8 +47,6 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
     private FavoriteProductAdapter favoriteProductAdapter;
     List<String> maSanPhamYeuThichList;
 
-    private User user;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,15 +56,13 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        user = OverUtils.getUserLogin(getContext());
         initView(view);
-
+        setUpListSPYeuThich();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        setUpListSPYeuThich();
+    private void initView(View view) {
+        rcvSanPhamYeuThich = view.findViewById(R.id.rcvSanPhamYeuThich);
+        viewRoot = view.findViewById(R.id.viewRoot);
     }
 
     private void setUpListSPYeuThich() {
@@ -80,7 +77,7 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(rcvSanPhamYeuThich);
 
 
-        UserDao.getInstance().getSanPhamYeuThichOfUser(user, new IAfterGetAllObject() {
+        UserDao.getInstance().getSanPhamYeuThichOfUser(userLogin, new IAfterGetAllObject() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void iAfterGetAllObject(Object obj) {
@@ -94,6 +91,7 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
                         public void iAfterGetAllObject(Object obj) {
                             if (obj != null) {
                                 Product product = (Product) obj;
+                                productList.add(product);
                                 if (product.getId() != null) {
                                     boolean duplicate = false;
                                     for (int i = 0; i < productList.size(); i++) {
@@ -124,10 +122,7 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
         });
     }
 
-    private void initView(View view) {
-        rcvSanPhamYeuThich = view.findViewById(R.id.rcvSanPhamYeuThich);
-        viewRoot = view.findViewById(R.id.viewRoot);
-    }
+
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder) {
@@ -137,18 +132,8 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
             // remove item
             // update list liked product
             maSanPhamYeuThichList.remove(product.getId());
-            user.setMa_sp_da_thich(maSanPhamYeuThichList);
-            UserDao.getInstance().updateUser(user, user.toMapSPDaThich(), new IAfterUpdateObject() {
-                @Override
-                public void onSuccess(Object obj) {
-                    LocalUserDatabase.getInstance(getContext()).getUserDao().update(user);
-                }
-
-                @Override
-                public void onError(DatabaseError error) {
-
-                }
-            });
+            userLogin.setMa_sp_da_thich(maSanPhamYeuThichList);
+            UserDao.getInstance().updateUser(userLogin, userLogin.toMapSPDaThich());
 
             // update rate of product
             product.setRate(product.getRate() - 1);
@@ -161,18 +146,8 @@ public class LikeProductFragment extends Fragment implements ItemTouchHelpListen
                 public void onClick(View v) {
                     // update list liked product
                     maSanPhamYeuThichList.add(product.getId());
-                    user.setMa_sp_da_thich(maSanPhamYeuThichList);
-                    UserDao.getInstance().updateUser(user, user.toMapSPDaThich(), new IAfterUpdateObject() {
-                        @Override
-                        public void onSuccess(Object obj) {
-                            LocalUserDatabase.getInstance(getContext()).getUserDao().update(user);
-                        }
-
-                        @Override
-                        public void onError(DatabaseError error) {
-
-                        }
-                    });
+                    userLogin.setMa_sp_da_thich(maSanPhamYeuThichList);
+                    UserDao.getInstance().updateUser(userLogin, userLogin.toMapSPDaThich());
 
                     // update rate of product
                     product.setRate(product.getRate() + 1);

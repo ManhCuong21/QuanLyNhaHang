@@ -2,6 +2,7 @@ package com.nhomduan.quanlyungdungdathang.Activity;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
 import static com.nhomduan.quanlyungdungdathang.Utils.OverUtils.ERROR_MESSAGE;
 
 import android.content.Intent;
@@ -60,8 +61,6 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
     private TextView tvNhapMaGiamGia;
     private TextView tvNhapGhiChu;
     private TextView tvDangHang;
-
-    private User user;
 
 
     private ImageView imgSanPham;
@@ -124,7 +123,6 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
     }
 
     private void getDuLieu() {
-        user = OverUtils.getUserLogin(this);
         Intent intent = getIntent();
         String productId = intent.getStringExtra("productId");
         soLuongDaChon = intent.getIntExtra("so_luong", 0);
@@ -132,10 +130,12 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
         ProductDao.getInstance().getProductByIdListener(productId, new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
-                productDaChon = (Product) obj;
-                donHangChiTietList = new ArrayList<>();
-                donHangChiTietList.add(new DonHangChiTiet(productDaChon, soLuongDaChon));
-                buildComponentSanPham(productDaChon, soLuongDaChon);
+                if(obj != null) {
+                    productDaChon = (Product) obj;
+                    donHangChiTietList = new ArrayList<>();
+                    donHangChiTietList.add(new DonHangChiTiet(productDaChon, soLuongDaChon));
+                    buildComponentSanPham(productDaChon, soLuongDaChon);
+                }
             }
 
             @Override
@@ -157,9 +157,9 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
     }
 
     private void setUpCarDiaChi() {
-        String hoTen = user.getName();
-        String diaChi = user.getAddress();
-        String phoneNumber = user.getPhone_number();
+        String hoTen = userLogin.getName();
+        String diaChi = userLogin.getAddress();
+        String phoneNumber = userLogin.getPhone_number();
         if (hoTen == null || diaChi == null) {
             rcvDiaChi.setVisibility(INVISIBLE);
         } else {
@@ -191,14 +191,14 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
                 btnThemDiaChi = bottomSheetDialog.findViewById(R.id.btnThemDiaChi);
 
 
-                if (user.getPhone_number() != null) {
-                    edtSDT.setText(user.getPhone_number());
+                if (userLogin.getPhone_number() != null) {
+                    edtSDT.setText(userLogin.getPhone_number());
                 }
-                if (user.getName() != null) {
-                    edtHoTen.setText(user.getName());
+                if (userLogin.getName() != null) {
+                    edtHoTen.setText(userLogin.getName());
                 }
-                if (user.getAddress() != null) {
-                    edtDiaChi.setText(user.getAddress());
+                if (userLogin.getAddress() != null) {
+                    edtDiaChi.setText(userLogin.getAddress());
                 }
                 btnHuy.setOnClickListener(v1 -> bottomSheetDialog.cancel());
 
@@ -214,12 +214,12 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
                         OverUtils.makeToast(getApplicationContext(), "Vui lòng nhập đúng định dạng số điện thoại (vd: +84868358175)");
                         return;
                     }
-                    user.setPhone_number(sdt);
-                    user.setAddress(diaChi);
-                    user.setName(hoTen);
+                    userLogin.setPhone_number(sdt);
+                    userLogin.setAddress(diaChi);
+                    userLogin.setName(hoTen);
 
-                    UserDao.getInstance().updateUser(user,
-                            user.toMapThongTinGiaoHang(),
+                    UserDao.getInstance().updateUser(userLogin,
+                            userLogin.toMapThongTinGiaoHang(),
                             new IAfterUpdateObject() {
                                 @Override
                                 public void onSuccess(Object obj) {
@@ -228,7 +228,6 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
                                     tvHoTen.setText(hoTen);
                                     tvDiaChiGiaoHang.setText(diaChi);
                                     tvSDT.setText(sdt);
-                                    LocalUserDatabase.getInstance(ThanhToanNgayActivity.this).getUserDao().update(user);
                                     bottomSheetDialog.cancel();
                                 }
 
@@ -247,11 +246,11 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
 
     private void setUpDatHang() {
         tvDangHang.setOnClickListener(v -> {
-            if (user.getName() == null || user.getAddress() == null) {
+            if (userLogin.getName() == null || userLogin.getAddress() == null) {
                 OverUtils.makeToast(ThanhToanNgayActivity.this, "Cần thêm địa chỉ");
                 return;
             }
-            UserDao.getInstance().getUserByUserName(user.getUsername(), new IAfterGetAllObject() {
+            UserDao.getInstance().getUserByUserName(userLogin.getUsername(), new IAfterGetAllObject() {
                 @Override
                 public void iAfterGetAllObject(Object obj) {
                     User user = (User) obj;
@@ -268,7 +267,7 @@ public class ThanhToanNgayActivity extends AppCompatActivity {
                         donHang.setTrang_thai(TrangThai.CHUA_XAC_NHAN.getTrangThai());
                         donHang.setThoiGianDatHang(OverUtils.getSimpleDateFormat().format(new Date(System.currentTimeMillis())));
                         donHang.setThoiGianGiaoHangDuKien(System.currentTimeMillis() +
-                                TimeUnit.MINUTES.toMillis((long) productDaChon.getThoiGianCheBien() * soLuongDaChon) +
+                                TimeUnit.MINUTES.toMillis(productDaChon.getThoiGianCheBien()) +
                                 TimeUnit.MINUTES.toMillis(30));
                         donHang.setTong_tien(soTienThanhToan + soTienVanChuyen);
                         String key = FirebaseDatabase.getInstance().getReference().child("don_hang").push().getKey();

@@ -1,5 +1,7 @@
 package com.nhomduan.quanlyungdungdathang.Activity;
 
+import static com.nhomduan.quanlyungdungdathang.Activity.FlashActivity.userLogin;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import com.nhomduan.quanlyungdungdathang.Fragment.LikeProductFragment;
 import com.nhomduan.quanlyungdungdathang.Fragment.OrderFragment;
 import com.nhomduan.quanlyungdungdathang.Fragment.ProfileFragment;
 import com.nhomduan.quanlyungdungdathang.Interface.IAfterGetAllObject;
+import com.nhomduan.quanlyungdungdathang.Interface.IDone;
 import com.nhomduan.quanlyungdungdathang.LocalDatabase.LocalUserDatabase;
 import com.nhomduan.quanlyungdungdathang.Model.User;
 import com.nhomduan.quanlyungdungdathang.R;
@@ -29,27 +32,20 @@ import java.util.List;
 public class HomeActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
-    public User userLogin = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initView();
-        if (getUserLogin()) {
-            triggerOrderFragment();
-            listenLockAccount();
-            setUpBottomNavigationView();
-        }
+        triggerOrderFragment();
+        listenLockAccount();
+        setUpBottomNavigationView();
     }
 
     private void initView() {
         bottomNavigationView = findViewById(R.id.bottom_nav_home);
-    }
-
-    private boolean getUserLogin() {
-        userLogin = OverUtils.getUserLogin(HomeActivity.this);
-        return userLogin != null;
     }
 
     private void triggerOrderFragment() {
@@ -84,7 +80,6 @@ public class HomeActivity extends AppCompatActivity {
         }
 
     }
-
 
     private void listenLockAccount() {
         UserDao.getInstance().getUserByUserNameListener(userLogin.getUsername(), new IAfterGetAllObject() {
@@ -144,7 +139,6 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
     }
-
 
     public void btnCart(View view) {
         Intent intent = new Intent(this, CartActivity.class);

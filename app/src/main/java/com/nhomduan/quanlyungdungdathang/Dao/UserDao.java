@@ -20,6 +20,7 @@ import com.nhomduan.quanlyungdungdathang.Model.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -132,7 +133,14 @@ public class UserDao {
                     GioHang gioHang = data.getValue(GioHang.class);
                     gioHangList.add(gioHang);
                 }
-                Collections.reverse(gioHangList);
+                Collections.sort(gioHangList, (o1, o2) -> {
+                    if(o1.getSo_luong() > o2.getSo_luong()) {
+                        return -1;
+                    } else if(o1.getSo_luong() < o2.getSo_luong()){
+                        return  1;
+                    }
+                    return 0;
+                });
                 iAfterGetAllObject.iAfterGetAllObject(gioHangList);
             }
 
@@ -227,6 +235,8 @@ public class UserDao {
             }
         });
     }
+
+
 
     public void isDuplicatePhoneNumber(String phone_number, IAfterGetAllObject iAfterGetAllObject) {
         Query query = FirebaseDatabase.getInstance().getReference().child("user").orderByChild("phone_number")
