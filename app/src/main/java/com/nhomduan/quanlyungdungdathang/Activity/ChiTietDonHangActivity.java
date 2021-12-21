@@ -102,7 +102,14 @@ public class ChiTietDonHangActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         donHang.setTrang_thai(TrangThai.HUY_DON.getTrangThai());
-                        donHang.setThong_tin_huy_don("Do khách hàng hủy khi đơn hàng chưa xác nhận");
+                        if(donHang.getThong_tin_huy_don() == null) {
+                            donHang.setThong_tin_huy_don("Do khách hàng hủy khi đơn hàng chưa xác nhận(" +
+                                    OverUtils.getSimpleDateFormat().format(new Date(System.currentTimeMillis())) + ")");
+                        } else {
+                            donHang.setThong_tin_huy_don(donHang.getThong_tin_huy_don() + " // " + "Do khách hàng hủy khi đơn hàng chưa xác nhận(" +
+                                    OverUtils.getSimpleDateFormat().format(new Date(System.currentTimeMillis())) + ")");
+                        }
+
                         OrderDao.getInstance().updateDonHang(donHang, donHang.toMapHuyDon(), new IAfterUpdateObject() {
                             @Override
                             public void onSuccess(Object obj) {

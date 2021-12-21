@@ -85,31 +85,33 @@ public class HomeActivity extends AppCompatActivity {
         UserDao.getInstance().getUserByUserNameListener(userLogin.getUsername(), new IAfterGetAllObject() {
             @Override
             public void iAfterGetAllObject(Object obj) {
-                User user = (User) obj;
-                if (user.getUsername() != null) {
-                    if (!user.isEnable()) {
-                        new AlertDialog.Builder(HomeActivity.this)
-                                .setTitle("Tài khoản")
-                                .setMessage("Tài khoản của bạn đã vi phạm một số điều khoản khi sử dụng." +
-                                        "\nVì vậy, chúng tôi tạm thời khóa tài khoản này." +
-                                        "\nLiên hệ 19001000 để tìm hiểu chi tiết")
-                                .setNegativeButton("Hủy", (dialog, which) -> {
-                                    SharedPreferences.Editor editor = OverUtils.getSPInstance(getApplicationContext(), OverUtils.PASS_FILE).edit();
-                                    editor.putString("pass", OverUtils.PASS_FLASH_ACTIVITY);
-                                    editor.apply();
+                if(obj != null) {
+                    User user = (User) obj;
+                    if (user.getUsername() != null) {
+                        if (!user.isEnable()) {
+                            new AlertDialog.Builder(HomeActivity.this)
+                                    .setTitle("Tài khoản")
+                                    .setMessage("Tài khoản của bạn đã vi phạm một số điều khoản khi sử dụng." +
+                                            "\nVì vậy, chúng tôi tạm thời khóa tài khoản này." +
+                                            "\nLiên hệ 19001000 để tìm hiểu chi tiết")
+                                    .setNegativeButton("Hủy", (dialog, which) -> {
+                                        SharedPreferences.Editor editor = OverUtils.getSPInstance(getApplicationContext(), OverUtils.PASS_FILE).edit();
+                                        editor.putString("pass", OverUtils.PASS_FLASH_ACTIVITY);
+                                        editor.apply();
 
-                                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                                })
-                                .setPositiveButton("OK", (dialog, which) -> {
-                                    SharedPreferences.Editor editor = OverUtils.getSPInstance(getApplicationContext(), OverUtils.PASS_FILE).edit();
-                                    editor.putString("pass", OverUtils.PASS_FLASH_ACTIVITY);
-                                    editor.apply();
-                                    Intent intent = new Intent("CALL_PHONE");
-                                    intent.setClass(HomeActivity.this, LoginActivity.class);
-                                    startActivity(intent);
-                                })
-                                .setCancelable(false)
-                                .create().show();
+                                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                    })
+                                    .setPositiveButton("OK", (dialog, which) -> {
+                                        SharedPreferences.Editor editor = OverUtils.getSPInstance(getApplicationContext(), OverUtils.PASS_FILE).edit();
+                                        editor.putString("pass", OverUtils.PASS_FLASH_ACTIVITY);
+                                        editor.apply();
+                                        Intent intent = new Intent("CALL_PHONE");
+                                        intent.setClass(HomeActivity.this, LoginActivity.class);
+                                        startActivity(intent);
+                                    })
+                                    .setCancelable(false)
+                                    .create().show();
+                        }
                     }
                 }
             }

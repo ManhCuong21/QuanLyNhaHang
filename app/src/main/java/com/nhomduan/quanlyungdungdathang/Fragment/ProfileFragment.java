@@ -102,9 +102,11 @@ public class ProfileFragment extends Fragment {
                 new IAfterGetAllObject() {
                     @Override
                     public void iAfterGetAllObject(Object obj) {
-                        user = (User) obj;
-                        if (user.getUsername() != null) {
-                            buildComponentUser(user);
+                        if(obj != null) {
+                            user = (User) obj;
+                            if (user.getUsername() != null) {
+                                buildComponentUser(user);
+                            }
                         }
                     }
 
